@@ -1,3 +1,19 @@
+The below endpoint gets information about athletes for a team, for a given year. Use this to get the player name to id mappings
+
+curl 'https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/teams/lar/athletes/statistics?region=us&lang=en&contentorigin=espn&season=2024&seasontype=2' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'origin: https://www.espn.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.espn.com/' \
+  -H 'sec-ch-ua: "Not:A-Brand";v="99", "Google Chrome";v="145", "Chromium";v="145"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'
+
 The below endpoint gives you basically ALL of the historical NFL data for a given player. Note that 12483 is the specific player id, which needs to be scraped somewhere else....
 
 curl 'https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/3918298/stats?region=us&lang=en&contentorigin=espn' \
