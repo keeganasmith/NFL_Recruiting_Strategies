@@ -169,9 +169,9 @@ def score_candidate(
     cmeta_positions = candidate_meta.get("positions", set())
     if cpos and cmeta_positions:
         if cpos in cmeta_positions:
-            score += 2.0
+            score += 4.0
         else:
-            score -= 2.0
+            score -= 4.0
 
     return score
 
@@ -207,14 +207,29 @@ def pick_best_match(
                 return None, 1.0, "exact_implausible"
             return only, 1.0, "exact"
 
-        ranked = sorted(
-            (
-                (score_candidate(combine_year, combine_pos, athlete_meta.get(a.athlete_id, {})), a)
-                for a in exact_matches
-            ),
-            key=lambda x: x[0],
-            reverse=True,
-        )
+        cpos = normalize_position(combine_pos)
+
+        def has_position_match(ath: Athlete) -> bool:
+            if not cpos:
+                return False
+            meta_positions = athlete_meta.get(ath.athlete_id, {}).get("positions", set())
+            return bool(meta_positions) and cpos in meta_positions
+
+        has_any_pos_match = any(has_position_match(a) for a in exact_matches)
+        scored: List[Tuple[float, Athlete]] = []
+        for a in exact_matches:
+            if has_any_pos_match and cpos:
+                meta_positions = athlete_meta.get(a.athlete_id, {}).get("positions", set())
+                if meta_positions and cpos not in meta_positions:
+                    # If we have at least one exact-name candidate whose tracked NFL
+                    # position matches the combine position, ignore exact-name
+                    # candidates that confidently disagree on position.
+                    continue
+            scored.append((score_candidate(combine_year, combine_pos, athlete_meta.get(a.athlete_id, {})), a))
+
+        ranked = sorted(scored, key=lambda x: x[0], reverse=True)
+        if not ranked:
+            return None, 1.0, "exact_ambiguous"
 
         top_score, top_athlete = ranked[0]
         second_score = ranked[1][0] if len(ranked) > 1 else float("-inf")
