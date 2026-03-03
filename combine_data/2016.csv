@@ -34,9 +34,9 @@ Ben Braunecker,TE,Harvard,,6-3,250,4.73,35.5,20.0,121.0,6.9,4.2,,BrauBe00,296924
 Jake Brendel,C,UCLA,College Stats,6-3,303,5.01,28.0,25.0,108.0,7.31,4.27,,BrenJa01,2577185
 Jacoby Brissett,QB,North Carolina State,College Stats,6-4,231,4.94,31.0,,113.0,7.17,4.53,New England Patriots / 3rd / 91st pick / 2016,BrisJa00,2578570
 Kentrell Brothers,OLB,Missouri,College Stats,6-0,245,4.89,28.5,19.0,110.0,6.99,4.11,Minnesota Vikings / 5th / 160th pick / 2016,BrotKe00,2577354
-Anthony Brown,CB,Purdue,College Stats,5-11,192,4.33,35.0,19.0,115.0,7.03,4.19,Dallas Cowboys / 6th / 189th pick / 2016,BrowAn02,4035312
+Anthony Brown,CB,Purdue,College Stats,5-11,192,4.33,35.0,19.0,115.0,7.03,4.19,Dallas Cowboys / 6th / 189th pick / 2016,BrowAn02,2977756
 Beniquez Brown,OLB,Mississippi State,College Stats,6-1,229,4.77,31.0,18.0,110.0,7.07,4.28,,BrowBe00,N/A
-Chris Brown,WR,Notre Dame,College Stats,6-2,194,4.48,,,,,,,BrowCh07,4551
+Chris Brown,WR,Notre Dame,College Stats,6-2,194,4.48,,,,,,,BrowCh07,N/A
 Lamarcus Brutus,S,Florida State,College Stats,6-0,206,4.76,33.0,14.0,114.0,7.08,4.33,,BrutLa00,N/A
 Deforest Buckner,DE,Oregon,College Stats,6-7,291,5.05,32.0,,116.0,7.51,4.47,San Francisco 49ers / 1st / 7th pick / 2016,BuckDe00,2971282
 Jonathan Bullard,DE,Florida,College Stats,6-3,285,4.93,32.0,23.0,116.0,7.31,4.56,Chicago Bears / 3rd / 72nd pick / 2016,BullJo00,2980097
@@ -154,7 +154,7 @@ Devon Johnson,RB,Marshall,College Stats,6-0,238,4.64,,,,,,,JohnDe05,N/A
 Tyler Johnstone,OT,Oregon,College Stats,6-5,301,5.21,30.5,24.0,104.0,7.31,4.6,,JohnTy01,N/A
 Cardale Jones,QB,Ohio State,College Stats,6-5,253,4.81,36.0,,,,,Buffalo Bills / 4th / 139th pick / 2016,JoneCa01,2976299
 Cayleb Jones,WR,Arizona,College Stats,6-3,209,4.65,33.5,9.0,,6.99,4.14,,JoneCa02,N/A
-Chris Jones,DT,Mississippi State,College Stats,6-6,310,5.03,24.5,26.0,106.0,7.44,4.62,Kansas City Chiefs / 2nd / 37th pick / 2016,JoneCh09,3116104
+Chris Jones,DT,Mississippi State,College Stats,6-6,310,5.03,24.5,26.0,106.0,7.44,4.62,Kansas City Chiefs / 2nd / 37th pick / 2016,JoneCh09,3044859
 Cyrus Jones,CB,Alabama,College Stats,5-10,197,4.49,33.0,10.0,116.0,6.71,4.21,New England Patriots / 2nd / 60th pick / 2016,JoneCy00,2979849
 Deion Jones,OLB,LSU,College Stats,6-1,222,4.59,33.0,,120.0,,,Atlanta Falcons / 2nd / 52nd pick / 2016,JoneDe01,2976545
 Jonathan Jones,CB,Auburn,College Stats,5-9,186,4.33,36.0,19.0,123.0,7.25,4.25,,JoneJo03,2971027
@@ -198,14 +198,14 @@ Ryan Malleck,TE,Virginia Tech,College Stats,6-4,247,4.77,34.5,18.0,121.0,7.0,4.3
 Byron Marshall,WR,Oregon,College Stats,5-9,201,4.42,,17.0,,,,,MarsBy01,2971289
 Jalin Marshall,WR,Ohio State,College Stats,5-10,200,4.6,37.5,16.0,125.0,6.8,4.13,,MarsJa01,3051400
 Keith Marshall,RB,Georgia,College Stats,5-11,219,4.31,30.5,25.0,,,,Washington Redskins / 7th / 242nd pick / 2016,MarsKe00,N/A
-Nick Martin,C,Notre Dame,College Stats,6-4,299,5.22,28.0,28.0,97.0,7.57,4.72,Houston Texans / 2nd / 50th pick / 2016,MartNi00,4573188
+Nick Martin,C,Notre Dame,College Stats,6-4,299,5.22,28.0,28.0,97.0,7.57,4.72,Houston Texans / 2nd / 50th pick / 2016,MartNi00,2579850
 Blake Martinez,ILB,Stanford,College Stats,6-2,237,4.71,28.5,22.0,113.0,6.98,4.2,Green Bay Packers / 4th / 131st pick / 2016,MartBl01,2978273
 Tyler Marz,OT,Wisconsin,College Stats,6-7,316,5.54,27.5,19.0,99.0,8.38,4.97,,MarzTy01,N/A
 Tyler Matakevich,OLB,Temple,College Stats,6-0,238,4.81,31.0,22.0,112.0,7.19,4.5,Pittsburgh Steelers / 7th / 246th pick / 2016,MataTy00,2976249
 Chris Mayes,DL,Georgia,College Stats,6-3,338,5.34,23.5,33.0,104.0,,5.13,,-9999,N/A
 Alex McCalister,DE,Florida,College Stats,6-6,239,4.8,34.5,,128.0,7.01,4.0,Philadelphia Eagles / 7th / 240th pick / 2016,McCaAl00,N/A
 Jake McGee,TE,Florida,College Stats,6-5,250,4.83,,17.0,,,,,McGeJa01,N/A
-Connor McGovern,OG,Missouri,College Stats,6-4,306,5.11,33.0,33.0,109.0,7.5,4.65,Denver Broncos / 5th / 144th pick / 2016,McGoCo00,4033748
+Connor McGovern,OG,Missouri,College Stats,6-4,306,5.11,33.0,33.0,109.0,7.5,4.65,Denver Broncos / 5th / 144th pick / 2016,McGoCo00,2577367
 Mekale McKay,WR,Cincinnati,College Stats,6-4,207,4.55,35.0,12.0,123.0,7.08,4.63,,McKaMe00,N/A
 Cassanova McKinzy,ILB,Auburn,College Stats,6-1,248,4.83,,21.0,,,,,McKiCa01,2971032
 Braxton Miller,WR,Ohio State,College Stats,6-1,201,4.5,35.0,17.0,123.0,6.65,4.07,Houston Texans / 3rd / 85th pick / 2016,MillBr03,2570987

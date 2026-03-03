@@ -21,7 +21,7 @@ Anthony Becht,TE,West Virginia,College Stats,6-6,270,4.78,33.5,,123.0,6.94,4.08,
 Matt Beck,ILB,California,,6-3,234,4.65,,,,,,,-9999,N/A
 Rogers Beckett,S,Marshall,,6-1,207,4.62,39.5,15.0,119.0,6.48,4.29,San Diego Chargers / 2nd / 43rd pick / 2000,BeckRo20,2174
 Brad Bedell,OG,Colorado,,6-4,302,5.07,31.5,17.0,103.0,7.76,4.58,Cleveland Browns / 6th / 206th pick / 2000,BedeBr20,2337
-Marcus Bell,ILB,Arizona,,6-2,237,4.78,31.5,21.0,111.0,7.17,4.33,Seattle Seahawks / 4th / 116th pick / 2000,BellMa21,2672
+Marcus Bell,ILB,Arizona,,6-2,237,4.78,31.5,21.0,111.0,7.17,4.33,Seattle Seahawks / 4th / 116th pick / 2000,BellMa21,2247
 Gary Berry,S,Ohio State,,5-11,204,4.55,,,,,,Green Bay Packers / 4th / 126th pick / 2000,BerrGa20,2257
 Michael Boireau,DE,Miami (FL),,6-4,274,5.09,29.0,26.0,105.0,7.68,4.49,Minnesota Vikings / 2nd / 56th pick / 2000,-9999,N/A
 Matt Bowen,S,Iowa,,6-1,201,4.49,33.0,12.0,115.0,7.06,4.09,St. Louis Rams / 6th / 198th pick / 2000,BoweMa20,2329
@@ -30,8 +30,8 @@ Tom Brady,QB,Michigan,College Stats,6-4,211,5.28,24.5,,99.0,7.2,4.38,New England
 Robert Brannon,DT,Iowa State,,6-4,309,5.19,28.5,28.0,99.0,7.82,4.7,,-9999,N/A
 Keith Brown,RB,UCLA,,5-11,216,4.66,30.0,,117.0,6.64,4.08,,-9999,N/A
 Demario Brown,RB,Utah State,,6-0,217,4.72,31.0,,107.0,7.17,4.39,,-9999,N/A
-Courtney Brown,DE,Penn State,College Stats,6-5,269,4.78,,,,,,Cleveland Browns / 1st / 1st pick / 2000,BrowCo22,10655
-Mike Brown,S,Nebraska,,5-10,204,4.59,36.0,14.0,116.0,6.93,4.01,Chicago Bears / 2nd / 39th pick / 2000,BrowMi99,4244310
+Courtney Brown,DE,Penn State,College Stats,6-5,269,4.78,,,,,,Cleveland Browns / 1st / 1st pick / 2000,BrowCo22,2132
+Mike Brown,S,Nebraska,,5-10,204,4.59,36.0,14.0,116.0,6.93,4.01,Chicago Bears / 2nd / 39th pick / 2000,BrowMi99,2170
 Ralph Brown,CB,Nebraska,College Stats,5-10,185,4.55,,10.0,,,,New York Giants / 5th / 140th pick / 2000,BrowRa20,2271
 Travis Brown,QB,Northern Arizona,,6-3,218,5.01,29.0,,101.0,7.54,4.87,,BrowTr01,2519
 Lamont Bryant,DE,Notre Dame,,6-3,260,4.91,,17.0,,,,,BryaLa00,N/A
@@ -83,7 +83,7 @@ Reuben Droughns,RB,Oregon,College Stats,5-11,215,4.66,30.0,13.0,115.0,7.34,4.41,
 Ron Dugans,WR,Florida State,College Stats,6-1,206,4.58,,,117.0,,,Cincinnati Bengals / 3rd / 66th pick / 2000,DugaRo00,2197
 Deon Dyer,FB,North Carolina,College Stats,5-11,260,4.99,28.0,,104.0,7.88,4.81,Miami Dolphins / 4th / 117th pick / 2000,DyerDe00,2248
 Chris Edwards,OLB,Georgia Tech,,6-5,226,4.65,,,,,,,-9999,N/A
-Mario Edwards,CB,Florida State,College Stats,6-0,191,4.46,,,120.0,,,Dallas Cowboys / 6th / 180th pick / 2000,EdwaMa20,2969921
+Mario Edwards,CB,Florida State,College Stats,6-0,191,4.46,,,120.0,,,Dallas Cowboys / 6th / 180th pick / 2000,EdwaMa20,2311
 Shaun Ellis,DE,Tennessee,,6-4,280,4.85,,,,,,New York Jets / 1st / 12th pick / 2000,ElliSh00,2143
 John Engelberger,DE,Virginia Tech,College Stats,6-4,260,4.73,34.0,24.0,115.0,6.95,4.28,San Francisco 49ers / 2nd / 35th pick / 2000,EngeJo20,2166
 Dwan Epps,ILB,Texas Southern,,6-1,242,4.68,34.5,8.0,,,,,-9999,N/A
@@ -115,8 +115,8 @@ Ernest Grant,DT,Ark-Pine Bluff,,6-5,316,5.31,29.5,24.0,98.0,8.0,5.03,Miami Dolph
 Jonathan Gray,OT,Texas Tech,,6-4,338,5.85,23.0,20.0,94.0,,,,-9999,N/A
 Brian Gray,CB,BYU,,6-1,214,4.94,33.5,19.0,116.0,7.38,4.24,,-9999,N/A
 Barrett Green,OLB,West Virginia,College Stats,6-0,233,4.56,36.0,22.0,120.0,,,Detroit Lions / 2nd / 50th pick / 2000,GreeBa20,2181
-Mike Green,S,NW State (LA),,6-0,189,4.53,38.5,,118.0,,4.2,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,4683188
-Mike Green,FB,Houston,College Stats,6-0,253,4.78,28.5,25.0,108.0,7.08,4.34,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,4683188
+Mike Green,S,NW State (LA),,6-0,189,4.53,38.5,,118.0,,4.2,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,2344
+Mike Green,FB,Houston,College Stats,6-0,253,4.78,28.5,25.0,108.0,7.08,4.34,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,2344
 Damian Gregory,DT,Illinois State,,6-2,307,4.87,30.0,27.0,105.0,7.37,4.6,,GregDa20,2869
 Cornelius Griffin,DE,Alabama,,6-3,297,4.9,31.0,30.0,111.0,7.63,4.62,New York Giants / 2nd / 42nd pick / 2000,GrifCo20,2173
 Clark Haggans,OLB,Colorado State,,6-3,253,4.97,31.5,20.0,109.0,7.12,4.21,Pittsburgh Steelers / 5th / 137th pick / 2000,HaggCl20,2268
@@ -158,7 +158,7 @@ Ryan Johanningmeier,OG,Colorado,,6-6,310,5.25,29.0,,107.0,7.9,4.66,,-9999,N/A
 Matt Johnson,OG,BYU,,6-4,345,5.56,28.0,35.0,99.0,8.07,4.99,Indianapolis Colts / 5th / 138th pick / 2000,-9999,N/A
 Doug Johnson,QB,Florida,College Stats,6-2,226,4.95,29.5,,96.0,,,,JohnDo00,2405
 Dwight Johnson,DT,Baylor,,6-4,285,4.97,28.0,26.0,105.0,7.51,4.76,,JohnDw20,2426
-Eric Johnson,S,Yale,,6-0,215,4.6,38.0,12.0,121.0,6.96,4.17,San Francisco 49ers / 7th / 224th pick / 2001,JohnEr00,4050971
+Eric Johnson,S,Yale,,6-0,215,4.6,38.0,12.0,121.0,6.96,4.17,San Francisco 49ers / 7th / 224th pick / 2001,JohnEr00,N/A
 Jerry Johnson,DT,Florida State,,6-0,293,5.03,28.5,26.0,102.0,,,Denver Broncos / 4th / 101st pick / 2000,JohnJe21,2232
 Dwaune Jones,WR,Richmond,,6-0,191,4.66,,,,,,,-9999,N/A
 Dhani Jones,OLB,Michigan,,6-1,240,4.68,,29.0,,,,New York Giants / 6th / 177th pick / 2000,JoneDh20,2308
@@ -208,7 +208,7 @@ Wendell Montgomery,WR,Wyoming,,6-3,203,4.81,35.5,,117.0,7.01,4.24,,-9999,N/A
 Scottie Montgomery,WR,Duke,College Stats,6-0,196,4.57,36.0,,117.0,7.16,4.11,,MontSc00,2501
 Mookie Moore,OG,Troy,,6-3,320,5.45,24.5,34.0,94.0,8.37,5.06,,-9999,N/A
 Muneer Moore,WR,Richmond,,6-1,201,4.52,37.5,,129.0,6.91,4.09,Denver Broncos / 5th / 154th pick / 2000,-9999,N/A
-Corey Moore,OLB,Virginia Tech,College Stats,5-11,223,4.6,,21.0,,,,Buffalo Bills / 3rd / 89th pick / 2000,MoorCo20,2578554
+Corey Moore,OLB,Virginia Tech,College Stats,5-11,223,4.6,,21.0,,,,Buffalo Bills / 3rd / 89th pick / 2000,MoorCo20,2220
 Frank Moreau,RB,Louisville,College Stats,6-1,231,4.57,36.0,23.0,117.0,,,Kansas City Chiefs / 4th / 115th pick / 2000,MoreFr00,2246
 Aric Morris,S,Michigan State,College Stats,5-9,211,4.56,,24.0,,,,Tennessee Titans / 5th / 135th pick / 2000,MorrAr20,2266
 Rob Morris,ILB,BYU,College Stats,6-2,250,4.77,33.0,18.0,113.0,6.93,4.17,Indianapolis Colts / 1st / 28th pick / 2000,MorrRo20,2159
@@ -269,7 +269,7 @@ Peter Sirmon,ILB,Oregon,,6-2,246,4.84,34.5,20.0,115.0,7.21,4.27,Tennessee Titans
 T.J. Slaughter,ILB,Southern Miss,,6-0,247,4.87,30.0,24.0,112.0,7.08,4.26,Jacksonville Jaguars / 3rd / 92nd pick / 2000,SlauT.20,2223
 Dwyte Smiley,S,Youngstown State,,6-1,198,4.57,35.0,13.0,115.0,7.18,4.29,,-9999,N/A
 Jamel Smith,ILB,Virginia Tech,,6-0,245,5.18,29.5,,108.0,7.51,4.58,,-9999,N/A
-Keith Smith,RB,Arizona,,5-10,207,4.5,,,,,,,SmitKe03,17315
+Keith Smith,RB,Arizona,,5-10,207,4.5,,,,,,,SmitKe03,N/A
 Marvel Smith,OT,Arizona State,,6-5,320,5.37,27.5,24.0,100.0,7.87,4.83,Pittsburgh Steelers / 2nd / 38th pick / 2000,SmitMa55,2169
 Paul Smith,FB,Texas-El Paso,,5-11,220,4.65,,25.0,,,,San Francisco 49ers / 5th / 132nd pick / 2000,SmitPa00,2263
 Robaire Smith,DE,Michigan State,,6-4,275,4.88,,,,,,Tennessee Titans / 6th / 197th pick / 2000,SmitRo21,2328
@@ -311,9 +311,9 @@ Dez White,WR,Georgia Tech,College Stats,6-1,218,4.62,37.5,,124.0,6.91,4.09,Chica
 Michael Wiley,RB,Ohio State,College Stats,5-11,193,4.5,,,,,,Dallas Cowboys / 5th / 144th pick / 2000,WileMi00,2275
 Boo Williams,RB,South Carolina,,5-11,222,4.52,,,,,,,WillBo00,N/A
 Bobbie Williams,OT,Arkansas,,6-4,332,5.26,29.0,28.0,97.0,7.78,4.72,Philadelphia Eagles / 2nd / 61st pick / 2000,WillBo21,2192
-James Williams,WR,Marshall,College Stats,5-11,180,4.59,36.0,,123.0,7.22,4.16,Seattle Seahawks / 6th / 175th pick / 2000,WillJa01,4431613
+James Williams,WR,Marshall,College Stats,5-11,180,4.59,36.0,,123.0,7.22,4.16,Seattle Seahawks / 6th / 175th pick / 2000,WillJa01,2306
 Jack Williams,S,Azusa Pacific,,5-10,206,4.72,31.5,15.0,108.0,7.15,4.65,Denver Broncos / 4th / 119th pick / 2008,WillJa96,11354
-Josh Williams,DT,Michigan,,6-3,282,4.9,30.5,,111.0,7.22,4.25,Indianapolis Colts / 4th / 122nd pick / 2000,WillJo30,4568024
+Josh Williams,DT,Michigan,,6-3,282,4.9,30.5,,111.0,7.22,4.25,Indianapolis Colts / 4th / 122nd pick / 2000,WillJo30,2253
 Antonio Wilson,OLB,Texas A&M-Commerce,,6-2,245,4.56,,11.0,,,,Minnesota Vikings / 4th / 106th pick / 2000,WilsAn20,2237
 Cedric Woodard,DT,Texas,,6-2,290,5.21,30.5,23.0,109.0,,,Baltimore Ravens / 6th / 191st pick / 2000,WoodCe20,2322
 Destry Wright,RB,Jackson State,,5-11,216,4.84,29.5,15.0,112.0,7.15,4.41,,-9999,N/A

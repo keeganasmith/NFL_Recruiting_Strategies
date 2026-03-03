@@ -169,12 +169,12 @@ Jalen Jelks,EDGE,Oregon,College Stats,6-5,256,4.92,32.5,19.0,113.0,7.22,4.59,Dal
 Elgton Jenkins,OL,Mississippi State,College Stats,6-4,310,,28.0,29.0,109.0,7.77,4.62,Green Bay Packers / 2nd / 44th pick / 2019,JenkEl00,3115485
 Gary Jennings,WR,West Virginia,College Stats,6-1,214,4.42,37.0,20.0,127.0,7.32,4.15,Seattle Seahawks / 4th / 120th pick / 2019,JennGa00,N/A
 Devon Johnson,OT,Ferris State,,6-7,338,5.16,27.5,26.0,89.0,8.34,5.28,,-9999,N/A
-Anthony Johnson,WR,Buffalo,College Stats,6-2,209,,32.5,18.0,122.0,7.12,,,JohnAn05,4361748
+Anthony Johnson,WR,Buffalo,College Stats,6-2,209,,32.5,18.0,122.0,7.12,,,JohnAn05,N/A
 Darryl Johnson,EDGE,North Carolina A&T,,6-6,253,,,20.0,,,,Buffalo Bills / 7th / 225th pick / 2019,JohnDa10,3957672
 Diontae Johnson,WR,Toledo,College Stats,5-10,183,4.53,33.5,15.0,123.0,7.09,4.45,Pittsburgh Steelers / 3rd / 66th pick / 2019,JohnDi01,3932905
 Fred Johnson,OL,Florida,College Stats,6-7,326,,,,,,,,JohnFr01,3915106
 Gary Johnson,LB,Texas,College Stats,6-0,226,4.43,33.5,16.0,121.0,7.15,4.57,,JohnGa02,N/A
-Isaiah Johnson,CB,Houston,College Stats,6-2,208,4.4,36.5,,133.0,6.81,4.06,Oakland Raiders / 4th / 129th pick / 2019,JohnIs02,4367699
+Isaiah Johnson,CB,Houston,College Stats,6-2,208,4.4,36.5,,133.0,6.81,4.06,Oakland Raiders / 4th / 129th pick / 2019,JohnIs02,3126182
 Jaquan Johnson,S,Miami (FL),College Stats,5-10,191,4.69,33.0,18.0,121.0,,,Buffalo Bills / 6th / 181st pick / 2019,JohnJa11,3672862
 Keesean Johnson,WR,Fresno State,College Stats,6-1,201,4.6,30.0,14.0,117.0,7.28,4.23,Arizona Cardinals / 6th / 174th pick / 2019,JohnKe07,3124537
 Lonnie Johnson,CB,Kentucky,College Stats,6-2,213,4.52,38.0,15.0,129.0,7.01,4.1,Houston Texans / 2nd / 54th pick / 2019,JohnLo01,4240780
@@ -198,7 +198,7 @@ Chris Lindstrom,OL,Boston Col.,College Stats,6-4,308,4.91,30.5,25.0,117.0,7.61,4
 Greg Little,OT,Mississippi,College Stats,6-5,310,5.33,25.0,,113.0,,4.74,Carolina Panthers / 2nd / 37th pick / 2019,LittGr01,4047661
 Drew Lock,QB,Missouri,College Stats,6-4,228,4.69,31.0,,112.0,7.03,4.12,Denver Broncos / 2nd / 42nd pick / 2019,LockDr00,3924327
 Damarkus Lodge,WR,Mississippi,College Stats,6-2,202,4.55,33.5,11.0,119.0,7.06,4.53,,LodgDa01,N/A
-David Long,CB,Michigan,College Stats,5-11,196,4.45,39.5,15.0,120.0,6.45,3.97,Los Angeles Rams / 3rd / 79th pick / 2019,LongDa02,3916074
+David Long,CB,Michigan,College Stats,5-11,196,4.45,39.5,15.0,120.0,6.45,3.97,Los Angeles Rams / 3rd / 79th pick / 2019,LongDa02,4046536
 Bryce Love,RB,Stanford,College Stats,5-9,200,,,18.0,,,,Washington Redskins / 4th / 112th pick / 2019,LoveBr00,N/A
 Julian Love,CB,Notre Dame,College Stats,5-11,195,4.54,36.0,14.0,121.0,6.72,4.1,New York Giants / 4th / 108th pick / 2019,LoveJu00,4046675
 Alize Mack,TE,Notre Dame,College Stats,6-4,249,4.7,36.0,22.0,120.0,7.27,4.34,New Orleans Saints / 7th / 231st pick / 2019,MackAl00,N/A
@@ -223,7 +223,7 @@ Jalin Moore,RB,Appalachian State,College Stats,5-10,212,,,27.0,,,,,MoorJa01,N/A
 Foster Moreau,TE,LSU,College Stats,6-4,253,4.66,36.5,22.0,121.0,7.16,4.11,Oakland Raiders / 4th / 137th pick / 2019,MoreFo00,3843945
 Stanley Morgan,WR,Nebraska,College Stats,6-0,202,4.53,38.5,14.0,125.0,6.78,4.13,,MorgSt02,3699902
 Trayvon Mullen,CB,Clemson,College Stats,6-1,199,4.46,34.5,,123.0,,,Oakland Raiders / 2nd / 40th pick / 2019,MullTr00,4035458
-Byron Murphy,CB,Washington,College Stats,5-11,190,4.55,36.5,14.0,120.0,,,Arizona Cardinals / 2nd / 33rd pick / 2019,MurpBy00,4570040
+Byron Murphy,CB,Washington,College Stats,5-11,190,4.55,36.5,14.0,120.0,,,Arizona Cardinals / 2nd / 33rd pick / 2019,MurpBy00,4038999
 Kyler Murray,QB,Oklahoma,College Stats,5-10,207,,,,,,,Arizona Cardinals / 1st / 1st pick / 2019,MurrKy00,3917315
 Nyqwan Murray,WR,Florida State,College Stats,5-10,191,4.63,34.0,8.0,113.0,7.2,4.4,,MurrNy00,N/A
 Isaac Nauta,TE,Georgia,College Stats,6-3,244,4.91,28.0,19.0,,7.45,4.43,Detroit Lions / 7th / 224th pick / 2019,NautIs00,4035014
@@ -316,8 +316,8 @@ Devin White,LB,LSU,College Stats,6-0,237,4.42,39.5,22.0,118.0,7.07,4.17,Tampa Ba
 Christian Wilkins,DL,Clemson,College Stats,6-3,315,5.04,29.5,28.0,107.0,,4.55,Miami Dolphins / 1st / 13th pick / 2019,WilkCh00,3728266
 Dexter Williams,RB,Notre Dame,College Stats,5-11,212,4.57,36.0,17.0,130.0,7.0,4.16,Green Bay Packers / 6th / 194th pick / 2019,WillDe07,3932449
 Greedy Williams,CB,LSU,College Stats,6-2,185,4.37,,,,,,Cleveland Browns / 2nd / 46th pick / 2019,WillGr00,4035437
-James Williams,RB,Washington State,College Stats,5-9,197,4.58,36.5,,118.0,7.01,4.25,,WillJa08,4431613
-Jonah Williams,OT,Alabama,College Stats,6-4,302,5.12,28.0,23.0,100.0,8.01,4.79,Cincinnati Bengals / 1st / 11th pick / 2019,WillJo10,4040726
+James Williams,RB,Washington State,College Stats,5-9,197,4.58,36.5,,118.0,7.01,4.25,,WillJa08,N/A
+Jonah Williams,OT,Alabama,College Stats,6-4,302,5.12,28.0,23.0,100.0,8.01,4.79,Cincinnati Bengals / 1st / 11th pick / 2019,WillJo10,4032481
 Joejuan Williams,CB,Vanderbilt,College Stats,6-4,211,4.64,,17.0,,,,New England Patriots / 2nd / 45th pick / 2019,WillJo13,4035286
 Quinnen Williams,DL,Alabama,College Stats,6-3,303,4.83,30.5,,112.0,,,New York Jets / 1st / 3rd pick / 2019,WillQu00,4040982
 Trayveon Williams,RB,Texas A&M,College Stats,5-8,206,4.51,33.0,19.0,121.0,7.44,4.44,Cincinnati Bengals / 6th / 182nd pick / 2019,WillTr06,4035222

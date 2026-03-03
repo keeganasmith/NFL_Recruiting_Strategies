@@ -38,7 +38,7 @@ Daniel Bullocks,S,Nebraska,College Stats,6-0,212,4.38,38.0,18.0,124.0,6.91,4.16,
 Brodrick Bunkley,DT,Florida State,College Stats,6-3,306,5.01,32.5,44.0,113.0,,,Philadelphia Eagles / 1st / 14th pick / 2006,BunkBr20,9600
 Reggie Bush,RB,USC,College Stats,5-11,201,4.37,,,,,,New Orleans Saints / 1st / 2nd pick / 2006,BushRe00,9588
 Brad Butler,OT,Virginia,College Stats,6-7,310,5.29,,,,,,Buffalo Bills / 5th / 143rd pick / 2006,ButlBr20,9729
-Rashad Butler,OT,Miami (FL),College Stats,6-5,293,5.3,28.0,16.0,106.0,7.9,4.55,Carolina Panthers / 3rd / 89th pick / 2006,ButlRa20,N/A
+Rashad Butler,OT,Miami (FL),College Stats,6-5,293,5.3,28.0,16.0,106.0,7.9,4.55,Carolina Panthers / 3rd / 89th pick / 2006,ButlRa20,9729
 Dominique Byrd,TE,USC,College Stats,6-3,255,4.79,,,,,,St. Louis Rams / 3rd / 93rd pick / 2006,ByrdDo00,9679
 Brian Calhoun,RB,Wisconsin,College Stats,5-9,201,4.57,31.5,18.0,124.0,7.05,4.2,Detroit Lions / 3rd / 74th pick / 2006,CalhBr00,9660
 Bobby Carpenter,OLB,Ohio State,College Stats,6-2,256,4.65,,,,,,Dallas Cowboys / 1st / 18th pick / 2006,CarpBo20,9604
@@ -133,7 +133,7 @@ Adam Jennings,WR,Fresno State,College Stats,5-9,181,4.44,37.5,,118.0,6.88,4.12,A
 Greg Jennings,WR,West. Michigan,College Stats,5-11,197,4.42,36.5,,117.0,6.68,4.16,Green Bay Packers / 2nd / 52nd pick / 2006,JennGr00,9638
 Kelly Jennings,CB,Miami (FL),College Stats,5-11,178,4.39,40.0,,120.0,,4.0,Seattle Seahawks / 1st / 31st pick / 2006,JennKe20,9617
 Tim Jennings,CB,Georgia,College Stats,5-8,185,4.32,37.5,17.0,117.0,,,Indianapolis Colts / 2nd / 62nd pick / 2006,JennTi20,9648
-Brandon Johnson,OLB,Louisville,College Stats,6-5,228,4.44,37.0,11.0,118.0,7.17,4.34,Arizona Cardinals / 5th / 142nd pick / 2006,JohnBr20,4594338
+Brandon Johnson,OLB,Louisville,College Stats,6-5,228,4.44,37.0,11.0,118.0,7.17,4.34,Arizona Cardinals / 5th / 142nd pick / 2006,JohnBr20,9728
 Johnny Jolly,DT,Texas A&M,College Stats,6-3,317,5.41,,,104.0,,,Green Bay Packers / 6th / 183rd pick / 2006,JollJo20,9769
 Maurice Jones-Drew,RB,UCLA,College Stats,5-7,207,4.39,36.0,18.0,116.0,7.08,4.38,Jacksonville Jaguars / 2nd / 60th pick / 2006,DrewMa00,9646
 Davin Joseph,OG,Oklahoma,College Stats,6-3,311,5.09,32.0,24.0,111.0,,4.97,Tampa Bay Buccaneers / 1st / 23rd pick / 2006,JoseDa20,9609
@@ -167,7 +167,7 @@ Antonio Malone,CB,Toledo,College Stats,6-0,200,4.59,34.0,10.0,111.0,7.05,4.1,,-9
 Nick Mangold,C,Ohio State,,6-4,300,5.05,27.5,24.0,104.0,7.47,4.36,New York Jets / 1st / 29th pick / 2006,MangNi20,9615
 Danieal Manning,CB,Abilene Christian,,5-11,202,4.48,39.0,17.0,123.0,7.23,4.07,Chicago Bears / 2nd / 42nd pick / 2006,MannDa21,9628
 Laurence Maroney,RB,Minnesota,College Stats,6-0,217,4.48,,,,,,New England Patriots / 1st / 21st pick / 2006,MaroLa00,9607
-Brandon Marshall,WR,Central Florida,College Stats,6-4,229,4.52,37.0,,120.0,,,Denver Broncos / 4th / 119th pick / 2006,MarsBr00,15002
+Brandon Marshall,WR,Central Florida,College Stats,6-4,229,4.52,37.0,,120.0,,,Denver Broncos / 4th / 119th pick / 2006,MarsBr00,9705
 Richard Marshall,CB,Fresno State,College Stats,5-11,189,4.42,37.0,12.0,129.0,6.65,4.16,Carolina Panthers / 2nd / 58th pick / 2006,MarsRi20,9644
 Derrick Martin,CB,Wyoming,College Stats,5-10,202,4.5,40.0,17.0,127.0,6.72,3.95,Baltimore Ravens / 6th / 208th pick / 2006,MartDe22,9794
 Ingle Martin,QB,Furman,,6-2,220,4.71,36.0,,111.0,7.13,4.17,Green Bay Packers / 5th / 148th pick / 2006,MartIn00,9734
@@ -265,7 +265,7 @@ Brad Smith,WR,Missouri,College Stats,6-2,213,4.46,39.5,,128.0,7.0,4.33,New York 
 Eric Smith,S,Michigan State,College Stats,6-1,209,4.63,40.0,21.0,127.0,6.89,4.1,New York Jets / 3rd / 97th pick / 2006,SmitEr22,9683
 Clinton Solomon,WR,Iowa,College Stats,6-3,214,4.58,33.0,,114.0,7.17,4.46,,-9999,N/A
 Isaac Sowells,OG,Indiana,,6-3,324,5.15,28.5,20.0,101.0,8.13,4.98,Cleveland Browns / 4th / 112th pick / 2006,SoweIs20,9698
-Charles Spencer,OG,Pittsburgh,,6-5,352,5.25,,30.0,,,,Houston Texans / 3rd / 65th pick / 2006,SpenCh20,N/A
+Charles Spencer,OG,Pittsburgh,,6-5,352,5.25,,30.0,,,,Houston Texans / 3rd / 65th pick / 2006,SpenCh20,8441
 Jason Spitz,OG,Louisville,College Stats,6-3,313,5.4,28.5,25.0,102.0,7.82,4.55,Green Bay Packers / 3rd / 75th pick / 2006,SpitJa20,9661
 Montavious Stanley,DT,Louisville,College Stats,6-2,313,5.12,29.0,,106.0,8.06,4.6,Dallas Cowboys / 6th / 182nd pick / 2006,StanMo20,9768
 Joel Stelly,P,La-Monroe,College Stats,5-10,197,4.68,,,,,,,-9999,N/A
@@ -309,8 +309,8 @@ E.J. Whitley,OT,UNLV,College Stats,6-5,309,5.35,25.0,16.0,101.0,7.53,4.79,Dallas
 Donte Whitner,S,Ohio State,College Stats,5-10,204,4.4,40.0,18.0,132.0,,,Buffalo Bills / 1st / 8th pick / 2006,WhitDo20,9594
 Andrew Whitworth,OT,LSU,,6-7,334,5.16,30.5,28.0,112.0,8.23,4.83,Cincinnati Bengals / 2nd / 55th pick / 2006,WhitAn20,9641
 Gerris Wilkinson,ILB,Georgia Tech,College Stats,6-3,233,4.66,39.0,19.0,122.0,7.21,4.17,New York Giants / 3rd / 96th pick / 2006,WilkGe20,9682
-T.J. Williams,TE,North Carolina State,College Stats,6-2,269,4.72,34.0,25.0,111.0,7.49,4.54,Tampa Bay Buccaneers / 6th / 202nd pick / 2006,-9999,N/A
-Brandon Williams,WR,Wisconsin,College Stats,5-9,179,4.48,34.5,,115.0,6.87,4.07,San Francisco 49ers / 3rd / 84th pick / 2006,WillBr01,2972286
+T.J. Williams,TE,North Carolina State,College Stats,6-2,269,4.72,34.0,25.0,111.0,7.49,4.54,Tampa Bay Buccaneers / 6th / 202nd pick / 2006,-9999,14158
+Brandon Williams,WR,Wisconsin,College Stats,5-9,179,4.48,34.5,,115.0,6.87,4.07,San Francisco 49ers / 3rd / 84th pick / 2006,WillBr01,9670
 DeAngelo Williams,RB,Memphis,College Stats,5-9,214,4.45,35.5,25.0,121.0,,,Carolina Panthers / 1st / 27th pick / 2006,WillDe02,9613
 Demetrius Williams,WR,Oregon,College Stats,6-2,197,4.52,38.0,,127.0,6.84,4.08,Baltimore Ravens / 4th / 111th pick / 2006,WillDe03,9697
 Jamar Williams,OLB,Arizona State,College Stats,6-0,236,4.59,37.0,,120.0,7.03,4.29,Chicago Bears / 4th / 120th pick / 2006,WillJa21,9706

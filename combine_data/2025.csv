@@ -79,8 +79,8 @@ Da'Quan Felton,WR,Virginia Tech,College Stats,6-5,213,4.5,32.5,16.0,122.0,7.1,4.
 Tai Felton,WR,Maryland,College Stats,6-1,183,4.37,39.5,,130.0,,,Minnesota Vikings / 3rd / 102nd pick / 2025,FeltTa00,4565185
 Terrance Ferguson,TE,Oregon,College Stats,6-5,247,4.63,39.0,,122.0,,,Los Angeles Rams / 2nd / 46th pick / 2025,FergTe00,4570037
 Ryan Fitzgerald,K,Florida St.,College Stats,5-11,193,,,,,,,,FitzRy01,4568263
-O'Donnell Fortune,CB,South Carolina,College Stats,6-1,185,,32.5,,117.0,,,,FortOD00,4432045
-Zah Frazier,CB,Texas-San Antonio,College Stats,6-3,186,4.36,36.5,,126.0,7.0,4.26,,-9999,4429775
+O'Donnell Fortune,CB,South Carolina,College Stats,6-1,185,,32.5,,117.0,,,,FortOD00,N/A
+Zah Frazier,CB,Texas-San Antonio,College Stats,6-3,186,4.36,36.5,,126.0,7.0,4.26,,-9999,N/A
 Miles Frazier,G,LSU,College Stats,6-6,317,5.24,31.0,,108.0,,,Detroit Lions / 5th / 171st pick / 2025,FrazMi00,N/A
 Dillon Gabriel,QB,Oregon,College Stats,5-11,205,,,,,,,Cleveland Browns / 3rd / 94th pick / 2025,GabrDi00,4427238
 Jacolby George,WR,Miami,College Stats,5-11,172,,32.5,,120.0,6.77,,,GeorJa00,N/A
@@ -135,7 +135,7 @@ Tyrion Ingram-Dawkins,DT,Georgia,College Stats,6-5,276,4.86,36.0,,124.0,7.28,4.3
 Ulysses Bentley IV,RB,Mississippi,College Stats,5-10,201,4.62,32.5,,117.0,,,,BentUl00,4426689
 Jared Ivey,EDGE,Mississippi,College Stats,6-6,274,,,,,,,,IveyJa00,N/A
 Cam Jackson,DT,Florida,College Stats,6-6,328,5.17,24.5,,93.0,,,Carolina Panthers / 5th / 140th pick / 2025,JackCa01,4687513
-Daniel Jackson,WR,Minnesota,College Stats,5-11,193,,,,,6.78,4.07,,JackDa03,3895791
+Daniel Jackson,WR,Minnesota,College Stats,5-11,193,,,,,6.78,4.07,,JackDa03,N/A
 Donovan Jackson,G,Ohio St.,College Stats,6-4,315,,,,,,,Minnesota Vikings / 1st / 24th pick / 2025,JackDo03,4431553
 Ja'Quinden Jackson,RB,Arkansas,College Stats,6-2,229,,32.0,,119.0,7.19,4.36,,JackJa05,N/A
 Landon Jackson,EDGE,Arkansas,College Stats,6-6,264,4.68,40.5,,129.0,,,Buffalo Bills / 3rd / 72nd pick / 2025,JackLa03,N/A
@@ -164,7 +164,7 @@ Dante Trader Jr.,SAF,Maryland,College Stats,5-11,196,,31.0,12.0,117.0,7.09,4.32,
 Antwane Wells Jr.,WR,Mississippi,College Stats,6-1,201,4.58,34.0,,124.0,,,,WellAn00,N/A
 Kevin Winston Jr.,SAF,Penn St.,College Stats,6-2,215,,,,,,,Tennessee Titans / 3rd / 82nd pick / 2025,WinsKe02,4685617
 Quinshon Judkins,RB,Ohio St.,College Stats,6-0,221,4.48,38.5,,132.0,,,Cleveland Browns / 2nd / 36th pick / 2025,JudkQu00,4685702
-DeAndre Jules,DT,South Carolina,College Stats,6-4,316,,,,,,,,-9999,4427650
+DeAndre Jules,DT,South Carolina,College Stats,6-4,316,,,,,,,,-9999,N/A
 Luke Kandra,G,Cincinnati,College Stats,6-5,319,,,,,,,,KandLu00,N/A
 Josh Kelly,WR,Texas Tech,College Stats,6-1,186,4.7,33.0,,121.0,7.02,,,-9999,N/A
 Drew Kendall,C,Boston Col.,College Stats,6-4,308,5.05,,,,7.56,4.51,Philadelphia Eagles / 5th / 168th pick / 2025,KendDr00,N/A
@@ -188,7 +188,7 @@ Chase Lundt,OT,Connecticut,College Stats,6-8,304,,,,,,,Buffalo Bills / 6th / 206
 Phil Mafah,RB,Clemson,College Stats,6-1,234,,,,,,,Dallas Cowboys / 7th / 239th pick / 2025,MafaPh00,4431562
 Jake Majors,C,Texas,College Stats,6-3,306,,,,,,,,MajoJa00,N/A
 Woody Marks,RB,USC,College Stats,5-10,207,4.54,35.0,18.0,119.0,,4.24,,-9999,4429059
-Nickolas Martin,LB,Oklahoma St.,College Stats,6-0,221,4.53,38.0,26.0,123.0,,,San Francisco 49ers / 3rd / 75th pick / 2025,MartNi01,N/A
+Nickolas Martin,LB,Oklahoma St.,College Stats,6-0,221,4.53,38.0,26.0,123.0,,,San Francisco 49ers / 3rd / 75th pick / 2025,MartNi01,4573188
 Sean Martin,EDGE,West Virginia,College Stats,6-6,293,4.88,28.5,28.0,112.0,7.38,,,MartSe00,N/A
 Bam Martin-Scott,LB,South Carolina,College Stats,6-2,231,4.63,33.5,,122.0,7.26,4.53,,-9999,4880613
 Damien Martinez,RB,Miami,College Stats,6-0,217,4.51,35.0,,124.0,,,Seattle Seahawks / 7th / 223rd pick / 2025,MartDa02,N/A
@@ -268,7 +268,7 @@ Tyler Shough,QB,Louisville,College Stats,6-5,219,4.63,32.0,,117.0,,,New Orleans 
 Marques Sigle,SAF,Kansas St.,College Stats,5-11,199,4.37,38.0,,130.0,,,,-9999,4693337
 Elijah Simmons,DT,Tennessee,College Stats,6-1,334,5.37,32.0,,106.0,,,,-9999,4430478
 Josh Simmons,OT,Ohio St.,College Stats,6-5,317,,,,,,,Kansas City Chiefs / 1st / 32nd pick / 2025,SimmJo01,4569659
-Joshua Simon,TE,South Carolina,College Stats,6-4,239,4.65,38.0,,124.0,7.22,4.4,,-9999,4430482
+Joshua Simon,TE,South Carolina,College Stats,6-4,239,4.65,38.0,,124.0,7.22,4.4,,-9999,N/A
 Cody Simon,LB,Ohio St.,College Stats,6-2,229,,,,,,,Arizona Cardinals / 4th / 115th pick / 2025,SimoCo01,4429071
 Cam Skattebo,RB,Arizona St.,College Stats,5-10,219,,39.5,,123.0,,,New York Giants / 4th / 105th pick / 2025,SkatCa00,4696981
 Jackson Slater,G,Sacramento St.,,6-3,311,5.01,28.5,,108.0,,,Tennessee Titans / 5th / 167th pick / 2025,SlatJa01,N/A
@@ -287,7 +287,7 @@ Danny Stutsman,LB,Oklahoma,College Stats,6-3,233,4.52,34.0,,,,,New Orleans Saint
 Bradyn Swinson,EDGE,LSU,College Stats,6-4,255,,,,,7.13,4.33,New England Patriots / 5th / 146th pick / 2025,SwinBr01,4431424
 Junior Tafuna,DT,Utah,College Stats,6-4,308,5.03,28.5,24.0,,,,,-9999,N/A
 Marcus Tate,G,Clemson,College Stats,6-5,321,,,,,,,,TateMa00,N/A
-Branson Taylor,OT,Pittsburgh,College Stats,6-6,321,,,,,,,,-9999,14350
+Branson Taylor,OT,Pittsburgh,College Stats,6-6,321,,,,,,,,-9999,N/A
 Mason Taylor,TE,LSU,College Stats,6-5,251,,,,,,,New York Jets / 2nd / 42nd pick / 2025,TaylMa02,4808766
 Roc Taylor,WR,Memphis,College Stats,6-2,213,4.49,30.5,,122.0,,,,TaylRo02,N/A
 Isaac TeSlaa,WR,Arkansas,College Stats,6-4,214,4.43,39.5,17.0,129.0,6.85,4.05,Detroit Lions / 3rd / 70th pick / 2025,TeSlIs00,5123663
@@ -315,7 +315,7 @@ Theo Wease,WR,Missouri,College Stats,6-3,200,4.56,31.0,,117.0,,,,WeasTh00,442653
 Robert Webb,C,Jacksonville St.,College Stats,6-3,312,5.11,31.0,,107.0,,4.9,,WebbCl00,N/A
 CJ West,DT,Indiana,College Stats,6-1,316,4.95,33.0,,,,,San Francisco 49ers / 4th / 113th pick / 2025,WestCJ00,4686308
 LaJohntay Wester,WR,Colorado,College Stats,5-10,163,4.46,32.0,,121.0,,,Baltimore Ravens / 6th / 203rd pick / 2025,WestLa01,4690143
-John Williams,G,Cincinnati,College Stats,6-4,322,5.17,,,,7.93,4.72,,-9999,2253
+John Williams,G,Cincinnati,College Stats,6-4,322,5.17,,,,7.93,4.72,,-9999,4568024
 Cameron Williams,OT,Texas,College Stats,6-6,317,,,,,,,Philadelphia Eagles / 6th / 207th pick / 2025,WillCa04,N/A
 Kyle Williams,WR,Washington St.,College Stats,5-11,190,4.4,36.5,,119.0,,,New England Patriots / 3rd / 69th pick / 2025,WillKy03,4613202
 Mykel Williams,EDGE,Georgia,College Stats,6-5,260,,,,,,,San Francisco 49ers / 1st / 11th pick / 2025,WillMy00,4685623
