@@ -116,7 +116,7 @@ Raymond House,DE,Arkansas,,6-2,277,5.08,32.0,20.0,120.0,7.55,4.36,,-9999,N/A
 Keenan Howry,WR,Oregon,College Stats,5-10,178,4.56,31.5,,114.0,7.34,4.28,Minnesota Vikings / 7th / 221st pick / 2003,HowrKe00,4679
 Joey Huber,P,Colorado State,College Stats,6-6,246,4.96,,,,,,,-9999,N/A
 Aaron Hunt,DE,Texas Tech,College Stats,6-2,267,4.86,30.0,24.0,106.0,7.68,4.52,Denver Broncos / 6th / 194th pick / 2003,-9999,N/A
-Wayne Hunter,OT,Hawaii,,6-6,303,5.08,31.0,37.0,104.0,7.72,4.57,Seattle Seahawks / 3rd / 73rd pick / 2003,HuntWa20,4531
+Wayne Hunter,OT,Hawaii,,6-6,303,5.08,31.0,37.0,104.0,7.72,4.57,Seattle Seahawks / 3rd / 73rd pick / 2003,HuntWa20,N/A
 Alex Jackson,OG,Georgia,,6-4,356,5.4,,,,,,,-9999,N/A
 Alonzo Jackson,DE,Florida State,College Stats,6-4,266,4.86,37.0,14.0,114.0,7.69,4.5,Pittsburgh Steelers / 2nd / 59th pick / 2003,JackAl23,4517
 Taylor Jacobs,WR,Florida,College Stats,6-0,205,4.42,,,,,,Washington Redskins / 2nd / 44th pick / 2003,JacoTa00,4502
@@ -212,7 +212,7 @@ Will Ofenheusle,OT,Tennessee,,6-6,308,5.35,26.5,23.0,94.0,8.65,5.03,,-9999,N/A
 Kassim Osgood,WR,San Diego State,College Stats,6-5,208,4.68,31.0,,122.0,7.19,4.44,,OsgoKa00,5437
 Calvin Pace,DE,Wake Forest,,6-4,269,4.79,33.0,,115.0,,,Arizona Cardinals / 1st / 18th pick / 2003,PaceCa20,4476
 Derek Pagel,S,Iowa,College Stats,6-1,208,4.57,35.5,25.0,115.0,6.87,4.08,New York Jets / 5th / 140th pick / 2003,PageDe20,4598
-Glenn Pakulak,P,Kentucky,College Stats,6-2,226,4.96,,,,,,,PakuGl00,5155
+Glenn Pakulak,P,Kentucky,College Stats,6-2,226,4.96,,,,,,,PakuGl00,N/A
 Carson Palmer,QB,USC,College Stats,6-5,232,4.65,,,,,,Cincinnati Bengals / 1st / 1st pick / 2003,PalmCa00,4459
 Tony Pashos,OT,Illinois,,6-6,337,5.3,,38.0,,,,Baltimore Ravens / 5th / 173rd pick / 2003,PashTo20,4631
 Antwan Peek,OLB,Cincinnati,College Stats,6-3,246,4.65,37.0,21.0,125.0,7.07,4.35,Houston Texans / 3rd / 67th pick / 2003,PeekAn20,4525
@@ -234,7 +234,7 @@ Terrell Roberts,CB,Oregon State,College Stats,5-9,203,4.63,34.0,18.0,117.0,7.12,
 Dewayne Robertson,DT,Kentucky,,6-1,317,5.15,,,,,,New York Jets / 1st / 4th pick / 2003,RobeDe20,4462
 Terrence Robinson,ILB,Oklahoma State,College Stats,6-0,240,4.95,33.5,19.0,116.0,7.62,4.36,,RobiTe20,N/A
 Charles Rogers,WR,Michigan State,College Stats,6-2,202,4.4,,,,,,Detroit Lions / 1st / 2nd pick / 2003,RogeCh01,4460
-Brett Romberg,C,Miami (FL),College Stats,6-2,295,5.2,27.5,27.0,99.0,8.16,4.65,,RombBr20,5208
+Brett Romberg,C,Miami (FL),College Stats,6-2,295,5.2,27.5,27.0,99.0,8.16,4.65,,RombBr20,N/A
 Tony Romo,QB,East. Illinois,,6-2,230,5.01,30.0,,105.0,7.11,4.2,,RomoTo00,5209
 Dustin Rykert,OT,BYU,,6-6,327,5.42,26.5,21.0,92.0,8.2,4.87,Oakland Raiders / 6th / 204th pick / 2003,-9999,N/A
 Asante Samuel,CB,Central Florida,College Stats,5-11,185,4.49,35.5,9.0,120.0,6.95,4.14,New England Patriots / 4th / 120th pick / 2003,SamuAs20,4578
@@ -261,7 +261,7 @@ L.J. Smith,TE,Rutgers,College Stats,6-3,258,4.62,37.0,26.0,122.0,6.74,4.25,Phila
 Musa Smith,RB,Georgia,College Stats,6-1,232,4.45,35.5,,123.0,,,Baltimore Ravens / 3rd / 77th pick / 2003,SmitMu00,4535
 Onterrio Smith,RB,Oregon,College Stats,5-10,220,4.48,,19.0,,,,Minnesota Vikings / 4th / 105th pick / 2003,SmitOn00,4563
 Trent Smith,TE,Oklahoma,College Stats,6-5,243,4.79,35.5,16.0,118.0,7.23,4.37,Baltimore Ravens / 7th / 223rd pick / 2003,SmitTr01,4681
-Wade Smith,OT,Memphis,College Stats,6-4,296,5.14,32.5,24.0,114.0,7.62,4.75,Miami Dolphins / 3rd / 78th pick / 2003,SmitWa21,4536
+Wade Smith,OT,Memphis,College Stats,6-4,296,5.14,32.5,24.0,114.0,7.62,4.75,Miami Dolphins / 3rd / 78th pick / 2003,SmitWa21,N/A
 Ben Sobieski,OG,Iowa,,6-5,307,5.0,30.0,18.0,109.0,7.7,4.49,Buffalo Bills / 5th / 151st pick / 2003,SobiBe20,N/A
 Jamil Soriano,OG,Harvard,,6-4,317,5.48,27.5,,103.0,8.54,5.08,,-9999,N/A
 Jake Sprague,DT,Wisconsin,,6-2,274,4.97,,26.0,,,,,-9999,N/A

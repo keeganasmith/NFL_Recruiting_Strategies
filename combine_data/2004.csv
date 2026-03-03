@@ -44,7 +44,7 @@ Kirk Chambers,OT,Stanford,,6-7,313,5.44,27.0,22.0,101.0,7.56,4.4,Cleveland Brown
 Ahmad Childress,DT,Alabama,,6-6,351,5.28,22.0,,86.0,8.75,4.94,,-9999,N/A
 Brandon Chillar,OLB,UCLA,College Stats,6-3,253,4.71,33.0,23.0,115.0,,4.08,St. Louis Rams / 4th / 130th pick / 2004,ChilBr20,5655
 Quinn Christensen,OG,BYU,,6-6,312,5.1,,32.0,,,,,-9999,N/A
-Tyson Clabo,OG,Wake Forest,,6-7,315,5.51,30.0,24.0,100.0,8.09,4.88,,ClabTy20,5954
+Tyson Clabo,OG,Wake Forest,,6-7,315,5.51,30.0,24.0,100.0,8.09,4.88,,ClabTy20,N/A
 Adrien Clarke,OG,Ohio State,,6-5,329,5.52,26.0,,102.0,7.9,4.74,Philadelphia Eagles / 7th / 227th pick / 2004,ClarAd20,N/A
 Casey Clausen,QB,Tennessee,College Stats,6-3,223,4.95,,,,,,,-9999,N/A
 Jared Clauss,DT,Iowa,College Stats,6-5,294,4.95,,23.0,,,,Tennessee Titans / 7th / 230th pick / 2004,ClauJa20,5755
@@ -142,7 +142,7 @@ Greg Jones,RB,Florida State,College Stats,6-1,249,4.55,,,,,,Jacksonville Jaguars
 Julius Jones,RB,Notre Dame,College Stats,5-10,217,4.47,37.5,,121.0,6.97,4.12,Dallas Cowboys / 2nd / 43rd pick / 2004,JoneJu01,5568
 Kevin Jones,RB,Virginia Tech,College Stats,6-0,227,4.38,38.0,,120.0,,,Detroit Lions / 1st / 30th pick / 2004,JoneKe02,5555
 Sean Jones,S,Georgia,College Stats,6-1,218,4.63,36.5,,122.0,7.19,,Cleveland Browns / 2nd / 59th pick / 2004,JoneSe20,5584
-Randy Jordan,CB,Kansas State,College Stats,6-1,178,4.59,33.5,,115.0,7.34,4.21,,-9999,527
+Randy Jordan,CB,Kansas State,College Stats,6-1,178,4.59,33.5,,115.0,7.34,4.21,,-9999,N/A
 Carlos Joseph,OT,Miami (FL),,6-6,345,5.33,,29.0,,,,San Diego Chargers / 7th / 254th pick / 2004,-9999,N/A
 Nate Kaeding,K,Iowa,College Stats,6-0,187,4.95,,,,,,San Diego Chargers / 3rd / 65th pick / 2004,kaedinat01,5590
 Mike Karney,FB,Arizona State,College Stats,5-11,254,5.02,30.0,25.0,103.0,,,New Orleans Saints / 5th / 156th pick / 2004,KarnMi00,5681
@@ -231,7 +231,7 @@ Fred Russell,RB,Iowa,College Stats,5-7,195,4.5,34.0,21.0,121.0,7.09,4.3,,-9999,N
 Rod Rutherford,QB,Pittsburgh,College Stats,6-2,240,4.79,30.5,,110.0,7.66,4.41,,-9999,N/A
 Sean Ryan,TE,Boston Col.,College Stats,6-4,268,4.97,32.5,22.0,115.0,,,Dallas Cowboys / 5th / 144th pick / 2004,RyanSe00,5669
 P.K. Sam,WR,Florida State,College Stats,6-3,210,4.54,34.5,,,7.04,,New England Patriots / 5th / 164th pick / 2004,SamxP.20,N/A
-Stanford Samuels,CB,Florida State,College Stats,5-10,193,4.58,,,,,,,SamuSt01,4240024
+Stanford Samuels,CB,Florida State,College Stats,5-10,193,4.58,,,,,,,SamuSt01,N/A
 B.J. Sander,P,Ohio State,College Stats,6-4,219,4.84,,,,,,Green Bay Packers / 3rd / 87th pick / 2004,SandB.20,5612
 Bob Sanders,S,Iowa,College Stats,5-8,204,4.35,41.5,15.0,128.0,6.7,3.91,Indianapolis Colts / 2nd / 44th pick / 2004,SandBo99,5569
 Matt Schaub,QB,Virginia,College Stats,6-6,243,5.04,30.5,,110.0,7.65,4.62,Atlanta Falcons / 3rd / 90th pick / 2004,SchaMa00,5615

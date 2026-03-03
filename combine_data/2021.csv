@@ -209,12 +209,12 @@ Johnathon Johnson,WR,Missouri,College Stats,,,,,,,,,,JohnJo11,N/A
 Mustafa Johnson,DE,Colorado,College Stats,6-0,280.0,,29.0,27.0,103.0,7.18,4.51,,JohnMu00,N/A
 Patrick Johnson,DE,Tulane,College Stats,6-6,240.0,4.59,35.0,16.0,119.0,6.97,4.41,Philadelphia Eagles / 7th / 234th pick / 2021,JohnPa02,4243916
 Zeandae Johnson,DE,California,College Stats,6-3,270.0,4.89,27.5,22.0,108.0,,,,JohnZe00,N/A
-Jamal Jones,RB,Arkansas St.,College Stats,5-6,198.0,4.67,28.0,23.0,112.0,7.39,4.65,,-9999,9352
+Jamal Jones,RB,Arkansas St.,College Stats,5-6,198.0,4.67,28.0,23.0,112.0,7.39,4.65,,-9999,N/A
 Ernest Jones,LB,South Carolina,College Stats,6-1,230.0,4.65,38.5,,,,,Los Angeles Rams / 3rd / 103rd pick / 2021,JoneEr01,4362851
 Mac Jones,QB,Alabama,College Stats,6-2,217.0,4.72,32.0,,116.0,7.04,4.39,New England Patriots / 1st / 15th pick / 2021,JoneMa05,4241464
 Naquan Jones,DT,Michigan St.,College Stats,6-3,313.0,5.42,25.0,20.0,100.0,,4.9,,JoneNa01,4046716
 Patrick Jones,DL,Pittsburgh,College Stats,6-4,261.0,4.85,31.5,22.0,107.0,,,Minnesota Vikings / 3rd / 90th pick / 2021,JonePa00,4036063
-Robert Jones,OL,Middle Tenn. St.,College Stats,6-4,319.0,5.36,,,,,,,JoneRo02,359
+Robert Jones,OL,Middle Tenn. St.,College Stats,6-4,319.0,5.36,,,,,,,JoneRo02,N/A
 Brevin Jordan,TE,Miami (FL),College Stats,6-2,247.0,4.64,31.0,17.0,116.0,,,Houston Texans / 5th / 147th pick / 2021,JordBr00,4362504
 Kelvin Joseph,DB,Kentucky,College Stats,5-11,197.0,4.34,35.0,,128.0,7.21,4.22,Dallas Cowboys / 2nd / 44th pick / 2021,JoseKe02,4362629
 Terrace Marshall Jr.,WR,LSU,College Stats,6-2,205.0,4.4,39.0,19.0,125.0,,,,-9999,4362630
@@ -279,7 +279,7 @@ Trevon Moehrig,S,TCU,College Stats,,,4.5,33.0,,,,4.19,Las Vegas Raiders / 2nd / 
 Elijah Molden,DB,Washington,College Stats,5-9,192.0,4.62,36.5,13.0,125.0,,,Tennessee Titans / 3rd / 100th pick / 2021,MoldEl00,4243328
 Briley Moore,TE,Kansas St.,College Stats,6-4,240.0,4.66,37.5,26.0,123.0,7.24,4.37,,-9999,N/A
 Jaylon Moore,OT,West. Michigan,College Stats,6-4,311.0,5.25,30.0,27.0,106.0,7.77,4.67,,-9999,N/A
-David Moore,QB,Central Michigan,College Stats,6-0,200.0,4.86,29.5,,112.0,7.62,4.75,,-9999,4212909
+David Moore,QB,Central Michigan,College Stats,6-0,200.0,4.86,29.5,,112.0,7.62,4.75,,-9999,N/A
 Elijah Moore,WR,Mississippi,College Stats,,,4.35,36.0,17.0,121.0,6.63,4.07,New York Jets / 2nd / 34th pick / 2021,MoorEl00,4372414
 Rondale Moore,WR,Purdue,College Stats,5-7,180.0,4.28,42.5,,,6.65,4.06,Arizona Cardinals / 2nd / 49th pick / 2021,MoorRo02,4372485
 Quintin Morris,TE,Bowling Green,College Stats,6-2,243.0,4.6,34.0,22.0,119.0,7.12,4.55,,-9999,4244049
@@ -289,7 +289,7 @@ Israel Mukuamu,DB,South Carolina,College Stats,,,,36.0,34.0,,,,Dallas Cowboys / 
 Josh Myers,C,Ohio St.,College Stats,6-5,310.0,,,29.0,,,,Green Bay Packers / 2nd / 62nd pick / 2021,MyerJo00,4242000
 Jonathan Nance,WR,Missouri,College Stats,,,,,,,,,,-9999,N/A
 Hamsah Nasirildeen,DB,Florida St.,College Stats,6-3,215.0,,32.0,17.0,,7.05,4.31,New York Jets / 6th / 186th pick / 2021,NasiHa00,4240030
-Lorenzo Neal,DT,Purdue,College Stats,,318.0,5.59,,27.0,,,,,NealLo02,490
+Lorenzo Neal,DT,Purdue,College Stats,,318.0,5.59,,27.0,,,,,NealLo02,N/A
 Ryan Neuzil,OL,Appalachian St.,College Stats,6-2,301.0,5.09,29.0,30.0,102.0,7.41,4.53,,-9999,4036444
 Royce Newman,OL,Mississippi,College Stats,6-5,310.0,5.14,28.0,23.0,104.0,7.91,4.75,,-9999,4047660
 Jamie Newman,QB,Georgia,College Stats,6-2,234.0,,,,,,,,NewmJa00,N/A
@@ -393,7 +393,7 @@ Corey Straughter,CB,La-Monroe,College Stats,5-10,184.0,4.62,35.0,11.0,117.0,7.37
 Elijah Sullivan,LB,Kansas St.,College Stats,6-0,214.0,4.69,,13.0,115.0,7.12,4.31,,-9999,N/A
 Chazz Surratt,LB,North Carolina,College Stats,6-2,229.0,4.58,31.0,25.0,,7.02,4.16,Minnesota Vikings / 3rd / 78th pick / 2021,SurrCh00,4037521
 Sage Surratt,WR,Wake Forest,College Stats,6-2,209.0,4.66,,18.0,,,4.25,,SurrSa00,N/A
-Patrick Surtain,DB,Alabama,College Stats,6-2,208.0,4.42,39.0,18.0,131.0,,,Denver Broncos / 1st / 9th pick / 2021,SurtPa01,1474
+Patrick Surtain,DB,Alabama,College Stats,6-2,208.0,4.42,39.0,18.0,131.0,,,Denver Broncos / 1st / 9th pick / 2021,SurtPa01,N/A
 Jovan Swann,DL,Indiana,College Stats,6-2,291.0,4.9,30.5,34.0,109.0,7.74,4.75,,-9999,N/A
 Tim Tanner-Blair,OL,Bowling Green,College Stats,6-3,288.0,5.59,21.0,32.0,93.0,8.06,4.95,,-9999,N/A
 Keith Taylor,DB,Washington,College Stats,6-2,187.0,4.54,33.5,12.0,127.0,6.85,4.26,Carolina Panthers / 5th / 166th pick / 2021,TaylKe03,4243332

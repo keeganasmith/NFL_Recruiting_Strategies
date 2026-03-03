@@ -41,7 +41,7 @@ Colt Brennan,QB,Hawaii,College Stats,6-2,207,4.79,,,,,,Washington Redskins / 6th
 Alex Brink,QB,Washington State,College Stats,6-2,211,4.96,28.0,,112.0,7.22,4.19,Houston Texans / 7th / 223rd pick / 2008,BrinAl00,N/A
 Brian Brohm,QB,Louisville,College Stats,6-3,230,4.81,30.0,,115.0,7.13,4.55,Green Bay Packers / 2nd / 56th pick / 2008,BrohBr00,11290
 Durant Brooks,P,Georgia Tech,College Stats,6-0,204,5.2,,,,,,Washington Redskins / 6th / 168th pick / 2008,BrooDu20,11402
-Travis Brown,WR,New Mexico,College Stats,6-2,202,4.49,30.0,13.0,120.0,7.18,4.38,,-9999,2519
+Travis Brown,WR,New Mexico,College Stats,6-2,202,4.49,30.0,13.0,120.0,7.18,4.38,,-9999,N/A
 Duane Brown,OT,Virginia Tech,College Stats,6-4,315,5.07,27.5,24.0,105.0,7.58,4.52,Houston Texans / 1st / 26th pick / 2008,BrowDu20,11260
 Thomas Brown,RB,Georgia,College Stats,5-8,204,4.51,36.0,25.0,128.0,7.17,,Atlanta Falcons / 6th / 172nd pick / 2008,BrowTh01,N/A
 Titus Brown,OLB,Mississippi State,College Stats,6-2,246,4.82,,18.0,,,,,BrowTi20,11685
@@ -68,7 +68,7 @@ Joe Clermond,DE,Pittsburgh,College Stats,6-2,249,5.15,25.5,20.0,107.0,7.61,4.73,
 Anthony Collins,OT,Kansas,,6-5,317,5.54,22.5,26.0,97.0,7.71,4.87,Cincinnati Bengals / 4th / 112th pick / 2008,CollAn21,11346
 Dan Connor,ILB,Penn State,College Stats,6-2,231,4.67,,,,,,Carolina Panthers / 3rd / 74th pick / 2008,ConnDa99,11308
 Brad Cottam,TE,Tennessee,College Stats,6-7,270,4.63,33.0,24.0,,,,Kansas City Chiefs / 3rd / 76th pick / 2008,CottBr00,11310
-Oniel Cousins,OT,Texas-El Paso,College Stats,6-4,308,5.11,24.5,23.0,107.0,7.9,4.8,Baltimore Ravens / 3rd / 99th pick / 2008,CousOn00,11333
+Oniel Cousins,OT,Texas-El Paso,College Stats,6-4,308,5.11,24.5,23.0,107.0,7.9,4.8,Baltimore Ravens / 3rd / 99th pick / 2008,CousOn00,N/A
 Shawn Crable,OLB,Michigan,College Stats,6-5,245,4.61,28.0,29.0,111.0,7.29,4.55,New England Patriots / 3rd / 78th pick / 2008,CrabSh99,11312
 Angelo Craig,OLB,Cincinnati,College Stats,6-4,252,5.07,30.5,21.0,118.0,,,Cincinnati Bengals / 7th / 244th pick / 2008,-9999,N/A
 Andrew Crummey,OG,Maryland,,6-5,299,5.32,,,,,,,CrumAn00,11623
@@ -278,7 +278,7 @@ Jerome Simpson,WR,Coastal Carolina,,6-2,199,4.42,37.5,,136.0,7.08,4.52,Cincinnat
 Pat Sims,DT,Auburn,College Stats,6-2,310,5.06,27.0,20.0,,,,Cincinnati Bengals / 3rd / 77th pick / 2008,SimsPa99,11311
 Steve Slaton,RB,West Virginia,College Stats,5-9,197,4.45,33.5,19.0,118.0,,,Houston Texans / 3rd / 89th pick / 2008,SlatSt00,11323
 Dorian Smith,DE,Oregon State,College Stats,6-1,264,5.06,27.5,24.0,105.0,7.52,4.73,,-9999,N/A
-Paul Smith,QB,Tulsa,College Stats,6-1,208,4.95,26.5,,111.0,7.02,4.29,,-9999,2263
+Paul Smith,QB,Tulsa,College Stats,6-1,208,4.95,26.5,,111.0,7.02,4.29,,-9999,N/A
 Bryan Smith,OLB,McNeese State,,6-2,231,4.74,32.5,17.0,120.0,7.22,4.4,Philadelphia Eagles / 3rd / 80th pick / 2008,SmitBr96,11314
 Kevin Smith,RB,Central Florida,College Stats,6-1,217,4.53,32.0,,120.0,6.74,4.49,Detroit Lions / 3rd / 64th pick / 2008,SmitKe02,11298
 Marcus Smith,WR,New Mexico,College Stats,6-1,221,4.51,26.5,20.0,111.0,7.1,4.42,Baltimore Ravens / 4th / 106th pick / 2008,SmitMa01,11340
@@ -309,7 +309,7 @@ DeJuan Tribble,CB,Boston Col.,College Stats,5-9,189,4.59,32.0,13.0,114.0,,,San D
 Justin Tryon,CB,Arizona State,College Stats,5-9,190,4.42,32.5,21.0,119.0,7.41,4.28,Washington Redskins / 4th / 124th pick / 2008,TryoJu99,11361
 Mario Urrutia,WR,Louisville,College Stats,6-5,232,4.59,30.0,16.0,115.0,7.07,4.44,Cincinnati Bengals / 7th / 246th pick / 2008,UrruMa00,N/A
 Marcus Walker,CB,Oklahoma,College Stats,5-10,191,4.46,35.5,,122.0,6.8,4.07,,-9999,3045377
-Cody Wallace,C,Texas A&M,College Stats,6-4,296,5.3,30.5,26.0,113.0,7.45,4.55,San Francisco 49ers / 4th / 107th pick / 2008,WallCo20,11341
+Cody Wallace,C,Texas A&M,College Stats,6-4,296,5.3,30.5,26.0,113.0,7.45,4.55,San Francisco 49ers / 4th / 107th pick / 2008,WallCo20,N/A
 Nehemiah Warrick,S,Michigan State,College Stats,6-1,211,4.51,29.5,16.0,119.0,6.98,4.09,,-9999,N/A
 Chauncey Washington,RB,USC,College Stats,5-11,211,4.45,,,,,,Jacksonville Jaguars / 7th / 213th pick / 2008,WashCh00,11447
 Nick Watkins,OLB,Clemson,College Stats,6-0,223,4.77,25.0,17.0,108.0,7.97,4.72,,-9999,N/A

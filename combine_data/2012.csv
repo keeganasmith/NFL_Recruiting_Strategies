@@ -10,7 +10,7 @@ Jeff Allen,OT,Illinois,College Stats,6-4,307,5.17,27.5,26.0,102.0,8.01,4.9,Kansa
 Justin Anderson,OT,Georgia,,6-4,335,5.24,27.0,32.0,101.0,8.04,4.99,Indianapolis Colts / 7th / 208th pick / 2012,AndeJu00,N/A
 Bryan Anger,P,California,College Stats,6-4,208,4.86,,,,,,Jacksonville Jaguars / 3rd / 70th pick / 2012,AngeBr00,14950
 Mark Asper,OG,Oregon,College Stats,6-6,319,5.32,,23.0,,,,Buffalo Bills / 6th / 178th pick / 2012,AspeMa00,N/A
-Ryan Baker,OLB,LSU,College Stats,5-11,232,4.8,34.0,30.0,113.0,7.21,4.35,,-9999,12908
+Ryan Baker,OLB,LSU,College Stats,5-11,232,4.8,34.0,30.0,113.0,7.21,4.35,,-9999,N/A
 Edwin Baker,RB,Michigan State,College Stats,5-8,204,4.44,35.0,20.0,111.0,7.27,4.31,San Diego Chargers / 7th / 250th pick / 2012,BakeEd01,14892
 Mike Ball,RB,Nevada,College Stats,5-8,206,4.54,36.0,21.0,112.0,7.1,4.23,,-9999,N/A
 Vick Ballard,RB,Mississippi State,College Stats,5-10,219,4.59,33.0,23.0,115.0,7.03,4.19,Indianapolis Colts / 5th / 170th pick / 2012,BallVi00,14898
@@ -36,7 +36,7 @@ LaVon Brazill,WR,Ohio,College Stats,5-11,192,4.43,32.5,11.0,,,,Indianapolis Colt
 Mike Brewster,C,Ohio State,,6-4,312,5.22,25.0,29.0,96.0,7.73,4.6,,BrewMi00,N/A
 Michael Brockers,DT,LSU,College Stats,6-5,322,5.31,26.5,,105.0,7.46,4.81,St. Louis Rams / 1st / 14th pick / 2012,BrocMi00,14944
 Ron Brooks,CB,LSU,College Stats,5-10,190,4.37,38.0,12.0,120.0,,,Buffalo Bills / 4th / 124th pick / 2012,BrooRo01,15008
-Charles Brown,CB,North Carolina,College Stats,5-9,202,4.53,35.5,18.0,114.0,6.94,4.06,,-9999,13263
+Charles Brown,CB,North Carolina,College Stats,5-9,202,4.53,35.5,18.0,114.0,6.94,4.06,,-9999,N/A
 James Brown,OG,Troy,College Stats,6-3,306,5.19,25.5,24.0,102.0,7.7,4.78,,BrowJa02,N/A
 Zach Brown,OLB,North Carolina,College Stats,6-1,244,4.44,33.5,,116.0,,,Tennessee Titans / 2nd / 52nd pick / 2012,BrowZa00,14973
 Ryan Broyles,WR,Oklahoma,College Stats,5-10,192,4.57,,21.0,,,,Detroit Lions / 2nd / 54th pick / 2012,BroyRy00,14919
@@ -142,7 +142,7 @@ Jerrell Jackson,WR,Missouri,College Stats,6-0,196,4.5,41.0,22.0,127.0,6.82,4.11,
 Malik Jackson,DE,Tennessee,College Stats,6-5,284,4.85,28.0,25.0,105.0,7.38,4.41,Denver Broncos / 5th / 137th pick / 2012,JackMa02,15047
 LaMichael James,RB,Oregon,College Stats,5-8,194,4.35,35.0,15.0,123.0,6.88,4.12,San Francisco 49ers / 2nd / 61st pick / 2012,JameLa00,N/A
 Jamaar Jarrett,DE,Arizona State,College Stats,6-5,265,4.96,30.0,21.0,114.0,,4.34,,-9999,N/A
-Jordan Jefferson,QB,LSU,College Stats,6-4,223,4.58,36.5,14.0,116.0,6.81,4.06,,-9999,4569448
+Jordan Jefferson,QB,LSU,College Stats,6-4,223,4.58,36.5,14.0,116.0,6.81,4.06,,-9999,N/A
 Alshon Jeffery,WR,South Carolina,College Stats,6-3,216,4.48,,,,,,Chicago Bears / 2nd / 45th pick / 2012,JeffAl00,14912
 A.J. Jenkins,WR,Illinois,College Stats,6-0,190,4.37,38.5,12.0,124.0,,,San Francisco 49ers / 1st / 30th pick / 2012,JenkA.00,14947
 Janoris Jenkins,CB,Florida,College Stats,5-10,193,4.41,33.5,,121.0,6.95,4.13,St. Louis Rams / 2nd / 39th pick / 2012,JenkJa03,14974
@@ -176,7 +176,7 @@ Travis Lewis,OLB,Oklahoma,College Stats,6-1,246,4.83,36.0,22.0,122.0,,,Detroit L
 Ryan Lindley,QB,San Diego State,College Stats,6-4,229,4.86,29.5,,108.0,7.52,4.45,Arizona Cardinals / 6th / 185th pick / 2012,LindRy00,14883
 Brandon Lindsey,OLB,Pittsburgh,College Stats,6-2,254,4.85,33.0,23.0,117.0,7.36,4.28,,-9999,N/A
 Shawn Loiseau,ILB,Merrimack,,6-0,244,4.74,32.5,19.0,109.0,,,,LoisSh00,N/A
-Joe Looney,OG,Wake Forest,College Stats,6-3,309,5.02,,26.0,,,,San Francisco 49ers / 4th / 117th pick / 2012,LoonJo01,15108
+Joe Looney,OG,Wake Forest,College Stats,6-3,309,5.02,,26.0,,,,San Francisco 49ers / 4th / 117th pick / 2012,LoonJo01,N/A
 Andrew Luck,QB,Stanford,College Stats,6-4,234,4.59,36.0,,124.0,6.8,4.28,Indianapolis Colts / 1st / 1st pick / 2012,LuckAn00,14874
 D'Anton Lynn,CB,Penn State,College Stats,6-0,206,4.71,31.5,17.0,111.0,,,,-9999,N/A
 Terrell Manning,OLB,North Carolina State,College Stats,6-2,237,4.71,32.5,22.0,114.0,7.18,4.43,Green Bay Packers / 5th / 163rd pick / 2012,MannTe00,15110
@@ -203,7 +203,7 @@ Davin Meggett,RB,Maryland,College Stats,5-8,211,4.5,35.0,23.0,118.0,7.14,4.32,,M
 DeQuan Menzie,CB,Alabama,College Stats,5-11,202,4.65,33.0,,116.0,,,Kansas City Chiefs / 5th / 146th pick / 2012,MenzDe00,N/A
 Whitney Mercilus,DE,Illinois,College Stats,6-4,261,4.68,32.0,27.0,118.0,7.17,4.53,Houston Texans / 1st / 26th pick / 2012,MercWh00,14936
 Lamar Miller,RB,Miami (FL),College Stats,5-11,212,4.34,33.0,,,,,Miami Dolphins / 4th / 97th pick / 2012,MillLa01,14886
-Ryan Miller,OG,Colorado,College Stats,6-7,321,5.16,28.0,32.0,100.0,7.72,4.78,Cleveland Browns / 5th / 160th pick / 2012,MillRy00,4369466
+Ryan Miller,OG,Colorado,College Stats,6-7,321,5.16,28.0,32.0,100.0,7.72,4.78,Cleveland Browns / 5th / 160th pick / 2012,MillRy00,N/A
 Chase Minnifield,CB,Virginia,College Stats,5-10,183,4.63,,7.0,,,,,MinnCh00,16446
 Charles Mitchell,S,Mississippi State,College Stats,5-11,202,4.56,37.0,19.0,127.0,6.93,4.22,Atlanta Falcons / 6th / 192nd pick / 2012,MitcCh01,15060
 David Molk,C,Michigan,College Stats,6-1,298,5.18,,41.0,,,,San Diego Chargers / 7th / 226th pick / 2012,MolkDa00,N/A

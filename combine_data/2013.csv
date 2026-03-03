@@ -4,7 +4,7 @@ Johnny Adams,CB,Michigan State,College Stats,5-10,185,4.48,,16.0,,,,,AdamJo02,N/
 Robert Alford,CB,SE Louisiana,,5-10,188,4.39,40.0,17.0,132.0,6.89,4.23,Atlanta Falcons / 2nd / 60th pick / 2013,AlfoRo00,15817
 Keenan Allen,WR,California,College Stats,6-2,206,4.58,,,,,,San Diego Chargers / 3rd / 76th pick / 2013,AlleKe00,15818
 Ryan Allen,P,Louisiana Tech,College Stats,6-1,229,4.98,,,,,,,AlleRy01,16382
-Zach Allen,OG,North Carolina State,,6-2,332,5.43,,32.0,,,,,AlleZa00,3915282
+Zach Allen,OG,North Carolina State,,6-2,332,5.43,,32.0,,,,,AlleZa00,N/A
 Kiko Alonso,ILB,Oregon,College Stats,6-3,238,4.74,,,,,,Buffalo Bills / 2nd / 46th pick / 2013,AlonKi00,15819
 David Amerson,CB,North Carolina State,College Stats,6-1,205,4.44,35.5,15.0,127.0,,,Washington Redskins / 2nd / 51st pick / 2013,AmerDa00,15820
 C.J. Anderson,RB,California,College Stats,5-8,224,4.6,32.0,17.0,119.0,7.15,4.12,,AndeC.00,16040
@@ -52,7 +52,7 @@ Braxston Cave,C,Notre Dame,,6-3,303,5.33,25.5,,98.0,7.81,4.71,,CaveBr00,N/A
 Emmett Cleary,OT,Boston Col.,,6-7,316,5.21,28.5,24.0,108.0,7.81,4.7,,CleaEm01,N/A
 Jamie Collins,OLB,Southern Miss,College Stats,6-3,250,4.64,41.5,19.0,139.0,7.1,4.32,New England Patriots / 2nd / 52nd pick / 2013,CollJa00,15830
 Sanders Commings,CB,Georgia,College Stats,6-0,216,4.41,34.5,,117.0,7.1,4.3,Kansas City Chiefs / 5th / 134th pick / 2013,CommSa00,15913
-Jonathan Cooper,OG,North Carolina,College Stats,6-2,311,5.07,27.0,35.0,108.0,7.78,4.84,Arizona Cardinals / 1st / 7th pick / 2013,CoopJo01,15787
+Jonathan Cooper,OG,North Carolina,College Stats,6-2,311,5.07,27.0,35.0,108.0,7.78,4.84,Arizona Cardinals / 1st / 7th pick / 2013,CoopJo01,N/A
 Bobby Cowan,P,Idaho,College Stats,6-4,219,5.13,,,,,,,-9999,N/A
 Justice Cunningham,TE,South Carolina,College Stats,6-3,258,4.94,31.5,,116.0,7.12,4.45,Indianapolis Colts / 7th / 254th pick / 2013,CunnJu00,15991
 Jonathan Cyprien,S,Florida International,College Stats,6-0,217,4.64,38.5,,,,,Jacksonville Jaguars / 2nd / 33rd pick / 2013,CyprJo00,15831
@@ -66,7 +66,7 @@ Aaron Dobson,WR,Marshall,College Stats,6-3,210,4.37,,,,,,New England Patriots / 
 Alex Dunnachie,P,Hawaii,College Stats,6-3,217,4.97,,,,,,,-9999,N/A
 Zac Dysert,QB,Miami (OH),College Stats,6-3,231,4.81,,,,,,Denver Broncos / 7th / 234th pick / 2013,DyseZa00,N/A
 Lavar Edwards,DE,LSU,College Stats,6-4,277,4.8,33.0,,119.0,7.03,4.51,Tennessee Titans / 5th / 142nd pick / 2013,EdwaLa00,15909
-Mike Edwards,CB,Hawaii,College Stats,5-9,189,4.56,36.0,14.0,124.0,6.94,4.18,Tampa Bay Buccaneers / 3rd / 99th pick / 2019,EdwaMi01,3155647
+Mike Edwards,CB,Hawaii,College Stats,5-9,189,4.56,36.0,14.0,124.0,6.94,4.18,Tampa Bay Buccaneers / 3rd / 99th pick / 2019,EdwaMi01,N/A
 Tyler Eifert,TE,Notre Dame,College Stats,6-5,250,4.68,35.5,22.0,119.0,6.92,4.32,Cincinnati Bengals / 1st / 21st pick / 2013,EifeTy00,15788
 Matt Elam,S,Florida,College Stats,5-10,208,4.43,35.5,17.0,118.0,,,Baltimore Ravens / 1st / 32nd pick / 2013,ElamMa00,15789
 Andre Ellington,RB,Clemson,College Stats,5-9,199,4.61,34.0,,122.0,,,Arizona Cardinals / 6th / 187th pick / 2013,ElliAn00,15893
@@ -177,7 +177,7 @@ Philip Lutzenkirchen,TE,Auburn,College Stats,6-3,258,4.94,30.5,21.0,112.0,7.15,4
 Joe Madsen,C,West Virginia,,6-3,310,5.2,25.0,25.0,98.0,7.6,4.83,,-9999,N/A
 Lamar Mady,OG,Youngstown State,,6-2,317,5.48,23.0,35.0,95.0,8.07,4.82,,MadyLa00,16250
 Brandon Magee,OLB,Arizona State,College Stats,5-11,223,4.74,,,114.0,,,,MageBr00,16478
-Brett Maher,K,Nebraska,College Stats,6-0,186,4.89,,,,,,,MaheBr01,16486
+Brett Maher,K,Nebraska,College Stats,6-0,186,4.89,,,,,,,MaheBr01,N/A
 E.J. Manuel,QB,Florida State,College Stats,6-5,237,4.65,34.0,,118.0,7.08,4.21,Buffalo Bills / 1st / 16th pick / 2013,ManuEJ00,15803
 Stansly Maponga,DE,TCU,College Stats,6-2,256,4.78,,30.0,,,,Atlanta Falcons / 5th / 153rd pick / 2013,MapoSt00,15999
 Luke Marquardt,OT,Azusa Pacific,,6-8,315,5.34,,31.0,,,,,MarqLu00,N/A
@@ -222,7 +222,7 @@ Ty Powell,OLB,Harding,,6-2,249,4.64,37.0,28.0,122.0,6.98,4.4,Seattle Seahawks / 
 Jordan Poyer,CB,Oregon State,College Stats,6-0,191,4.54,30.5,8.0,118.0,6.87,4.18,Philadelphia Eagles / 7th / 218th pick / 2013,PoyeJo00,15979
 Lonnie Pryor,FB,Florida State,College Stats,5-11,227,4.7,30.0,17.0,114.0,7.28,4.55,,PryoLo00,N/A
 Justin Pugh,OT,Syracuse,College Stats,6-4,307,5.12,28.5,,103.0,7.45,4.63,New York Giants / 1st / 19th pick / 2013,PughJu00,15808
-David Quessenberry,OT,San Jose State,,6-5,302,5.08,29.5,25.0,112.0,7.49,4.45,Houston Texans / 6th / 176th pick / 2013,QuesDa00,15946
+David Quessenberry,OT,San Jose State,,6-5,302,5.08,29.5,25.0,112.0,7.49,4.45,Houston Texans / 6th / 176th pick / 2013,QuesDa00,N/A
 Bacarri Rambo,S,Georgia,College Stats,6-0,211,4.56,,17.0,,,,Washington Redskins / 6th / 191st pick / 2013,RambBa00,15912
 Joseph Randle,RB,Oklahoma State,College Stats,6-0,204,4.63,35.0,,123.0,,,Dallas Cowboys / 5th / 151st pick / 2013,RandJo01,16013
 Kevin Reddick,ILB,North Carolina,College Stats,6-1,243,4.72,,23.0,113.0,,,,ReddKe00,16157
@@ -263,7 +263,7 @@ Zac Stacy,RB,Vanderbilt,College Stats,5-8,216,4.55,33.0,27.0,122.0,6.7,4.17,St. 
 Daimion Stafford,S,Nebraska,College Stats,6-0,221,4.69,30.5,21.0,111.0,7.06,,Tennessee Titans / 7th / 248th pick / 2013,StafDa00,16030
 Matt Stankiewitch,C,Penn State,,6-3,302,5.43,24.0,27.0,92.0,7.9,4.96,,-9999,N/A
 Jawanza Starling,S,USC,College Stats,6-1,202,4.64,36.0,17.0,122.0,6.68,4.34,,StarJa01,16498
-Jonathan Stewart,ILB,Texas A&M,College Stats,6-4,242,4.68,31.0,19.0,118.0,7.44,4.53,,StewJo01,11247
+Jonathan Stewart,ILB,Texas A&M,College Stats,6-4,242,4.68,31.0,19.0,118.0,7.44,4.53,,StewJo01,N/A
 Walter Stewart,DE,Cincinnati,College Stats,6-4,246,4.69,,,,,,,StewWa01,N/A
 Kenny Stills,WR,Oklahoma,College Stats,6-0,194,4.38,33.5,16.0,124.0,,4.35,New Orleans Saints / 5th / 144th pick / 2013,StilKe00,16016
 Jake Stoneburner,TE,Ohio State,College Stats,6-3,252,4.65,34.5,18.0,116.0,7.12,4.27,,StonJa01,16493

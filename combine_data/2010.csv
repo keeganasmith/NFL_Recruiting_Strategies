@@ -74,7 +74,7 @@ Perrish Cox,CB,Oklahoma State,College Stats,5-11,195,4.58,32.5,12.0,113.0,,,Denv
 Jermaine Cunningham,DE,Florida,College Stats,6-3,266,4.89,,,,,,New England Patriots / 2nd / 53rd pick / 2010,CunnJe99,13269
 Rennie Curran,OLB,Georgia,College Stats,5-11,235,4.75,34.5,25.0,,,,Tennessee Titans / 3rd / 97th pick / 2010,CurrRe99,13270
 Anthony Davis,OT,Rutgers,College Stats,6-5,323,5.36,33.0,21.0,99.0,8.17,4.97,San Francisco 49ers / 1st / 11th pick / 2010,DaviAn27,13253
-Dexter Davis,OLB,Arizona State,College Stats,6-1,244,4.62,35.0,25.0,109.0,7.08,4.3,Seattle Seahawks / 7th / 236th pick / 2010,DaviDe99,6909
+Dexter Davis,OLB,Arizona State,College Stats,6-1,244,4.62,35.0,25.0,109.0,7.08,4.3,Seattle Seahawks / 7th / 236th pick / 2010,DaviDe99,N/A
 Hall Davis,DE,Louisiana-Lafayette,College Stats,6-4,271,4.84,,28.0,,,,St. Louis Rams / 5th / 149th pick / 2010,DaviHa21,N/A
 Brandon Deaderick,DT,Alabama,College Stats,6-4,314,5.08,,,,,,New England Patriots / 7th / 247th pick / 2010,DeadBr99,13351
 Eric Decker,WR,Minnesota,College Stats,6-3,217,4.54,,15.0,,,,Denver Broncos / 3rd / 87th pick / 2010,DeckEr00,13271
@@ -247,7 +247,7 @@ Emmanuel Sanders,WR,SMU,College Stats,5-11,186,4.4,39.5,12.0,126.0,6.64,4.1,Pitt
 Ricky Sapp,OLB,Clemson,College Stats,6-4,252,4.65,34.0,23.0,114.0,7.29,4.41,Philadelphia Eagles / 5th / 134th pick / 2010,SappRi99,13447
 O'Brien Schofield,OLB,Wisconsin,College Stats,6-2,221,4.63,,,,,,Arizona Cardinals / 4th / 130th pick / 2010,SchoOB99,13449
 Charles Scott,RB,LSU,College Stats,5-11,238,4.68,30.5,,111.0,6.98,4.47,Philadelphia Eagles / 6th / 200th pick / 2010,-9999,N/A
-Chris Scott,OG,Tennessee,,6-5,319,5.52,22.5,19.0,90.0,8.24,5.03,Pittsburgh Steelers / 5th / 151st pick / 2010,ScotCh23,13451
+Chris Scott,OG,Tennessee,,6-5,319,5.52,22.5,19.0,90.0,8.24,5.03,Pittsburgh Steelers / 5th / 151st pick / 2010,ScotCh23,N/A
 George Selvie,DE,South Florida,College Stats,6-4,252,4.93,30.5,24.0,109.0,7.48,4.63,St. Louis Rams / 7th / 226th pick / 2010,SelvGe99,13452
 Darryl Sharpton,ILB,Miami (FL),College Stats,5-11,236,4.81,,24.0,,7.19,4.42,Houston Texans / 4th / 102nd pick / 2010,SharDa01,13453
 Cameron Sheffield,OLB,Troy,College Stats,6-2,257,4.92,33.0,,115.0,7.23,4.53,Kansas City Chiefs / 5th / 142nd pick / 2010,ShefCa99,13454
@@ -297,7 +297,7 @@ T.J. Ward,S,Oregon,College Stats,5-10,211,4.56,34.0,19.0,121.0,,,Cleveland Brown
 Donovan Warren,S,Michigan,College Stats,5-11,193,4.62,,12.0,113.0,,,,WarrDo01,N/A
 Lorenzo Washington,DT,Alabama,College Stats,6-4,291,5.21,30.0,25.0,107.0,7.4,4.68,,-9999,N/A
 Daryl Washington,OLB,TCU,College Stats,6-2,230,4.58,31.0,17.0,114.0,,,Arizona Cardinals / 2nd / 47th pick / 2010,WashDa99,13305
-Tony Washington,OT,Appalachian State,,6-6,311,5.25,29.5,33.0,114.0,7.52,4.84,,WashTo00,17048
+Tony Washington,OT,Appalachian State,,6-6,311,5.25,29.5,33.0,114.0,7.52,4.84,,WashTo00,N/A
 Dekoda Watson,OLB,Florida State,College Stats,6-1,240,4.55,40.0,24.0,134.0,7.06,4.11,Tampa Bay Buccaneers / 7th / 217th pick / 2010,WatsDe99,13482
 Sean Weatherspoon,OLB,Missouri,College Stats,6-1,239,4.62,40.0,34.0,123.0,6.99,4.38,Atlanta Falcons / 1st / 19th pick / 2010,WeatSe99,13243
 Thomas Welch,OT,Vanderbilt,College Stats,6-6,307,5.42,29.0,29.0,105.0,7.67,4.8,New England Patriots / 7th / 208th pick / 2010,WelcTh20,N/A
@@ -323,5 +323,5 @@ Corey Wootton,DE,Northwestern,College Stats,6-6,270,4.92,,20.0,,,,Chicago Bears 
 Jason Worilds,OLB,Virginia Tech,College Stats,6-1,254,4.65,38.0,24.0,114.0,6.95,4.29,Pittsburgh Steelers / 2nd / 52nd pick / 2010,WoriJa99,13306
 Doug Worthington,DT,Ohio State,College Stats,6-5,292,5.02,,19.0,,,,Pittsburgh Steelers / 7th / 242nd pick / 2010,WortDo99,13495
 Major Wright,S,Florida,College Stats,5-11,206,4.44,37.5,14.0,119.0,6.95,4.36,Chicago Bears / 3rd / 75th pick / 2010,WrigMa99,13307
-Sam Young,OT,Notre Dame,,6-8,316,5.2,29.5,29.0,104.0,7.73,4.87,Dallas Cowboys / 6th / 179th pick / 2010,YounSa21,13496
+Sam Young,OT,Notre Dame,,6-8,316,5.2,29.5,29.0,104.0,7.73,4.87,Dallas Cowboys / 6th / 179th pick / 2010,YounSa21,N/A
 Willie Young,DE,North Carolina State,College Stats,6-5,251,4.88,38.0,25.0,118.0,7.24,4.56,Detroit Lions / 7th / 213th pick / 2010,YounWi99,13497

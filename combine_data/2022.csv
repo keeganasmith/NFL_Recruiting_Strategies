@@ -1,7 +1,7 @@
 Player,Pos,School,College,Ht,Wt,40yd,Vertical,Bench,Broad Jump,3Cone,Shuttle,Drafted (tm/rnd/yr),Player-additional,NFL_id
 Cal Adomitis,LS,Pittsburgh,College Stats,6-2,235,4.97,29.5,18.0,107.0,7.53,4.62,,AdomCa00,4240719
 Austin Allen,TE,Nebraska,College Stats,6-8,253,4.83,34.0,,121.0,7.0,4.26,,AlleAu00,N/A
-Chase Allen,TE,Iowa St.,College Stats,6-6,251,,33.5,,117.0,7.03,4.43,,AlleCh03,2975680
+Chase Allen,TE,Iowa St.,College Stats,6-6,251,,33.5,,117.0,7.03,4.43,,AlleCh03,N/A
 Christopher Allen,EDGE,Alabama,College Stats,6-4,241,,,,,,,,AlleCh04,N/A
 Tyler Allgeier,RB,BYU,College Stats,5-11,224,4.6,33.0,,120.0,,,Atlanta Falcons / 5th / 151st pick / 2022,AllgTy00,4373626
 Troy Andersen,LB,Montana St.,,6-4,243,4.42,36.0,,128.0,,,Atlanta Falcons / 2nd / 58th pick / 2022,AndeTr00,4247807
@@ -270,7 +270,7 @@ Cam Taylor-Britt,CB,Nebraska,College Stats,5-11,196,4.38,,,,,,Cincinnati Bengals
 Isaac Taylor-Stuart,CB,USC,College Stats,6-2,201,4.42,,,123.0,,,,TaylIs00,N/A
 Luke Tenuta,OT,Virginia Tech,College Stats,6-8,319,5.41,26.0,,104.0,,4.77,Buffalo Bills / 6th / 209th pick / 2022,TenuLu00,N/A
 Kayvon Thibodeaux,EDGE,Oregon,College Stats,6-4,254,4.58,,27.0,,,,New York Giants / 1st / 5th pick / 2022,ThibKa00,4426326
-Zach Thomas,OG,San Diego St.,,6-5,308,4.96,22.5,21.0,107.0,7.4,4.65,,-9999,985
+Zach Thomas,OG,San Diego St.,,6-5,308,4.96,22.5,21.0,107.0,7.4,4.65,,-9999,N/A
 Cameron Thomas,DE,San Diego St.,College Stats,6-4,267,,,24.0,,,,Arizona Cardinals / 3rd / 87th pick / 2022,ThomCa03,4361510
 Isaiah Thomas,EDGE,Oklahoma,College Stats,6-5,266,4.7,31.5,,117.0,,,Cleveland Browns / 7th / 223rd pick / 2022,ThomIs01,4241404
 Juanyeh Thomas,S,Georgia Tech,College Stats,6-1,212,4.55,34.0,17.0,122.0,,,,ThomJu03,4360590
