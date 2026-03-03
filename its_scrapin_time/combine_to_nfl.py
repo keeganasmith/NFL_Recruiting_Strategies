@@ -176,6 +176,15 @@ def score_candidate(
     return score
 
 
+def is_temporally_plausible(combine_year: Optional[int], candidate_meta: dict) -> bool:
+    debut_year = candidate_meta.get("debut_year")
+    if combine_year is None or debut_year is None:
+        return True
+    # A combine entrant should usually debut around the combine year.
+    # Allow small drift for redshirt/roster timing noise, but block obvious mislinks.
+    return (combine_year - 1) <= debut_year <= (combine_year + 4)
+
+
 def pick_best_match(
     combine_player_name: str,
     combine_year: Optional[int],
@@ -192,7 +201,11 @@ def pick_best_match(
     if cn in exact_index:
         exact_matches = exact_index[cn]
         if len(exact_matches) == 1:
-            return exact_matches[0], 1.0, "exact"
+            only = exact_matches[0]
+            meta = athlete_meta.get(only.athlete_id, {})
+            if not is_temporally_plausible(combine_year, meta):
+                return None, 1.0, "exact_implausible"
+            return only, 1.0, "exact"
 
         ranked = sorted(
             (
@@ -499,8 +512,8 @@ def main():
 
             combine_pos = str(row.get("Pos", "")).strip()
 
-            duplicate_pool = exact_index.get(normalize_name(player_name), [])
-            for cand in duplicate_pool:
+            exact_pool = exact_index.get(normalize_name(player_name), [])
+            for cand in exact_pool:
                 if cand.athlete_id in athlete_meta:
                     continue
                 cached_payload = cache_get(conn, cand.athlete_id)
