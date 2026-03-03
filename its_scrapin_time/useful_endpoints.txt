@@ -14,9 +14,8 @@ curl 'https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/teams/lar/a
   -H 'sec-fetch-site: same-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36'
 
-The below endpoint gives you basically ALL of the historical NFL data for a given player. Note that 12483 is the specific player id, which needs to be scraped somewhere else....
-
-curl 'https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/3918298/stats?region=us&lang=en&contentorigin=espn' \
+The below endpoint gives you basically ALL of the historical NFL data for a given player. Note that 12483 is the specific player Id
+curl 'https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/12483/stats?region=us&lang=en&contentorigin=espn' \
   --compressed \
   -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0' \
   -H 'Accept: */*' \
