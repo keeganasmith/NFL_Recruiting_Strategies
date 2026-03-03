@@ -1,3 +1,4 @@
 venv
 __pycache__
 espn_cache.sqlite
+.DS_Store

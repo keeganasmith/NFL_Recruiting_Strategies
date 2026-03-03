@@ -39,7 +39,7 @@ import sqlite3
 import time
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 import requests
@@ -80,8 +80,8 @@ class Athlete:
     norm_name: str
 
 
-def load_athletes(athletes_csv: str) -> Tuple[Dict[str, Athlete], Dict[str, List[Athlete]]]:
-    exact: Dict[str, Athlete] = {}
+def load_athletes(athletes_csv: str) -> Tuple[Dict[str, List[Athlete]], Dict[str, List[Athlete]]]:
+    exact: Dict[str, List[Athlete]] = {}
     by_last: Dict[str, List[Athlete]] = {}
 
     df = pd.read_csv(athletes_csv)
@@ -92,18 +92,97 @@ def load_athletes(athletes_csv: str) -> Tuple[Dict[str, Athlete], Dict[str, List
         if not nn:
             continue
         ath = Athlete(athlete_id=aid, display_name=dn, norm_name=nn)
-        exact[nn] = ath
+        exact.setdefault(nn, []).append(ath)
         ln = last_name(nn)
         by_last.setdefault(ln, []).append(ath)
 
-    print(f"[INFO] Loaded {len(exact):,} athlete name mappings from {athletes_csv}")
+    duplicate_name_count = sum(1 for athletes in exact.values() if len(athletes) > 1)
+    print(
+        f"[INFO] Loaded {sum(len(v) for v in exact.values()):,} athletes and "
+        f"{len(exact):,} normalized names from {athletes_csv} "
+        f"({duplicate_name_count:,} duplicate-name keys)"
+    )
     return exact, by_last
+
+
+def normalize_position(pos: str) -> str:
+    if pos is None:
+        return ""
+    p = str(pos).strip().upper()
+    if not p:
+        return ""
+
+    groups = {
+        "OL": {"OL", "OT", "OG", "C", "G", "T"},
+        "DL": {"DL", "DE", "DT", "NT"},
+        "DB": {"DB", "CB", "S", "FS", "SS"},
+        "LB": {"LB", "ILB", "OLB", "MLB"},
+        "RB": {"RB", "HB", "FB"},
+        "WR": {"WR"},
+        "TE": {"TE"},
+        "QB": {"QB"},
+        "K": {"K", "PK"},
+        "P": {"P"},
+        "LS": {"LS"},
+    }
+    for grp, vals in groups.items():
+        if p in vals:
+            return grp
+    return p
+
+
+def extract_athlete_meta(payload: dict) -> dict:
+    seasons: Set[int] = set()
+    positions: Set[str] = set()
+    for cat in payload.get("categories", []):
+        for entry in cat.get("statistics", []):
+            season = entry.get("season", {}) or {}
+            year = season.get("year")
+            if isinstance(year, int) and year > 0:
+                seasons.add(year)
+            norm_pos = normalize_position(entry.get("position", ""))
+            if norm_pos:
+                positions.add(norm_pos)
+
+    debut_year = min(seasons) if seasons else None
+    return {
+        "debut_year": debut_year,
+        "positions": positions,
+    }
+
+
+def score_candidate(
+    combine_year: Optional[int],
+    combine_pos: str,
+    candidate_meta: dict,
+) -> float:
+    score = 0.0
+
+    debut_year = candidate_meta.get("debut_year")
+    if combine_year is not None and debut_year is not None:
+        if combine_year <= debut_year <= combine_year + 3:
+            score += 4.0
+        else:
+            score -= min(abs(debut_year - combine_year) * 0.25, 3.0)
+
+    cpos = normalize_position(combine_pos)
+    cmeta_positions = candidate_meta.get("positions", set())
+    if cpos and cmeta_positions:
+        if cpos in cmeta_positions:
+            score += 2.0
+        else:
+            score -= 2.0
+
+    return score
 
 
 def pick_best_match(
     combine_player_name: str,
-    exact_index: Dict[str, Athlete],
+    combine_year: Optional[int],
+    combine_pos: str,
+    exact_index: Dict[str, List[Athlete]],
     last_index: Dict[str, List[Athlete]],
+    athlete_meta: Dict[int, dict],
     min_ratio: float = 0.92,
 ) -> Tuple[Optional[Athlete], float, str]:
     cn = normalize_name(combine_player_name)
@@ -111,7 +190,24 @@ def pick_best_match(
         return None, 0.0, "empty"
 
     if cn in exact_index:
-        return exact_index[cn], 1.0, "exact"
+        exact_matches = exact_index[cn]
+        if len(exact_matches) == 1:
+            return exact_matches[0], 1.0, "exact"
+
+        ranked = sorted(
+            (
+                (score_candidate(combine_year, combine_pos, athlete_meta.get(a.athlete_id, {})), a)
+                for a in exact_matches
+            ),
+            key=lambda x: x[0],
+            reverse=True,
+        )
+
+        top_score, top_athlete = ranked[0]
+        second_score = ranked[1][0] if len(ranked) > 1 else float("-inf")
+        if top_score - second_score >= 1.0 and top_score >= 0.0:
+            return top_athlete, 1.0, "exact_disambiguated"
+        return None, 1.0, "exact_ambiguous"
 
     ln = last_name(cn)
     candidates = last_index.get(ln, [])
@@ -120,6 +216,7 @@ def pick_best_match(
     best_r = 0.0
     for ath in candidates:
         r = similarity(cn, ath.norm_name)
+        r += 0.02 * score_candidate(combine_year, combine_pos, athlete_meta.get(ath.athlete_id, {}))
         if r > best_r:
             best_r = r
             best = ath
@@ -136,6 +233,7 @@ def pick_best_match(
 
         for ath in expanded:
             r = similarity(cn, ath.norm_name)
+            r += 0.02 * score_candidate(combine_year, combine_pos, athlete_meta.get(ath.athlete_id, {}))
             if r > best_r:
                 best_r = r
                 best = ath
@@ -333,6 +431,7 @@ def main():
 
     all_output_rows: List[dict] = []
     unmatched_rows: List[dict] = []
+    athlete_meta: Dict[int, dict] = {}
 
     # Global counters for stats section
     total_drafted_rows_seen = 0
@@ -398,8 +497,30 @@ def main():
                 empty_name_count += 1
                 continue
 
+            combine_pos = str(row.get("Pos", "")).strip()
+
+            duplicate_pool = exact_index.get(normalize_name(player_name), [])
+            for cand in duplicate_pool:
+                if cand.athlete_id in athlete_meta:
+                    continue
+                cached_payload = cache_get(conn, cand.athlete_id)
+                if cached_payload is None:
+                    try:
+                        cached_payload = fetch_espn_stats(session, limiter, cand.athlete_id)
+                        cache_put(conn, cand.athlete_id, cached_payload)
+                    except Exception:
+                        athlete_meta[cand.athlete_id] = {}
+                        continue
+                athlete_meta[cand.athlete_id] = extract_athlete_meta(cached_payload)
+
             ath, ratio, method = pick_best_match(
-                player_name, exact_index, last_index, min_ratio=args.min_match_ratio
+                player_name,
+                year,
+                combine_pos,
+                exact_index,
+                last_index,
+                athlete_meta,
+                min_ratio=args.min_match_ratio,
             )
             if ath:
                 df.at[idx, "NFL_id"] = str(ath.athlete_id)

@@ -245,6 +245,24 @@ def load_existing_ids(csv_path: str) -> Set[str]:
     return ids
 
 
+def count_duplicate_display_names(csv_path: str) -> int:
+    """Count how many display names map to multiple athlete IDs in the CSV."""
+    if not os.path.exists(csv_path):
+        return 0
+
+    name_to_ids: Dict[str, Set[str]] = {}
+    with open(csv_path, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            athlete_id = str(row.get("athlete_id") or "").strip()
+            display_name = str(row.get("athlete_display_name") or "").strip()
+            if not athlete_id or not display_name:
+                continue
+            name_to_ids.setdefault(display_name, set()).add(athlete_id)
+
+    return sum(1 for ids in name_to_ids.values() if len(ids) > 1)
+
+
 def ensure_csv_header(csv_path: str) -> None:
     if os.path.exists(csv_path) and os.path.getsize(csv_path) > 0:
         return
@@ -273,7 +291,9 @@ def main() -> int:
 
     ensure_csv_header(args.out)
     seen_ids = load_existing_ids(args.out)
+    existing_duplicate_names = count_duplicate_display_names(args.out)
     print(f"[info] Loaded {len(seen_ids)} existing athlete_ids from {args.out}", file=sys.stderr)
+    print(f"[info] Existing duplicate display names in CSV: {existing_duplicate_names}", file=sys.stderr)
 
     limiter = RateLimiter(min_delay_s)
 
@@ -348,6 +368,8 @@ def main() -> int:
         f"[done] unique athletes={len(seen_ids)} | newly added={newly_added} | requests={total_requests} | elapsed={elapsed:.1f}s",
         file=sys.stderr,
     )
+    final_duplicate_names = count_duplicate_display_names(args.out)
+    print(f"[done] duplicate display names in CSV: {final_duplicate_names}", file=sys.stderr)
     return 0
 
 
