@@ -48,11 +48,14 @@ SPECIAL_TEAMS_STATS = [
     "returning_kickReturnYards",
     "returning_puntReturnYards",
 ]
+OFFENSIVE_LINE_STATS = ["rushing_gamesPlayed", "scoring_gamesPlayed"]
+FALLBACK_STATS = ["rushing_gamesPlayed", "receiving_gamesPlayed", "defensive_gamesPlayed"]
 
 QB_POSITIONS = {"QB"}
 SKILL_POSITIONS = {"RB", "FB", "WR", "TE", "CB/WR"}
 DEFENSE_POSITIONS = {"CB", "DB", "DE", "DL", "DT", "EDGE", "ILB", "LB", "OLB", "S", "SAF"}
 SPECIAL_POSITIONS = {"K", "P", "LS"}
+OFFENSIVE_LINE_POSITIONS = {"C", "G", "OG", "OL", "OT", "T"}
 
 
 HTML_TEMPLATE = """
@@ -221,8 +224,10 @@ def _position_stat_columns(pos: str, available_cols: set[str]) -> list[str]:
         candidates = DEFENSE_STATS
     elif pos in SPECIAL_POSITIONS:
         candidates = SPECIAL_TEAMS_STATS
+    elif pos in OFFENSIVE_LINE_POSITIONS:
+        candidates = OFFENSIVE_LINE_STATS
     else:
-        candidates = DEFENSE_STATS + RUSH_REC_STATS
+        candidates = FALLBACK_STATS
     return [c for c in candidates if c in available_cols]
 
 
@@ -333,7 +338,7 @@ def build_interactive_html(players: pd.DataFrame, output_path: Path) -> None:
 
 
 def main() -> None:
-    df = pd.read_csv(DATA_PATH)
+    df = pd.read_csv(DATA_PATH, low_memory=False)
     players = build_player_level_dataset(df)
     build_interactive_html(players, OUTPUT_HTML)
     print(f"Wrote visualization to {OUTPUT_HTML}")
