@@ -39,6 +39,7 @@ RUSH_REC_STATS = [
     "receiving_receptions",
     "receiving_yardsPerReception",
 ]
+RETURNING_STATS = ["returning_kickReturnYards", "returning_puntReturnYards"]
 DEFENSE_STATS = [
     "defensive_totalTackles",
     "defensive_soloTackles",
@@ -226,8 +227,12 @@ def _zscore(series: pd.Series) -> pd.Series:
 def _position_stat_columns(pos: str, available_cols: set[str]) -> list[str]:
     if pos in QB_POSITIONS:
         candidates = PASSING_STATS + ["rushing_rushingYards", "rushing_rushingTouchdowns"]
+    elif pos == "WR":
+        # Keep receiver production focused on offense to avoid special-teams return volume
+        # inflating true receiving output for players who handled return duties.
+        candidates = RUSH_REC_STATS
     elif pos in SKILL_POSITIONS:
-        candidates = RUSH_REC_STATS + ["returning_kickReturnYards", "returning_puntReturnYards"]
+        candidates = RUSH_REC_STATS + RETURNING_STATS
     elif pos in DEFENSE_POSITIONS:
         candidates = DEFENSE_STATS
     elif pos in SPECIAL_POSITIONS:
