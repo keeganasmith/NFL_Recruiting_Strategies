@@ -39,7 +39,7 @@ Brady Breeze,S,Oregon,College Stats,5-11,197.0,4.55,38.0,20.0,120.0,7.05,4.22,Te
 Gary Brightwell,RB,Arizona,College Stats,5-10,218.0,4.62,34.5,17.0,118.0,7.51,4.48,New York Giants / 6th / 196th pick / 2021,BrigGa00,4245645
 K.J. Britt,LB,Auburn,College Stats,6-0,235.0,4.76,32.5,24.0,118.0,7.38,4.4,Tampa Bay Buccaneers / 5th / 176th pick / 2021,BritKJ00,4242521
 Josiah Bronson,DL,Washington,College Stats,6-2,304.0,5.08,30.0,27.0,101.0,7.63,4.72,,-9999,3923400
-Chris Brown,DB,Texas,College Stats,5-10,191.0,4.55,36.0,15.0,118.0,6.85,4.18,,-9999,4830
+Chris Brown,DB,Texas,College Stats,5-10,191.0,4.55,36.0,15.0,118.0,6.85,4.18,,-9999,N/A
 Earnest Brown,DE,Northwestern,College Stats,6-4,270.0,5.01,31.0,25.0,115.0,7.19,4.5,,-9999,4242292
 Kimere Brown,CB,Temple,College Stats,5-11,175.0,4.57,32.5,,124.0,7.37,4.32,,-9999,N/A
 Deonte Brown,OL,Alabama,College Stats,6-3,344.0,,27.0,,,,,Carolina Panthers / 6th / 193rd pick / 2021,BrowDe06,N/A
@@ -70,7 +70,7 @@ Drue Chrisman,P,Ohio St.,College Stats,6-2,209.0,,,,,,,,ChriDr00,4040607
 Brady Christensen,OL,BYU,College Stats,,,,34.0,30.0,124.0,,,Carolina Panthers / 3rd / 70th pick / 2021,ChriBr00,4256062
 Andre Cisco,DB,Syracuse,College Stats,,,,,17.0,,,,Jacksonville Jaguars / 3rd / 65th pick / 2021,CiscAn00,4361939
 Mallory Claybourne,CB,Coastal Carolina,College Stats,5-9,191.0,4.57,33.0,12.0,116.0,7.37,4.32,,-9999,N/A
-Ben Cleveland,OL,Georgia,College Stats,6-6,343.0,5.05,28.0,30.0,102.0,,4.88,Baltimore Ravens / 3rd / 94th pick / 2021,ClevBe00,4048231
+Ben Cleveland,OL,Georgia,College Stats,6-6,343.0,5.05,28.0,30.0,102.0,,4.88,Baltimore Ravens / 3rd / 94th pick / 2021,ClevBe00,N/A
 Riley Cole,LB,South Alabama,College Stats,6-2,240.0,4.72,,26.0,,7.46,4.35,,-9999,N/A
 Nico Collins,WR,Michigan,College Stats,6-4,215.0,4.43,37.5,14.0,125.0,6.78,4.29,Houston Texans / 3rd / 89th pick / 2021,CollNi00,4258173
 Zaven Collins,LB,Tulsa,College Stats,6-4,259.0,4.67,35.0,19.0,122.0,,4.36,Arizona Cardinals / 1st / 16th pick / 2021,CollZa00,4244606
@@ -133,7 +133,7 @@ Thomas Fletcher,LS,Alabama,College Stats,,,,,,,,,,-9999,N/A
 Paris Ford,DB,Pittsburgh,College Stats,6-0,197.0,4.85,28.5,,110.0,7.44,4.45,,FordPa01,N/A
 Darrick Forrest,S,Cincinnati,College Stats,5-11,206.0,4.42,39.0,21.0,132.0,6.91,4.23,Washington Football Team / 5th / 163rd pick / 2021,ForrDa00,4239088
 Miller Forristall,TE,Alabama,College Stats,,,,,,,,,,ForrMi00,4040714
-Stone Forsythe,OL,Florida,College Stats,6-8,307.0,5.14,27.5,25.0,103.0,7.47,4.65,Seattle Seahawks / 6th / 208th pick / 2021,ForsSt00,4034962
+Stone Forsythe,OL,Florida,College Stats,6-8,307.0,5.14,27.5,25.0,103.0,7.47,4.65,Seattle Seahawks / 6th / 208th pick / 2021,ForsSt00,N/A
 Feleipe Franks,QB,Arkansas,College Stats,6-6,234.0,4.61,32.5,,117.0,7.16,4.22,,FranFe00,4034948
 Pat Freiermuth,TE,Penn St.,College Stats,6-5,251.0,,,26.0,,,,Pittsburgh Steelers / 2nd / 55th pick / 2021,FreiPa00,4361411
 Will Fries,OL,Penn St.,College Stats,6-6,309.0,5.37,31.0,24.0,115.0,7.77,4.53,Indianapolis Colts / 7th / 248th pick / 2021,FrieWi00,4045176
@@ -201,8 +201,8 @@ Shemar Jean-Charles,DB,Appalachian St.,College Stats,5-10,184.0,4.47,35.0,19.0,1
 Jermar Jefferson,RB,Oregon St.,College Stats,5-10,206.0,4.57,31.0,13.0,115.0,7.38,4.38,Detroit Lions / 7th / 257th pick / 2021,JeffJe00,4374033
 Teven Jenkins,OL,Oklahoma St.,College Stats,6-5,317.0,5.01,32.5,36.0,106.0,7.72,4.66,Chicago Bears / 2nd / 39th pick / 2021,JenkTe00,4038457
 Adam Jewell,OL,Air Force,College Stats,6-2,289.0,5.37,27.5,,107.0,,,,-9999,N/A
-Sterling Johnson,DL,Coastal Carolina,College Stats,6-3,288.0,5.22,28.0,25.0,103.0,7.56,4.81,,-9999,4050971
-Jerome Johnson,DL,Indiana,College Stats,6-2,296.0,5.12,27.5,21.0,113.0,7.7,4.66,,-9999,4050971
+Sterling Johnson,DL,Coastal Carolina,College Stats,6-3,288.0,5.22,28.0,25.0,103.0,7.56,4.81,,-9999,N/A
+Jerome Johnson,DL,Indiana,College Stats,6-2,296.0,5.12,27.5,21.0,113.0,7.7,4.66,,-9999,N/A
 Jamar Johnson,DB,Indiana,College Stats,6-2,205.0,4.58,35.0,17.0,122.0,7.22,4.41,Denver Broncos / 5th / 164th pick / 2021,JohnJa15,4878878
 Josh Johnson,RB,La-Monroe,College Stats,5-8,209.0,4.61,35.5,22.0,115.0,7.16,4.4,,JohnJo06,4390717
 Johnathon Johnson,WR,Missouri,College Stats,,,,,,,,,,JohnJo11,N/A
@@ -314,7 +314,7 @@ AJ Parker,DB,Kansas St.,College Stats,5-11,182.0,4.53,33.5,10.0,117.0,7.02,4.37,
 Micah Parsons,LB,Penn St.,College Stats,6-3,246.0,4.39,34.0,19.0,126.0,6.89,4.4,Dallas Cowboys / 1st / 12th pick / 2021,ParsMi00,4361423
 Jarrett Patterson,OL,Notre Dame,College Stats,5-6,195.0,4.52,,,,,,,-9999,4362452
 Riley Patterson,K,Memphis,College Stats,5-10,181.0,,,,,,,,-9999,4243371
-Jaret Patterson,RB,Buffalo,College Stats,5-6,195.0,4.59,30.0,19.0,117.0,7.03,4.35,,PattJa01,4362452
+Jaret Patterson,RB,Buffalo,College Stats,5-6,195.0,4.59,30.0,19.0,117.0,7.03,4.35,,PattJa01,N/A
 Kwity Paye,DL,Michigan,College Stats,6-2,261.0,4.52,35.3,36.0,118.0,,,Indianapolis Colts / 1st / 21st pick / 2021,PayeKw00,4258194
 Josh Pederson,TE,La-Monroe,College Stats,6-4,234.0,4.81,28.5,19.0,110.0,7.31,4.43,,-9999,N/A
 Ronnie Perkins,DE,Oklahoma,College Stats,6-2,253.0,4.71,32.0,25.0,115.0,,4.69,New England Patriots / 3rd / 96th pick / 2021,PerkRo00,4360274
@@ -325,7 +325,7 @@ Nick Pickett,S,Oregon,College Stats,6-0,201.0,4.65,35.5,18.0,119.0,7.4,4.43,,Pic
 Jason Pinnock,DB,Pittsburgh,College Stats,6-0,204.0,4.49,39.5,15.0,128.0,6.9,4.1,,-9999,4240706
 Kyle Pitts,TE,Florida,College Stats,6-5,245.0,4.44,33.5,22.0,129.0,7.12,4.3,Atlanta Falcons / 1st / 4th pick / 2021,PittKy00,4360248
 Kyle Poland,LS,West Virginia,College Stats,6-1,237.0,4.97,32.5,12.0,111.0,7.47,4.5,,-9999,N/A
-Elijah Ponder,DT,Cincinnati,College Stats,6-1,268.0,5.06,30.0,27.0,101.0,7.45,4.53,,-9999,4688432
+Elijah Ponder,DT,Cincinnati,College Stats,6-1,268.0,5.06,30.0,27.0,101.0,7.45,4.53,,-9999,N/A
 Cornell Powell,WR,Clemson,College Stats,6-0,204.0,4.53,36.5,16.0,128.0,7.03,4.21,Kansas City Chiefs / 5th / 181st pick / 2021,PoweCo00,N/A
 Blake Proehl,WR,East Carolina,College Stats,6-1,186.0,4.47,36.0,12.0,126.0,7.0,4.06,,ProeBl00,N/A
 Dillon Radunz,OT,North Dakota St.,,6-5,301.0,5.16,32.0,24.0,112.0,7.27,4.57,Tennessee Titans / 2nd / 53rd pick / 2021,RaduDi00,4040945

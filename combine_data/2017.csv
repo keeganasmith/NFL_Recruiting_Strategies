@@ -54,7 +54,7 @@ Aviante Collins,OG,TCU,College Stats,6-4,295,4.81,,34.0,,,,,CollAv00,N/A
 Gareon Conley,CB,Ohio State,College Stats,6-0,195,4.44,37.0,11.0,129.0,6.68,4.18,Oakland Raiders / 1st / 24th pick / 2017,ConlGa00,3051391
 James Conner,RB,Pittsburgh,College Stats,6-1,233,4.65,29.0,20.0,113.0,,,Pittsburgh Steelers / 3rd / 105th pick / 2017,ConnJa00,3045147
 Dalvin Cook,RB,Florida State,College Stats,5-10,210,4.49,30.5,22.0,116.0,7.27,4.53,Minnesota Vikings / 2nd / 41st pick / 2017,CookDa01,3116593
-Ethan Cooper,OG,Indiana (PA),,6-2,322,5.36,24.5,26.0,99.0,8.02,4.88,,CoopEt00,15787
+Ethan Cooper,OG,Indiana (PA),,6-2,322,5.36,24.5,26.0,99.0,8.02,4.88,,CoopEt00,N/A
 Zach Cunningham,OLB,Vanderbilt,College Stats,6-3,234,4.67,35.0,15.0,125.0,7.03,4.29,Houston Texans / 2nd / 57th pick / 2017,CunnZa00,3051750
 Darrell Daniels,TE,Washington,College Stats,6-3,247,4.55,32.0,17.0,116.0,7.09,4.47,,DaniDa02,3052166
 Amara Darboh,WR,Michigan,College Stats,6-2,214,4.45,36.0,17.0,124.0,,,Seattle Seahawks / 3rd / 106th pick / 2017,DarbAm00,2977629
@@ -196,7 +196,7 @@ Arthur Maulet,CB,Memphis,College Stats,5-10,189,4.62,34.5,18.0,120.0,,,,MaulAr00
 Marcus Maye,S,Florida,College Stats,6-0,210,,,,,,,New York Jets / 2nd / 39th pick / 2017,MayeMa00,2980110
 Christian McCaffrey,RB,Stanford,College Stats,5-11,202,4.48,37.5,10.0,121.0,6.57,4.22,Carolina Panthers / 1st / 8th pick / 2017,McCaCh01,3117251
 Conor McDermott,OT,UCLA,College Stats,6-8,307,5.18,28.5,,105.0,7.52,4.58,New England Patriots / 6th / 211th pick / 2017,McDeCo00,2971584
-Malik McDowell,DT,Michigan State,College Stats,6-6,295,4.85,28.5,23.0,112.0,7.69,4.53,Seattle Seahawks / 2nd / 35th pick / 2017,McDoMa00,3134681
+Malik McDowell,DT,Michigan State,College Stats,6-6,295,4.85,28.5,23.0,112.0,7.69,4.53,Seattle Seahawks / 2nd / 35th pick / 2017,McDoMa00,N/A
 Elijah McGuire,RB,Louisiana,College Stats,5-10,214,4.53,36.0,15.0,120.0,7.26,4.56,New York Jets / 6th / 188th pick / 2017,McGuEl00,3042494
 Isaiah McKenzie,WR,Georgia,College Stats,5-7,173,4.42,36.0,11.0,123.0,6.64,4.15,Denver Broncos / 5th / 172nd pick / 2017,McKeIs00,3128724
 Takkarist McKinley,OLB,UCLA,College Stats,6-2,250,4.59,33.0,24.0,122.0,7.48,4.62,Atlanta Falcons / 1st / 26th pick / 2017,McKiTa00,N/A
@@ -303,18 +303,18 @@ Tanner Vallejo,ILB,Boise State,College Stats,6-1,228,4.67,33.5,,121.0,,4.39,Buff
 Eddie Vanderdoes,DT,UCLA,College Stats,6-3,305,4.99,28.5,28.0,111.0,7.69,4.39,Oakland Raiders / 3rd / 88th pick / 2017,VandEd00,3047570
 Justin Vogel,P,Miami (FL),College Stats,6-4,219,4.7,34.0,,,,,,VogeJu00,2980123
 Charles Walker,DT,Oklahoma,College Stats,6-2,310,4.96,28.0,25.0,107.0,7.89,4.96,,WalkCh01,N/A
-DeMarcus Walker,DE,Florida State,College Stats,6-4,280,,,18.0,,,,Denver Broncos / 2nd / 51st pick / 2017,WalkDe03,3045377
+DeMarcus Walker,DE,Florida State,College Stats,6-4,280,,,18.0,,,,Denver Broncos / 2nd / 51st pick / 2017,WalkDe03,N/A
 Carlos Watkins,DT,Clemson,College Stats,6-3,309,,,25.0,,,,Houston Texans / 4th / 142nd pick / 2017,WatkCa00,2977681
 Deshaun Watson,QB,Clemson,College Stats,6-2,221,4.66,32.5,,119.0,6.95,4.31,Houston Texans / 1st / 12th pick / 2017,WatsDe00,3122840
 T.J. Watt,OLB,Wisconsin,College Stats,6-4,252,4.69,37.0,21.0,128.0,6.79,4.13,Pittsburgh Steelers / 1st / 30th pick / 2017,WattT.00,3045282
-Davis Webb,QB,California,College Stats,6-5,229,4.79,33.0,,118.0,6.92,4.21,New York Giants / 3rd / 87th pick / 2017,WebbDa00,3052600
+Davis Webb,QB,California,College Stats,6-5,229,4.79,33.0,,118.0,6.92,4.21,New York Giants / 3rd / 87th pick / 2017,WebbDa00,N/A
 Dede Westbrook,WR,Oklahoma,College Stats,6-0,178,,,,,,,Jacksonville Jaguars / 4th / 110th pick / 2017,WestDe00,3892889
 Chad Wheeler,OT,USC,College Stats,6-7,306,5.48,20.5,15.0,105.0,,5.01,,WheeCh00,2971615
 Marquez White,CB,Florida State,College Stats,6-0,194,4.59,36.0,,123.0,,,Dallas Cowboys / 6th / 216th pick / 2017,WhitMa03,N/A
 TreDavious White,CB,LSU,College Stats,5-11,192,4.47,32.0,16.0,119.0,6.9,4.32,Buffalo Bills / 1st / 27th pick / 2017,WhitTr01,3042717
 Kermit Whitfield,WR,Florida State,College Stats,5-8,185,4.44,32.5,8.0,120.0,7.17,4.37,,WhitKe02,N/A
 Jamaal Williams,RB,BYU,College Stats,6-0,212,4.59,30.0,,123.0,7.25,4.53,Green Bay Packers / 4th / 134th pick / 2017,WillJa06,2980453
-Joe Williams,RB,Utah,College Stats,5-11,210,4.41,35.0,14.0,125.0,7.19,4.19,San Francisco 49ers / 4th / 121st pick / 2017,WillJo12,4568024
+Joe Williams,RB,Utah,College Stats,5-11,210,4.41,35.0,14.0,125.0,7.19,4.19,San Francisco 49ers / 4th / 121st pick / 2017,WillJo12,N/A
 Marcus Williams,S,Utah,College Stats,6-1,202,4.56,43.5,14.0,129.0,6.85,4.2,New Orleans Saints / 2nd / 42nd pick / 2017,WillMa06,3122882
 Mike Williams,WR,Clemson,College Stats,6-4,218,,32.5,15.0,121.0,,,Los Angeles Chargers / 1st / 7th pick / 2017,WillMi07,3045138
 Stanley Williams,RB,Kentucky,College Stats,5-7,190,4.51,36.0,18.0,121.0,6.86,4.18,,WillSt03,N/A

@@ -4,10 +4,10 @@ Hakim Akbar,S,Washington,College Stats,6-0,210,4.55,,,,,,New England Patriots / 
 Brian Allen,OLB,Florida State,College Stats,6-0,238,4.65,,25.0,,,,St. Louis Rams / 3rd / 83rd pick / 2001,AlleBr21,2631
 David Allen,RB,Kansas State,College Stats,5-9,194,4.62,31.0,15.0,111.0,,,,AlleDa00,4760
 Matt Allen,P,Troy,,6-3,246,,,,,,,,AlleMa20,4300
-Will Allen,CB,Syracuse,College Stats,5-10,192,4.44,39.5,14.0,121.0,6.78,3.9,New York Giants / 1st / 22nd pick / 2001,AlleWi20,N/A
+Will Allen,CB,Syracuse,College Stats,5-10,192,4.44,39.5,14.0,121.0,6.78,3.9,New York Giants / 1st / 22nd pick / 2001,AlleWi20,2570
 Scotty Anderson,WR,Grambling State,,6-2,184,4.57,34.5,,115.0,,,Detroit Lions / 5th / 148th pick / 2001,AndeSc00,2697
 Adam Archuleta,S,Arizona State,College Stats,6-0,211,4.46,,31.0,,,,St. Louis Rams / 1st / 20th pick / 2001,ArchAd20,2568
-Tom Ashworth,OG,Colorado,College Stats,6-6,293,5.11,33.5,20.0,109.0,7.4,4.3,,AshwTo20,4298
+Tom Ashworth,OG,Colorado,College Stats,6-6,293,5.11,33.5,20.0,109.0,7.4,4.3,,AshwTo20,N/A
 Billy Baber,TE,Virginia,College Stats,6-4,255,4.76,33.0,22.0,106.0,7.12,4.19,Kansas City Chiefs / 5th / 141st pick / 2001,BabeBi00,2690
 Jeff Backus,OT,Michigan,,6-5,310,5.37,27.0,25.0,99.0,8.27,4.67,Detroit Lions / 1st / 18th pick / 2001,BackJe20,2566
 Rodney Bailey,DE,Ohio State,,6-3,283,5.1,,,,,,Pittsburgh Steelers / 6th / 181st pick / 2001,BailRo21,2730
@@ -30,7 +30,7 @@ Willie Blade,DT,Mississippi State,,6-3,316,4.93,,,,,,Dallas Cowboys / 3rd / 93rd
 Al Blades,S,Miami (FL),College Stats,6-1,209,4.56,,,,,,,-9999,N/A
 Derrick Blaylock,RB,Stephen F. Austin,,5-10,194,4.36,35.5,18.0,119.0,7.05,4.09,Kansas City Chiefs / 5th / 150th pick / 2001,BlayDe00,2699
 David Bobo,OG,TCU,,6-4,290,5.28,31.0,19.0,106.0,7.81,4.89,,-9999,N/A
-Fred Booker,CB,LSU,College Stats,5-9,193,4.65,,,,,,,BookFr20,4807
+Fred Booker,CB,LSU,College Stats,5-9,193,4.65,,,,,,,BookFr20,N/A
 Josh Booty,QB,LSU,College Stats,6-2,221,4.9,29.5,,105.0,7.54,4.48,Seattle Seahawks / 6th / 172nd pick / 2001,-9999,N/A
 Jarvis Borum,OG,North Carolina State,,6-7,332,5.05,30.5,25.0,107.0,8.08,4.83,,BoruJa20,N/A
 Kyle Vanden Bosch,DE,Nebraska,,6-4,270,4.75,36.5,26.0,119.0,6.82,4.08,Arizona Cardinals / 2nd / 34th pick / 2001,VandKy99,2582
@@ -152,7 +152,7 @@ Kris Jenkins,DT,Maryland,,6-5,318,5.19,31.0,33.0,108.0,7.85,4.4,Carolina Panther
 Jonas Jennings,OT,Georgia,,6-4,334,5.31,29.5,31.0,102.0,8.08,4.93,Buffalo Bills / 3rd / 95th pick / 2001,JennJo20,2644
 Ligarius Jennings,CB,Tennessee State,,5-9,202,4.67,34.0,11.0,120.0,7.07,4.03,,JennLi20,3455
 Sly Johnson,WR,Miami (OH),College Stats,5-9,181,4.61,35.5,,115.0,,,,-9999,N/A
-Jevaris Johnson,TE,Georgia,College Stats,6-5,257,4.9,,,,,,,-9999,2773
+Jevaris Johnson,TE,Georgia,College Stats,6-5,257,4.9,,,,,,,-9999,N/A
 Chad Johnson,WR,Oregon State,College Stats,6-1,192,4.57,33.0,,108.0,7.51,4.14,Cincinnati Bengals / 2nd / 36th pick / 2001,JohnCh01,2584
 Rudi Johnson,RB,Auburn,College Stats,5-10,227,4.57,37.5,24.0,119.0,7.32,4.22,Cincinnati Bengals / 4th / 100th pick / 2001,JohnRu00,2649
 Kenyatta Jones,OT,South Florida,,6-3,308,5.01,,31.0,,,,New England Patriots / 4th / 96th pick / 2001,JoneKe22,N/A
@@ -219,7 +219,7 @@ Dennis Norman,OG,Princeton,,6-4,305,5.16,35.0,25.0,107.0,8.08,4.72,Seattle Seaha
 Moran Norris,FB,Kansas,College Stats,6-1,250,4.63,31.0,37.0,114.0,7.56,4.5,New Orleans Saints / 4th / 115th pick / 2001,NorrMo00,2664
 Dan O'Leary,TE,Notre Dame,College Stats,6-4,252,5.02,32.0,16.0,113.0,7.4,4.31,Buffalo Bills / 6th / 195th pick / 2001,OLeaDa20,2744
 Ifeanyi Ohalete,S,USC,,6-2,221,4.64,,16.0,,,,,OhalIf20,2841
-Chukky Okobi,C,Purdue,College Stats,6-1,316,5.27,32.5,24.0,103.0,7.87,4.61,Pittsburgh Steelers / 5th / 146th pick / 2001,OkobCh20,2695
+Chukky Okobi,C,Purdue,College Stats,6-1,316,5.27,32.5,24.0,103.0,7.87,4.61,Pittsburgh Steelers / 5th / 146th pick / 2001,OkobCh20,N/A
 Jesse Palmer,QB,Florida,College Stats,6-2,231,4.78,35.5,,112.0,7.13,4.29,New York Giants / 4th / 125th pick / 2001,PalmJe00,2674
 Saul Patu,DE,Oregon,,6-2,272,5.01,30.5,22.0,112.0,7.52,4.43,,-9999,N/A
 Tupe Peko,C,Michigan State,,6-4,300,5.36,28.0,,92.0,8.1,4.56,New York Jets / 7th / 217th pick / 2001,PekoTu20,2766
@@ -262,7 +262,7 @@ Rickie Simpkins,DT,Syracuse,,6-3,287,5.28,29.5,,97.0,7.65,4.52,,-9999,N/A
 Dwight Smith,CB,Akron,College Stats,5-10,212,4.51,33.5,15.0,114.0,,,Tampa Bay Buccaneers / 3rd / 84th pick / 2001,SmitDw20,2632
 Justin Smith,DE,Missouri,College Stats,6-4,267,4.64,34.0,26.0,117.0,,,Cincinnati Bengals / 1st / 4th pick / 2001,SmitJu20,2552
 Kenny Smith,DT,Alabama,College Stats,6-3,299,5.24,30.0,,100.0,8.0,4.8,New Orleans Saints / 3rd / 81st pick / 2001,SmitKe23,10416
-Omar Smith,OG,Kentucky,,6-2,293,5.33,30.0,21.0,98.0,,,,SmitOm20,2169
+Omar Smith,OG,Kentucky,,6-2,293,5.33,30.0,21.0,98.0,,,,SmitOm20,N/A
 Steve Smith,WR,Utah,College Stats,5-9,184,4.41,38.5,,121.0,7.44,4.25,Carolina Panthers / 3rd / 74th pick / 2001,SmitSt01,2622
 Fred Smoot,CB,Mississippi State,College Stats,5-11,172,4.48,,,,,,Washington Redskins / 2nd / 45th pick / 2001,SmooFr20,2593
 Brandon Spoon,ILB,North Carolina,,6-2,245,4.75,35.5,33.0,110.0,7.3,4.15,Buffalo Bills / 4th / 110th pick / 2001,SpooBr20,2659
@@ -294,7 +294,7 @@ T.J. Turner,ILB,Michigan State,,6-3,273,4.8,,,,,,New England Patriots / 7th / 23
 Chris Valletta,OG,Texas A&M,,6-3,299,5.32,33.5,18.0,98.0,7.9,4.53,,-9999,N/A
 Patrick Venzke,OT,Idaho,,6-6,303,5.28,34.0,,103.0,8.08,4.59,,-9999,N/A
 Michael Vick,QB,Virginia Tech,College Stats,6-0,210,4.33,,,,,,Atlanta Falcons / 1st / 1st pick / 2001,VickMi00,N/A
-Keydrick Vincent,OG,Mississippi,,6-5,328,5.61,32.5,23.0,94.0,,,,VincKe20,2901
+Keydrick Vincent,OG,Mississippi,,6-5,328,5.61,32.5,23.0,94.0,,,,VincKe20,N/A
 Fred Wakefield,DE,Illinois,College Stats,6-7,287,5.09,29.0,26.0,108.0,7.49,4.64,,WakeFr00,2866
 Kenyatta Walker,OT,Florida,,6-5,311,5.17,31.5,24.0,109.0,7.7,4.6,Tampa Bay Buccaneers / 1st / 14th pick / 2001,WalkKe21,2562
 Raymond Walls,CB,Southern Miss,College Stats,5-11,176,4.51,39.0,,124.0,,4.18,Indianapolis Colts / 5th / 152nd pick / 2001,WallRa20,2701

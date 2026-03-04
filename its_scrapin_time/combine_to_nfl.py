@@ -46,6 +46,7 @@ import requests
 
 
 ESPN_URL_TMPL = "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/{athlete_id}/stats"
+ESPN_PROFILE_URL_TMPL = "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/{athlete_id}"
 DEFAULT_PARAMS = {"region": "us", "lang": "en", "contentorigin": "espn"}
 
 _SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
@@ -71,6 +72,12 @@ def last_name(norm_name: str) -> str:
 
 def similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, a, b).ratio()
+
+
+def school_similarity(a: str, b: str) -> float:
+    if not a or not b:
+        return 0.0
+    return SequenceMatcher(None, normalize_name(a), normalize_name(b)).ratio()
 
 
 @dataclass
@@ -148,20 +155,32 @@ def extract_athlete_meta(payload: dict) -> dict:
     return {
         "debut_year": debut_year,
         "positions": positions,
+        "colleges": set(),
     }
+
+
+def extract_profile_meta(payload: dict) -> dict:
+    athlete = payload.get("athlete", {}) if isinstance(payload, dict) else {}
+    college = athlete.get("college", {}) if isinstance(athlete, dict) else {}
+    college_name = normalize_name(college.get("name", ""))
+    colleges = {college_name} if college_name else set()
+    return {"colleges": colleges}
 
 
 def score_candidate(
     combine_year: Optional[int],
     combine_pos: str,
+    combine_school: str,
     candidate_meta: dict,
 ) -> float:
     score = 0.0
 
     debut_year = candidate_meta.get("debut_year")
     if combine_year is not None and debut_year is not None:
-        if combine_year <= debut_year <= combine_year + 3:
+        if combine_year <= debut_year <= combine_year + 2:
             score += 4.0
+        elif (combine_year - 1) <= debut_year <= (combine_year + 3):
+            score += 1.0
         else:
             score -= min(abs(debut_year - combine_year) * 0.25, 3.0)
 
@@ -173,37 +192,52 @@ def score_candidate(
         else:
             score -= 4.0
 
+    cschool = normalize_name(combine_school)
+    meta_colleges = candidate_meta.get("colleges", set())
+    if cschool and meta_colleges:
+        best_school_match = max((school_similarity(cschool, mc) for mc in meta_colleges), default=0.0)
+        if best_school_match >= 0.90:
+            score += 6.0
+        elif best_school_match < 0.60:
+            score -= 6.0
+
     return score
 
 
-def is_temporally_plausible(combine_year: Optional[int], candidate_meta: dict) -> bool:
+def is_temporally_plausible(anchor_year: Optional[int], candidate_meta: dict) -> bool:
     debut_year = candidate_meta.get("debut_year")
-    if combine_year is None or debut_year is None:
+    if anchor_year is None or debut_year is None:
         return True
-    # A combine entrant should usually debut around the combine year.
+    # A combine entrant should usually debut around draft/combine year.
     # Allow small drift for redshirt/roster timing noise, but block obvious mislinks.
-    return (combine_year - 1) <= debut_year <= (combine_year + 4)
+    return (anchor_year - 1) <= debut_year <= (anchor_year + 3)
 
 
 def pick_best_match(
     combine_player_name: str,
     combine_year: Optional[int],
+    draft_year: Optional[int],
     combine_pos: str,
+    combine_school: str,
     exact_index: Dict[str, List[Athlete]],
     last_index: Dict[str, List[Athlete]],
     athlete_meta: Dict[int, dict],
     min_ratio: float = 0.92,
+    excluded_athlete_ids: Optional[Set[int]] = None,
 ) -> Tuple[Optional[Athlete], float, str]:
     cn = normalize_name(combine_player_name)
     if not cn:
         return None, 0.0, "empty"
 
+    anchor_year = draft_year if draft_year is not None else combine_year
+    excluded = excluded_athlete_ids or set()
+
     if cn in exact_index:
-        exact_matches = exact_index[cn]
+        exact_matches = [a for a in exact_index[cn] if a.athlete_id not in excluded]
         if len(exact_matches) == 1:
             only = exact_matches[0]
             meta = athlete_meta.get(only.athlete_id, {})
-            if not is_temporally_plausible(combine_year, meta):
+            if not is_temporally_plausible(anchor_year, meta):
                 return None, 1.0, "exact_implausible"
             return only, 1.0, "exact"
 
@@ -225,7 +259,7 @@ def pick_best_match(
                     # position matches the combine position, ignore exact-name
                     # candidates that confidently disagree on position.
                     continue
-            scored.append((score_candidate(combine_year, combine_pos, athlete_meta.get(a.athlete_id, {})), a))
+            scored.append((score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(a.athlete_id, {})), a))
 
         ranked = sorted(scored, key=lambda x: x[0], reverse=True)
         if not ranked:
@@ -243,8 +277,10 @@ def pick_best_match(
     best = None
     best_r = 0.0
     for ath in candidates:
+        if ath.athlete_id in excluded:
+            continue
         r = similarity(cn, ath.norm_name)
-        r += 0.02 * score_candidate(combine_year, combine_pos, athlete_meta.get(ath.athlete_id, {}))
+        r += 0.02 * score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(ath.athlete_id, {}))
         if r > best_r:
             best_r = r
             best = ath
@@ -260,8 +296,10 @@ def pick_best_match(
                 expanded.extend(v)
 
         for ath in expanded:
+            if ath.athlete_id in excluded:
+                continue
             r = similarity(cn, ath.norm_name)
-            r += 0.02 * score_candidate(combine_year, combine_pos, athlete_meta.get(ath.athlete_id, {}))
+            r += 0.02 * score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(ath.athlete_id, {}))
             if r > best_r:
                 best_r = r
                 best = ath
@@ -277,6 +315,15 @@ def init_cache(db_path: str) -> sqlite3.Connection:
     conn.execute(
         """
         CREATE TABLE IF NOT EXISTS athlete_stats_cache (
+            athlete_id INTEGER PRIMARY KEY,
+            fetched_at_utc INTEGER NOT NULL,
+            payload_json TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS athlete_profile_cache (
             athlete_id INTEGER PRIMARY KEY,
             fetched_at_utc INTEGER NOT NULL,
             payload_json TEXT NOT NULL
@@ -316,6 +363,34 @@ def cache_put(conn: sqlite3.Connection, athlete_id: int, payload: dict) -> None:
     conn.commit()
 
 
+def profile_cache_get(conn: sqlite3.Connection, athlete_id: int) -> Optional[dict]:
+    cur = conn.execute(
+        "SELECT payload_json FROM athlete_profile_cache WHERE athlete_id = ?",
+        (athlete_id,),
+    )
+    row = cur.fetchone()
+    if not row:
+        return None
+    try:
+        return json.loads(row[0])
+    except Exception:
+        return None
+
+
+def profile_cache_put(conn: sqlite3.Connection, athlete_id: int, payload: dict) -> None:
+    conn.execute(
+        """
+        INSERT INTO athlete_profile_cache (athlete_id, fetched_at_utc, payload_json)
+        VALUES (?, ?, ?)
+        ON CONFLICT(athlete_id) DO UPDATE SET
+          fetched_at_utc=excluded.fetched_at_utc,
+          payload_json=excluded.payload_json
+        """,
+        (athlete_id, int(time.time()), json.dumps(payload)),
+    )
+    conn.commit()
+
+
 class RateLimiter:
     def __init__(self, min_interval_sec: float):
         self.min_interval = float(min_interval_sec)
@@ -340,6 +415,19 @@ def fetch_espn_stats(
 ) -> dict:
     limiter.wait()
     url = ESPN_URL_TMPL.format(athlete_id=athlete_id)
+    resp = session.get(url, params=DEFAULT_PARAMS, timeout=timeout_sec)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def fetch_espn_athlete_profile(
+    session: requests.Session,
+    limiter: RateLimiter,
+    athlete_id: int,
+    timeout_sec: float = 30.0,
+) -> dict:
+    limiter.wait()
+    url = ESPN_PROFILE_URL_TMPL.format(athlete_id=athlete_id)
     resp = session.get(url, params=DEFAULT_PARAMS, timeout=timeout_sec)
     resp.raise_for_status()
     return resp.json()
@@ -401,6 +489,23 @@ def infer_year_from_filename(path: str) -> Optional[int]:
     return int(m.group(0)) if m else None
 
 
+def infer_draft_year(drafted_value: str) -> Optional[int]:
+    if drafted_value is None:
+        return None
+    m = re.search(r"(19|20)\d{2}", str(drafted_value))
+    return int(m.group(0)) if m else None
+
+
+def combine_player_fingerprint(row: pd.Series, combine_year: Optional[int], draft_year: Optional[int]) -> tuple:
+    anchor_year = draft_year if draft_year is not None else combine_year
+    return (
+        normalize_name(row.get("Player", "")),
+        normalize_position(str(row.get("Pos", "")).strip()),
+        normalize_name(row.get("School", "")),
+        anchor_year,
+    )
+
+
 def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
@@ -460,6 +565,7 @@ def main():
     all_output_rows: List[dict] = []
     unmatched_rows: List[dict] = []
     athlete_meta: Dict[int, dict] = {}
+    athlete_claims: Dict[int, tuple] = {}
 
     # Global counters for stats section
     total_drafted_rows_seen = 0
@@ -526,6 +632,8 @@ def main():
                 continue
 
             combine_pos = str(row.get("Pos", "")).strip()
+            combine_school = str(row.get("School", "")).strip()
+            draft_year = infer_draft_year(row.get("Drafted (tm/rnd/yr)", ""))
 
             exact_pool = exact_index.get(normalize_name(player_name), [])
             for cand in exact_pool:
@@ -539,17 +647,47 @@ def main():
                     except Exception:
                         athlete_meta[cand.athlete_id] = {}
                         continue
-                athlete_meta[cand.athlete_id] = extract_athlete_meta(cached_payload)
+                stats_meta = extract_athlete_meta(cached_payload)
 
-            ath, ratio, method = pick_best_match(
-                player_name,
-                year,
-                combine_pos,
-                exact_index,
-                last_index,
-                athlete_meta,
-                min_ratio=args.min_match_ratio,
-            )
+                profile_payload = profile_cache_get(conn, cand.athlete_id)
+                if profile_payload is None:
+                    try:
+                        profile_payload = fetch_espn_athlete_profile(session, limiter, cand.athlete_id)
+                        profile_cache_put(conn, cand.athlete_id, profile_payload)
+                    except Exception:
+                        profile_payload = {}
+
+                stats_meta.update(extract_profile_meta(profile_payload))
+                athlete_meta[cand.athlete_id] = stats_meta
+
+            fingerprint = combine_player_fingerprint(row, year, draft_year)
+            blocked_ids: Set[int] = set()
+            ath = None
+
+            while True:
+                candidate, ratio, method = pick_best_match(
+                    player_name,
+                    year,
+                    draft_year,
+                    combine_pos,
+                    combine_school,
+                    exact_index,
+                    last_index,
+                    athlete_meta,
+                    min_ratio=args.min_match_ratio,
+                    excluded_athlete_ids=blocked_ids,
+                )
+                if candidate is None:
+                    break
+
+                existing_claim = athlete_claims.get(candidate.athlete_id)
+                if existing_claim is None or existing_claim == fingerprint:
+                    ath = candidate
+                    athlete_claims[candidate.athlete_id] = fingerprint
+                    break
+
+                blocked_ids.add(candidate.athlete_id)
+
             if ath:
                 df.at[idx, "NFL_id"] = str(ath.athlete_id)
                 matched_count += 1

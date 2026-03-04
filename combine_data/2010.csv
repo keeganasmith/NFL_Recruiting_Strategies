@@ -31,7 +31,7 @@ Navorro Bowman,OLB,Penn State,College Stats,6-0,242,4.7,29.5,26.0,115.0,6.91,4.5
 Sam Bradford,QB,Oklahoma,College Stats,6-4,236,4.79,,,,,,St. Louis Rams / 1st / 1st pick / 2010,BradSa00,13197
 Dezmon Briscoe,WR,Kansas,College Stats,6-2,207,4.66,33.0,9.0,115.0,7.1,4.57,Cincinnati Bengals / 6th / 191st pick / 2010,BrisDe00,13227
 Dorian Brooks,OG,James Madison,,6-2,306,5.15,23.0,26.0,100.0,7.73,4.66,,-9999,N/A
-Chris Brown,RB,Oklahoma,College Stats,5-10,210,4.55,36.0,17.0,115.0,,,,-9999,4551
+Chris Brown,RB,Oklahoma,College Stats,5-10,210,4.55,36.0,17.0,115.0,,,,-9999,N/A
 Antonio Brown,WR,Central Michigan,College Stats,5-10,186,4.56,33.5,13.0,105.0,6.98,4.18,Pittsburgh Steelers / 6th / 195th pick / 2010,BrowAn04,13934
 Charles Brown,OT,USC,College Stats,6-5,303,5.21,31.5,21.0,,,,New Orleans Saints / 2nd / 64th pick / 2010,BrowCh28,13263
 Cornelius Brown,CB,Texas-El Paso,College Stats,5-11,198,4.59,31.5,11.0,118.0,6.87,4.24,,BrowCo00,13318
@@ -45,14 +45,14 @@ Donald Butler,ILB,Washington,College Stats,6-1,245,4.61,,35.0,,,,San Diego Charg
 Jeff Byers,C,USC,College Stats,6-3,301,5.04,,33.0,,,,,ByerJe00,13325
 Nate Byham,TE,Pittsburgh,College Stats,6-4,268,4.97,29.0,,109.0,,,San Francisco 49ers / 6th / 182nd pick / 2010,ByhaNa00,N/A
 Kyle Calloway,OT,Iowa,College Stats,6-6,323,5.46,23.5,22.0,92.0,7.96,4.86,Buffalo Bills / 7th / 216th pick / 2010,-9999,N/A
-Lee Campbell,ILB,Minnesota,College Stats,6-2,247,4.88,34.0,17.0,108.0,7.27,4.4,,-9999,11452
+Lee Campbell,ILB,Minnesota,College Stats,6-2,247,4.88,34.0,17.0,108.0,7.27,4.4,,-9999,N/A
 Bruce Campbell,OT,Maryland,College Stats,6-6,314,4.75,32.0,34.0,101.0,7.58,4.69,Oakland Raiders / 4th / 106th pick / 2010,CampBr20,N/A
 Sean Canfield,QB,Oregon State,College Stats,6-4,223,4.93,29.5,,100.0,7.26,4.39,New Orleans Saints / 7th / 239th pick / 2010,CanfSe00,N/A
 Selvish Capers,OT,West Virginia,College Stats,6-5,308,5.11,30.5,19.0,106.0,7.68,4.68,Washington Redskins / 7th / 231st pick / 2010,CapeSe20,N/A
 Alex Carrington,DE,Arkansas State,College Stats,6-5,285,4.92,,26.0,,,,Buffalo Bills / 3rd / 72nd pick / 2010,CarrAl99,13266
 Nolan Carroll,CB,Maryland,College Stats,5-11,204,4.42,,,,,,Miami Dolphins / 5th / 145th pick / 2010,CarrNo00,13333
 Brandon Carter,OG,Texas Tech,College Stats,6-6,329,5.34,24.5,22.0,102.0,7.82,4.94,,CartBr20,N/A
-Chris Carter,WR,California-Davis,,5-11,191,4.49,,12.0,,,,Pittsburgh Steelers / 5th / 162nd pick / 2011,CartCh00,14174
+Chris Carter,WR,California-Davis,,5-11,191,4.49,,12.0,,,,Pittsburgh Steelers / 5th / 162nd pick / 2011,CartCh00,N/A
 Chris Chancellor,CB,Clemson,College Stats,5-9,177,4.49,34.0,14.0,115.0,6.85,4.07,,-9999,N/A
 Kam Chancellor,S,Virginia Tech,College Stats,6-3,231,4.62,32.0,22.0,116.0,7.36,4.41,Seattle Seahawks / 5th / 133rd pick / 2010,ChanKa99,13336
 Jamar Chaney,ILB,Mississippi State,College Stats,6-1,242,4.54,39.0,26.0,124.0,6.9,4.29,Philadelphia Eagles / 7th / 220th pick / 2010,ChanJa98,13337
@@ -95,7 +95,7 @@ Armanti Edwards,WR,Appalachian State,,5-11,187,4.41,,,,,,Carolina Panthers / 3rd
 Brody Eldridge,TE,Oklahoma,College Stats,6-5,261,4.72,31.5,,,,,Indianapolis Colts / 5th / 162nd pick / 2010,EldrBr00,13359
 Dedrick Epps,TE,Miami (FL),College Stats,6-3,250,4.7,,19.0,,,,San Diego Chargers / 7th / 235th pick / 2010,EppsDe00,13360
 Jacoby Ford,WR,Clemson,College Stats,5-9,186,4.28,33.5,15.0,115.0,7.0,4.44,Oakland Raiders / 4th / 108th pick / 2010,FordJa01,13363
-Jason Fox,OT,Miami (FL),College Stats,6-7,303,5.45,,23.0,,,,Detroit Lions / 4th / 128th pick / 2010,FoxxJa20,13364
+Jason Fox,OT,Miami (FL),College Stats,6-7,303,5.45,,23.0,,,,Detroit Lions / 4th / 128th pick / 2010,FoxxJa20,N/A
 Dominique Franks,CB,Oklahoma,College Stats,5-11,194,4.46,33.5,10.0,117.0,7.32,4.33,Atlanta Falcons / 5th / 135th pick / 2010,FranDo99,13365
 Junior Galette,OLB,Temple,College Stats,6-2,257,4.77,33.5,25.0,113.0,7.04,4.16,,GaleJu00,13566
 Clifton Geathers,DE,South Carolina,College Stats,6-7,299,4.98,36.0,26.0,112.0,7.69,,Cleveland Browns / 6th / 186th pick / 2010,GeatCl99,13366
@@ -147,7 +147,7 @@ Kyle Jolly,OT,North Carolina,,6-6,311,5.36,21.5,20.0,89.0,7.89,4.87,,JollKy00,N/
 Arthur Jones,DT,Syracuse,College Stats,6-3,301,5.04,,,,,,Baltimore Ravens / 5th / 157th pick / 2010,JoneAr22,13394
 Donald Jones,WR,Youngstown State,,6-0,214,4.46,41.0,20.0,119.0,6.9,4.2,,JoneDo00,13597
 Reshad Jones,S,Georgia,College Stats,6-1,214,4.51,39.5,24.0,118.0,7.43,4.54,Miami Dolphins / 5th / 163rd pick / 2010,JoneRe99,13395
-Chad Jones,S,LSU,College Stats,6-2,221,4.59,36.0,9.0,115.0,6.83,4.14,New York Giants / 3rd / 76th pick / 2010,-9999,13395
+Chad Jones,S,LSU,College Stats,6-2,221,4.59,36.0,9.0,115.0,6.83,4.14,New York Giants / 3rd / 76th pick / 2010,-9999,N/A
 Linval Joseph,DT,East Carolina,College Stats,6-4,328,5.09,30.0,39.0,100.0,8.12,4.71,New York Giants / 2nd / 46th pick / 2010,JoseLi99,13281
 Kevin Jurovich,WR,San Jose State,College Stats,5-11,188,4.45,,14.0,,,,,JuroKe00,N/A
 Mike Kafka,QB,Northwestern,College Stats,6-3,225,4.93,32.0,,110.0,6.96,4.37,Philadelphia Eagles / 4th / 122nd pick / 2010,KafkMi00,13397
@@ -233,7 +233,7 @@ Taylor Price,WR,Ohio,College Stats,6-0,204,4.4,37.0,16.0,114.0,6.82,4.34,New Eng
 Andrew Quarless,TE,Penn State,College Stats,6-4,254,4.68,32.0,23.0,112.0,,,Green Bay Packers / 5th / 154th pick / 2010,QuarAn00,13440
 Scott Ravanesi,P,Southern Illinois,,6-0,191,4.85,,,,,,,-9999,N/A
 David Reed,WR,Utah,College Stats,6-0,191,4.56,37.0,15.0,114.0,6.95,4.38,Baltimore Ravens / 5th / 156th pick / 2010,ReedDa00,13442
-Dace Richardson,OG,Iowa,,6-5,320,5.76,23.5,19.0,87.0,8.58,5.38,,-9999,11404
+Dace Richardson,OG,Iowa,,6-5,320,5.76,23.5,19.0,87.0,8.58,5.38,,-9999,N/A
 Perry Riley,OLB,LSU,College Stats,6-1,239,4.69,35.5,,119.0,6.97,4.25,Washington Redskins / 4th / 103rd pick / 2010,RilePe00,13443
 Andre Roberts,WR,Citadel,,5-11,195,4.4,36.0,15.0,120.0,6.77,4.15,Arizona Cardinals / 3rd / 88th pick / 2010,RobeAn00,13226
 Patrick Robinson,CB,Florida State,College Stats,5-11,190,4.46,39.0,15.0,122.0,6.78,,New Orleans Saints / 1st / 32nd pick / 2010,RobiPa99,13238

@@ -39,7 +39,7 @@ Vincent Brown,WR,San Diego State,College Stats,5-11,187,4.68,33.5,12.0,121.0,6.6
 Kendric Burney,CB,North Carolina,College Stats,5-9,186,4.71,32.5,14.0,112.0,,,,BurnKe00,N/A
 Brandon Burton,CB,Utah,College Stats,6-0,190,4.5,32.0,18.0,118.0,6.93,4.07,Minnesota Vikings / 5th / 139th pick / 2011,BurtBr00,14132
 Stephen Burton,WR,West Texas A&M,,6-1,221,4.5,34.5,19.0,117.0,7.04,4.31,Minnesota Vikings / 7th / 236th pick / 2011,BurtSt00,14210
-Mario Butler,CB,Georgia Tech,College Stats,6-0,182,4.65,30.5,,120.0,7.09,4.37,,ButlMa00,14671
+Mario Butler,CB,Georgia Tech,College Stats,6-0,182,4.65,30.5,,120.0,7.09,4.37,,ButlMa00,N/A
 Jordan Cameron,TE,USC,College Stats,6-5,254,4.53,37.5,23.0,119.0,6.82,4.03,Cleveland Browns / 4th / 102nd pick / 2011,CameJo00,14189
 Jeff Van Camp,QB,Florida Atlantic,College Stats,6-5,218,4.83,31.0,,114.0,6.87,4.16,,-9999,N/A
 Marcus Cannon,OT,TCU,College Stats,6-5,358,5.26,30.5,33.0,105.0,8.07,4.97,New England Patriots / 5th / 138th pick / 2011,CannMa00,14116
@@ -91,7 +91,7 @@ Reid Forrest,P,Washington State,College Stats,6-0,189,4.69,,,,,,,-9999,N/A
 Mason Foster,OLB,Washington,College Stats,6-1,245,4.75,31.0,22.0,110.0,7.14,4.45,Tampa Bay Buccaneers / 3rd / 84th pick / 2011,FostMa00,14023
 Orlando Franklin,OT,Miami (FL),College Stats,6-5,316,5.11,28.5,26.0,,,,Denver Broncos / 2nd / 46th pick / 2011,FranOr00,13996
 Sione Fua,DT,Stanford,College Stats,6-1,308,5.28,24.0,30.0,101.0,7.54,4.54,Carolina Panthers / 3rd / 97th pick / 2011,FuaxSi00,14003
-Brandon Fusco,C,Slippery Rock,,6-4,306,5.18,28.5,26.0,108.0,7.29,4.43,Minnesota Vikings / 6th / 172nd pick / 2011,FuscBr00,14208
+Brandon Fusco,C,Slippery Rock,,6-4,306,5.18,28.5,26.0,108.0,7.29,4.43,Minnesota Vikings / 6th / 172nd pick / 2011,FuscBr00,N/A
 Blaine Gabbert,QB,Missouri,College Stats,6-4,234,4.61,33.5,,120.0,6.84,4.26,Jacksonville Jaguars / 1st / 10th pick / 2011,GabbBl00,13987
 Charlie Gantt,TE,Michigan State,College Stats,6-4,252,4.85,30.5,27.0,112.0,7.15,4.4,,-9999,N/A
 Clyde Gates,WR,Abilene Christian,,6-0,192,4.31,40.0,16.0,131.0,,,Miami Dolphins / 4th / 111th pick / 2011,GateCl00,14209
@@ -137,7 +137,7 @@ Jeremiha Hunter,OLB,Iowa,College Stats,6-0,239,4.77,31.5,20.0,116.0,,,,HuntJe00,
 Kendall Hunter,RB,Oklahoma State,College Stats,5-7,199,4.46,35.0,24.0,122.0,6.74,4.21,San Francisco 49ers / 4th / 115th pick / 2011,HuntKe00,14159
 Zach Hurd,OG,Connecticut,,6-7,316,5.28,28.0,,101.0,7.73,4.77,,HurdZa00,N/A
 Maurice Hurt,OG,Florida,,6-3,318,5.39,,18.0,,,,Washington Redskins / 7th / 217th pick / 2011,HurtMa00,14078
-Henry Hynoski,FB,Pittsburgh,College Stats,6-0,257,5.06,30.5,24.0,111.0,,,,HynoHe01,N/A
+Henry Hynoski,FB,Pittsburgh,College Stats,6-0,257,5.06,30.5,24.0,111.0,,,,HynoHe01,14608
 Ben Ijalana,OG,Villanova,,6-4,317,5.2,,,,,,Indianapolis Colts / 2nd / 49th pick / 2011,IjalBe00,N/A
 Mark Ingram,RB,Alabama,College Stats,5-9,215,4.62,31.5,21.0,118.0,7.13,4.62,New Orleans Saints / 1st / 28th pick / 2011,IngrMa01,13981
 Nate Irving,ILB,North Carolina State,College Stats,6-1,240,4.74,,,,,,Denver Broncos / 3rd / 67th pick / 2011,IrviNa00,14004
@@ -147,7 +147,7 @@ Josh Jasper,K,LSU,College Stats,5-10,174,5.06,,,,,,,-9999,N/A
 Lestar Jean,WR,Florida Atlantic,,6-3,215,4.61,37.5,14.0,113.0,7.45,4.43,,JeanLe01,14570
 Jarvis Jenkins,DT,Clemson,College Stats,6-4,310,5.03,26.5,17.0,98.0,7.42,4.83,Washington Redskins / 2nd / 41st pick / 2011,JenkJa01,14019
 Jerrel Jernigan,WR,Troy,College Stats,5-9,185,4.46,37.5,11.0,124.0,7.07,4.25,New York Giants / 3rd / 83rd pick / 2011,JernJe00,14040
-Carl Johnson,OG,Florida,,6-5,361,5.4,25.5,25.0,96.0,,5.03,,-9999,4496
+Carl Johnson,OG,Florida,,6-5,361,5.4,25.5,25.0,96.0,,5.03,,-9999,N/A
 Jeron Johnson,S,Boise State,College Stats,5-10,212,4.51,,23.0,,,,,JohnJe02,14274
 Jerrod Johnson,QB,Texas A&M,College Stats,6-5,251,4.75,29.0,,119.0,7.28,4.31,,JohnJe03,N/A
 Ronald Johnson,WR,USC,College Stats,5-11,199,4.46,,16.0,,,,San Francisco 49ers / 6th / 182nd pick / 2011,JohnRo05,N/A
@@ -201,7 +201,7 @@ John Moffitt,OG,Wisconsin,,6-4,319,5.51,30.5,23.0,102.0,7.79,4.53,Seattle Seahaw
 Mike Mohamed,ILB,California,College Stats,6-3,239,4.65,32.0,21.0,115.0,6.7,4.0,Denver Broncos / 6th / 189th pick / 2011,MohaMi00,14097
 Denarius Moore,WR,Tennessee,College Stats,6-0,194,4.43,36.0,13.0,118.0,6.78,4.15,Oakland Raiders / 5th / 148th pick / 2011,MoorDe02,14153
 Rahim Moore,S,UCLA,College Stats,6-0,202,4.58,35.0,11.0,115.0,6.98,3.96,Denver Broncos / 2nd / 45th pick / 2011,MoorRa00,14050
-Joseph Morgan,WR,Michigan State,,6-0,189,4.38,35.5,10.0,123.0,6.91,4.25,,-9999,11408
+Joseph Morgan,WR,Michigan State,,6-0,189,4.38,35.5,10.0,123.0,6.91,4.25,,-9999,N/A
 Adrian Moten,OLB,Maryland,College Stats,6-2,228,4.53,31.0,18.0,114.0,7.05,4.21,,MoteAd00,14634
 Jonas Mouton,OLB,Michigan,College Stats,6-1,239,4.84,31.5,,115.0,7.08,4.34,San Diego Chargers / 2nd / 61st pick / 2011,MoutJo00,14000
 O.J. Murdock,WR,Fort Hays State,,5-10,197,4.5,34.5,15.0,116.0,,4.37,,MurdO.00,N/A
@@ -218,7 +218,7 @@ Stephen Paea,DT,Oregon State,College Stats,6-1,303,4.98,,49.0,,,,Chicago Bears /
 Martin Parker,DT,Richmond,,6-2,303,4.95,29.0,22.0,104.0,7.56,4.57,,ParkMa00,N/A
 Johnny Patrick,CB,Louisville,College Stats,5-11,191,4.59,32.0,13.0,110.0,,4.16,New Orleans Saints / 3rd / 88th pick / 2011,PatrJo00,14011
 Niles Paul,WR,Nebraska,College Stats,6-1,224,4.45,34.5,24.0,117.0,6.9,4.14,Washington Redskins / 5th / 155th pick / 2011,PaulNi00,14156
-Mike Person,OG,Montana State,,6-4,299,5.07,28.0,21.0,108.0,7.44,4.5,San Francisco 49ers / 7th / 239th pick / 2011,PersMi00,14070
+Mike Person,OG,Montana State,,6-4,299,5.07,28.0,21.0,108.0,7.44,4.5,San Francisco 49ers / 7th / 239th pick / 2011,PersMi00,N/A
 Patrick Peterson,CB,LSU,College Stats,6-0,219,4.31,38.0,15.0,126.0,6.58,4.07,Arizona Cardinals / 1st / 5th pick / 2011,PetePa00,13980
 Austin Pettis,WR,Boise State,College Stats,6-3,209,4.56,33.5,14.0,120.0,6.68,3.88,St. Louis Rams / 3rd / 78th pick / 2011,PettAu00,14035
 Zack Pianalto,TE,North Carolina,College Stats,6-3,256,4.78,32.0,22.0,108.0,6.85,4.41,,PianZa00,14567

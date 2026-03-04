@@ -76,8 +76,8 @@ Jessie Daniels,S,LSU,College Stats,5-11,216,4.54,,25.0,,,,,-9999,N/A
 Kenneth Darby,RB,Alabama,College Stats,5-10,211,4.75,30.0,19.0,108.0,7.25,4.53,Tampa Bay Buccaneers / 7th / 246th pick / 2007,DarbKe00,10689
 Doug Datish,C,Ohio State,College Stats,6-4,302,5.13,26.0,31.0,102.0,7.51,4.65,Atlanta Falcons / 6th / 198th pick / 2007,-9999,N/A
 Buster Davis,WR,Florida State,College Stats,6-1,207,4.41,,,,,,Arizona Cardinals / 3rd / 69th pick / 2007,DaviBu99,10513
-Buster Davis,ILB,Florida State,College Stats,5-9,239,4.64,31.0,24.0,104.0,7.28,4.37,Arizona Cardinals / 3rd / 69th pick / 2007,DaviBu99,10513
-Chris Davis,WR,Florida State,College Stats,5-10,181,4.5,35.5,,115.0,6.66,4.14,Tennessee Titans / 4th / 128th pick / 2007,DaviCh02,N/A
+Buster Davis,ILB,Florida State,College Stats,5-9,239,4.64,31.0,24.0,104.0,7.28,4.37,Arizona Cardinals / 3rd / 69th pick / 2007,DaviBu99,N/A
+Chris Davis,WR,Florida State,College Stats,5-10,181,4.5,35.5,,115.0,6.66,4.14,Tennessee Titans / 4th / 128th pick / 2007,DaviCh02,10571
 A.J. Davis,CB,North Carolina State,College Stats,5-10,193,4.56,,16.0,,,,Detroit Lions / 4th / 105th pick / 2007,-9999,N/A
 Victor DeGrate,DE,Oklahoma State,College Stats,6-3,249,4.77,,19.0,,,,,-9999,N/A
 Chris Denman,OT,Fresno State,College Stats,6-6,315,5.62,27.5,21.0,97.0,8.1,4.92,Tampa Bay Buccaneers / 7th / 214th pick / 2007,-9999,N/A
@@ -183,7 +183,7 @@ Robert Meachem,WR,Tennessee,College Stats,6-2,214,4.39,37.5,,121.0,6.97,4.31,New
 Brandon Mebane,DT,California,College Stats,6-1,309,5.15,24.0,24.0,106.0,7.94,4.65,Seattle Seahawks / 3rd / 85th pick / 2007,MebaBr99,10529
 Justin Medlock,K,UCLA,College Stats,6-0,201,4.89,,,,,,Kansas City Chiefs / 5th / 160th pick / 2007,MedlJu20,10603
 Brandon Meriweather,S,Miami (FL),College Stats,5-11,195,4.47,35.0,11.0,111.0,7.06,4.33,New England Patriots / 1st / 24th pick / 2007,MeriBr99,10468
-Zach Miller,TE,Arizona State,College Stats,6-4,256,4.87,34.0,,115.0,7.01,4.42,Oakland Raiders / 2nd / 38th pick / 2007,MillZa01,N/A
+Zach Miller,TE,Arizona State,College Stats,6-4,256,4.87,34.0,,115.0,7.01,4.42,Oakland Raiders / 2nd / 38th pick / 2007,MillZa01,10482
 Martrez Milner,TE,Georgia,College Stats,6-4,252,4.79,34.0,19.0,117.0,7.35,4.49,Atlanta Falcons / 4th / 133rd pick / 2007,MilnMa00,10576
 Marvin Mitchell,ILB,Tennessee,College Stats,6-3,249,4.87,32.0,22.0,108.0,7.29,4.25,New Orleans Saints / 7th / 220th pick / 2007,MitcMa99,10663
 Ryan Moore,WR,Miami (FL),College Stats,6-2,217,4.54,32.0,,110.0,6.87,4.35,,-9999,N/A
@@ -306,7 +306,7 @@ Anthony Waters,ILB,Clemson,College Stats,6-3,245,4.59,,25.0,,,,San Diego Charger
 Eric Weddle,S,Utah,College Stats,5-11,203,4.48,33.5,11.0,113.0,6.78,4.12,San Diego Chargers / 2nd / 37th pick / 2007,WeddEr99,10481
 John Wendling,S,Wyoming,College Stats,6-1,222,4.48,38.5,22.0,129.0,6.96,4.16,Buffalo Bills / 6th / 184th pick / 2007,WendJo99,10627
 Marvin White,S,TCU,College Stats,6-1,199,4.54,33.5,17.0,,,,Cincinnati Bengals / 4th / 114th pick / 2007,WhitMa99,10558
-Chaz Williams,CB,La-Monroe,College Stats,5-11,196,4.68,32.5,13.0,108.0,,,,-9999,3786
+Chaz Williams,CB,La-Monroe,College Stats,5-11,196,4.68,32.5,13.0,108.0,,,,-9999,N/A
 Chandler Williams,WR,Florida International,College Stats,5-11,184,4.42,32.5,,123.0,6.99,4.29,Minnesota Vikings / 7th / 233rd pick / 2007,-9999,N/A
 Paul Williams,WR,Fresno State,College Stats,6-1,205,4.45,38.5,,125.0,7.03,4.24,Tennessee Titans / 3rd / 80th pick / 2007,WillPa00,10524
 Patrick Willis,ILB,Mississippi,College Stats,6-1,242,4.51,39.0,22.0,119.0,7.23,4.46,San Francisco 49ers / 1st / 11th pick / 2007,WillPa98,10455

@@ -99,7 +99,7 @@ Jake Ferguson,TE,Wisconsin,College Stats,6-5,250,4.81,31.5,15.0,118.0,7.03,4.48,
 DaMarcus Fields,CB,Texas Tech,College Stats,6-0,193,4.48,34.5,,,,,,FielDa02,N/A
 Cordale Flott,CB,LSU,College Stats,6-1,175,,,,,,,New York Giants / 3rd / 81st pick / 2022,FlotCo00,4429607
 Jerome Ford,RB,Cincinnati,College Stats,5-11,210,4.46,31.0,,118.0,,,Cleveland Browns / 5th / 156th pick / 2022,FordJe00,4372019
-Jonathan Ford,DT,Miami,College Stats,6-5,333,,29.0,,102.0,,,Green Bay Packers / 7th / 234th pick / 2022,FordJo00,4259762
+Jonathan Ford,DT,Miami,College Stats,6-5,333,,29.0,,102.0,,,Green Bay Packers / 7th / 234th pick / 2022,FordJo00,N/A
 Luke Fortner,C,Kentucky,College Stats,6-4,307,5.21,24.0,,102.0,7.75,4.95,Jacksonville Jaguars / 3rd / 65th pick / 2022,FortLu01,4035048
 Ty Fryfogle,WR,Indiana,College Stats,6-1,204,4.53,39.0,,127.0,,,,FryfTy00,N/A
 Ahmad Gardner,CB,Cincinnati,College Stats,6-3,190,4.41,,,,,,New York Jets / 1st / 4th pick / 2022,GardSa00,N/A
@@ -141,7 +141,7 @@ Verone McKinley III,S,Oregon,College Stats,5-10,198,,35.0,16.0,120.0,,,,McKiVe00
 Ed Ingram,OG,LSU,College Stats,6-3,307,5.02,20.5,,102.0,7.81,4.76,Minnesota Vikings / 2nd / 59th pick / 2022,IngrEd00,4242227
 Keaontay Ingram,RB,USC,College Stats,6-0,221,4.53,34.5,,122.0,,,Arizona Cardinals / 6th / 201st pick / 2022,IngrKe01,4362087
 D'Marco Jackson,LB,Appalachian St.,College Stats,6-1,233,4.55,33.0,,125.0,,,New Orleans Saints / 5th / 161st pick / 2022,JackDM00,4241007
-Drake Jackson,EDGE,USC,College Stats,6-3,254,,36.5,,127.0,,,San Francisco 49ers / 2nd / 61st pick / 2022,JackDr01,4569511
+Drake Jackson,EDGE,USC,College Stats,6-3,254,,36.5,,127.0,,,San Francisco 49ers / 2nd / 61st pick / 2022,JackDr01,N/A
 Jordan Jackson,DT,Air Force,College Stats,6-5,294,,,,,,,New Orleans Saints / 6th / 194th pick / 2022,JackJo06,4261090
 Joshua Jobe,CB,Alabama,College Stats,6-0,182,,,,,,,,JobeJo00,N/A
 Josh Johnson,WR,Tulsa,College Stats,5-11,183,,,14.0,,,,,JohnJo13,N/A
@@ -251,7 +251,7 @@ Nephi Sewell,LB,Utah,College Stats,6-0,226,4.67,32.0,,120.0,7.01,4.33,,SeweNe00,
 Justin Shaffer,OG,Georgia,College Stats,6-4,314,5.14,25.5,,107.0,,,Atlanta Falcons / 6th / 190th pick / 2022,ShafJu00,N/A
 Khalil Shakir,WR,Boise St.,College Stats,6-0,196,4.43,34.5,,124.0,7.28,4.21,Buffalo Bills / 5th / 148th pick / 2022,ShakKh00,4373678
 Abram Smith,RB,Baylor,College Stats,6-0,213,,,,,,,,SmitAb00,N/A
-Brandon Smith,LB,Penn St.,College Stats,6-4,250,4.52,37.5,,128.0,,,Carolina Panthers / 4th / 120th pick / 2022,SmitBr08,4575416
+Brandon Smith,LB,Penn St.,College Stats,6-4,250,4.52,37.5,,128.0,,,Carolina Panthers / 4th / 120th pick / 2022,SmitBr08,N/A
 Lecitus Smith,OG,Virginia Tech,College Stats,6-3,314,5.18,,23.0,99.0,7.88,4.78,Arizona Cardinals / 6th / 215th pick / 2022,SmitLe01,N/A
 Tyler Smith,OT,Tulsa,College Stats,6-5,324,5.02,27.5,,105.0,7.78,4.65,Dallas Cowboys / 1st / 24th pick / 2022,SmitTy02,4568652
 Tyreke Smith,EDGE,Ohio St.,College Stats,6-3,254,4.86,34.0,,117.0,,,Seattle Seahawks / 5th / 158th pick / 2022,SmitTy03,4361340
@@ -308,7 +308,7 @@ Devon Williams,WR,Oregon,College Stats,6-5,210,4.65,33.0,,133.0,,,,WillDe09,N/A
 Jameson Williams,WR,Alabama,College Stats,6-2,179,,,,,,,Detroit Lions / 1st / 12th pick / 2022,WillJa11,4426388
 Joshua Williams,CB,Fayetteville St. University,,6-3,195,4.53,36.0,,124.0,,,Kansas City Chiefs / 4th / 135th pick / 2022,WillJo03,4917635
 Kyren Williams,RB,Notre Dame,College Stats,5-9,194,4.65,32.0,,116.0,,,Los Angeles Rams / 5th / 164th pick / 2022,WillKy02,4430737
-Sam Williams,EDGE,Mississippi,College Stats,6-4,261,4.46,32.5,,123.0,,,Dallas Cowboys / 2nd / 56th pick / 2022,WillSa00,4567242
+Sam Williams,EDGE,Mississippi,College Stats,6-4,261,4.46,32.5,,123.0,,,Dallas Cowboys / 2nd / 56th pick / 2022,WillSa00,N/A
 Malik Willis,QB,Liberty,College Stats,6-1,219,,,,,,,Tennessee Titans / 3rd / 86th pick / 2022,WillMa12,4242512
 Garrett Wilson,WR,Ohio St.,College Stats,6-0,183,4.38,36.0,,123.0,,4.36,New York Jets / 1st / 10th pick / 2022,WilsGa00,4569618
 Perrion Winfrey,DT,Oklahoma,College Stats,6-4,290,4.89,,,,,,Cleveland Browns / 4th / 108th pick / 2022,WinfPe00,4686470

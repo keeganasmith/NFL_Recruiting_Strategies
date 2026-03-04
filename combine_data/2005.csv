@@ -2,7 +2,7 @@ Player,Pos,School,College,Ht,Wt,40yd,Vertical,Bench,Broad Jump,3Cone,Shuttle,Dra
 Hamza Abdullah,S,Washington State,College Stats,6-2,214,,39.0,18.0,114.0,6.94,,Tampa Bay Buccaneers / 7th / 231st pick / 2005,AbduHa20,8645
 Anthony Alabi,OT,TCU,,6-5,310,5.12,32.5,18.0,105.0,7.62,4.6,Miami Dolphins / 5th / 162nd pick / 2005,AlabAn20,N/A
 Lorenzo Alexander,DT,California,College Stats,6-2,289,5.12,29.5,28.0,106.0,7.53,4.55,,AlexLo99,9424
-Jared Allen,QB,Florida Atlantic,College Stats,6-2,218,4.93,27.5,,106.0,7.29,4.39,,-9999,5651
+Jared Allen,QB,Florida Atlantic,College Stats,6-2,218,4.93,27.5,,106.0,7.29,4.39,,-9999,N/A
 Derek Anderson,QB,Oregon State,College Stats,6-6,242,5.03,29.0,,103.0,7.67,4.62,Baltimore Ravens / 6th / 213th pick / 2005,AndeDe00,8627
 Calvin Armstrong,OT,Washington State,,6-7,325,5.51,34.0,26.0,100.0,7.62,4.66,Philadelphia Eagles / 6th / 211th pick / 2005,-9999,N/A
 J.J. Arrington,RB,California,College Stats,5-9,214,4.4,35.0,18.0,121.0,6.81,4.1,Arizona Cardinals / 2nd / 44th pick / 2005,ArriJ.00,8458
@@ -19,7 +19,7 @@ Jordan Beck,OLB,Cal Poly,,6-2,233,4.6,41.0,25.0,128.0,7.11,4.1,Atlanta Falcons /
 Bryce Benekos,P,Texas-El Paso,College Stats,6-5,227,5.1,,,,,,,-9999,N/A
 Cedric Benson,RB,Texas,College Stats,5-10,222,4.62,,,,,,Chicago Bears / 1st / 4th pick / 2005,BensCe00,8419
 Adam Bergen,TE,Lehigh,,6-4,265,4.78,38.0,25.0,121.0,7.11,4.1,,BergAd00,9260
-Joe Berger,OT,Michigan Tech,,6-5,303,5.18,27.0,30.0,96.0,7.77,4.62,Carolina Panthers / 6th / 207th pick / 2005,BergJo20,8621
+Joe Berger,OT,Michigan Tech,,6-5,303,5.18,27.0,30.0,96.0,7.77,4.62,Carolina Panthers / 6th / 207th pick / 2005,BergJo20,N/A
 Justin Beriault,S,Ball State,College Stats,6-3,204,4.52,39.5,14.0,132.0,6.92,3.8,Dallas Cowboys / 6th / 208th pick / 2005,-9999,N/A
 Brock Berlin,QB,Miami (FL),College Stats,6-1,221,4.83,29.0,,109.0,7.49,4.54,,BerlBr00,10152
 Atari Bigby,S,Central Florida,College Stats,5-11,214,4.57,35.0,19.0,112.0,7.0,4.1,,BigbAt20,9445
@@ -67,7 +67,7 @@ Nick Collins,CB,Bethune-Cookman,,5-11,206,4.36,40.0,11.0,118.0,6.94,4.16,Green B
 Chris Colmer,OT,Boise State,,6-5,310,5.19,,,,,,Tampa Bay Buccaneers / 3rd / 91st pick / 2005,-9999,N/A
 Jon Colon,OT,Florida,,6-7,317,5.64,25.5,,85.0,8.03,4.89,,-9999,N/A
 Dustin Colquitt,P,Tennessee,College Stats,6-2,211,4.88,,,,,,Kansas City Chiefs / 3rd / 99th pick / 2005,ColqDu20,8513
-Dan Connolly,OT,Southeast Missouri,,6-4,311,5.19,28.5,22.0,108.0,7.65,4.54,,ConnDa21,9298
+Dan Connolly,OT,Southeast Missouri,,6-4,311,5.19,28.5,22.0,108.0,7.65,4.54,,ConnDa21,N/A
 Sean Considine,S,Iowa,College Stats,6-0,212,4.5,37.0,19.0,117.0,7.09,3.92,Philadelphia Eagles / 4th / 102nd pick / 2005,ConsSe20,8516
 Atcheson Conway,S,Bowie State,,5-10,219,4.9,32.0,14.0,108.0,7.38,4.1,,-9999,N/A
 Roger Cooper,OLB,Montana State,,6-2,239,4.75,35.5,19.0,118.0,7.28,4.33,,-9999,N/A
@@ -77,10 +77,10 @@ Channing Crowder,ILB,Florida,College Stats,6-2,252,4.71,,,,,,Miami Dolphins / 3r
 Airese Currie,WR,Clemson,College Stats,5-10,186,4.49,38.0,,125.0,7.05,4.07,Chicago Bears / 5th / 140th pick / 2005,CurrAi00,N/A
 Markus Curry,CB,Michigan,College Stats,5-11,181,4.59,35.0,12.0,117.0,7.04,3.89,,CurrMa20,N/A
 Tony Curtis,TE,Portland State,,6-5,269,4.93,,21.0,115.0,,,,CurtTo00,9434
-Harvey Dahl,OT,Nevada,,6-6,299,5.42,27.0,17.0,99.0,8.15,4.58,,DahlHa20,9500
+Harvey Dahl,OT,Nevada,,6-6,299,5.42,27.0,17.0,99.0,8.15,4.58,,DahlHa20,N/A
 Travis Daniels,CB,LSU,College Stats,6-1,194,4.54,35.0,,120.0,6.95,3.97,Miami Dolphins / 4th / 104th pick / 2005,DaniTr20,8518
 Josh Davis,WR,Marshall,College Stats,6-0,191,4.52,37.5,,118.0,7.19,4.22,,-9999,N/A
-Anthony Davis,RB,Wisconsin,College Stats,5-7,200,4.5,38.0,18.0,121.0,7.39,,Indianapolis Colts / 7th / 243rd pick / 2005,-9999,4887
+Anthony Davis,RB,Wisconsin,College Stats,5-7,200,4.5,38.0,18.0,121.0,7.39,,Indianapolis Colts / 7th / 243rd pick / 2005,-9999,N/A
 Chauncey Davis,DE,Florida State,College Stats,6-2,273,4.8,37.0,22.0,118.0,7.66,4.44,Atlanta Falcons / 4th / 128th pick / 2005,DaviCh22,8542
 Jim Davis,DE,Virginia Tech,College Stats,6-3,277,4.75,34.0,,111.0,7.11,4.23,,DaviJi20,9366
 Thomas Davis,S,Georgia,College Stats,6-1,230,4.6,36.5,,115.0,7.09,3.97,Carolina Panthers / 1st / 14th pick / 2005,DaviTh20,8429
@@ -92,7 +92,7 @@ Clifford Dukes,DE,Michigan State,,6-3,268,4.95,31.5,28.0,,,,,-9999,N/A
 Jon Dunn,OT,Virginia Tech,,6-7,328,5.4,,,,,,Cleveland Browns / 7th / 217th pick / 2005,-9999,N/A
 Braylon Edwards,WR,Michigan,College Stats,6-3,211,4.45,,,,,,Cleveland Browns / 1st / 3rd pick / 2005,EdwaBr00,8418
 Abraham Elimimian,CB,Hawaii,College Stats,5-10,190,4.62,39.0,14.0,121.0,,4.05,,-9999,N/A
-Atiyyah Ellison,DT,Missouri,,6-4,305,5.07,27.5,25.0,103.0,8.0,4.79,Carolina Panthers / 3rd / 89th pick / 2005,ElliAt00,8503
+Atiyyah Ellison,DT,Missouri,,6-4,305,5.07,27.5,25.0,103.0,8.0,4.79,Carolina Panthers / 3rd / 89th pick / 2005,ElliAt00,N/A
 Ben Emanuel,S,UCLA,College Stats,6-3,213,4.57,,21.0,,,,Carolina Panthers / 5th / 171st pick / 2005,EmanBe20,8585
 Jamar Enzor,OLB,Cincinnati,College Stats,6-0,243,4.75,,21.0,,,,,EnzoJa20,N/A
 Trai Essex,OT,Northwestern,College Stats,6-4,324,5.61,29.0,,96.0,8.11,4.92,Pittsburgh Steelers / 3rd / 93rd pick / 2005,EsseTr20,N/A
@@ -165,7 +165,7 @@ Tony Jackson,TE,Iowa,College Stats,6-2,266,4.75,33.0,23.0,113.0,7.5,4.48,Seattle
 Brandon Jacobs,RB,Southern Illinois,,6-4,267,4.56,37.0,19.0,118.0,7.53,4.46,New York Giants / 4th / 110th pick / 2005,JacoBr00,8524
 Erasmus James,DE,Wisconsin,College Stats,6-4,266,4.81,37.5,,122.0,7.56,4.37,Minnesota Vikings / 1st / 18th pick / 2005,JameEr20,8433
 Jason Jefferson,DT,Wisconsin,,6-2,310,5.1,28.5,,102.0,7.79,4.47,New Orleans Saints / 6th / 193rd pick / 2005,JeffJa21,8607
-Chase Johnson,OT,TCU,,6-8,330,5.41,27.0,,91.0,8.15,4.7,,-9999,4496
+Chase Johnson,OT,TCU,,6-8,330,5.41,27.0,,91.0,8.15,4.7,,-9999,N/A
 Derrick Johnson,CB,Texas,College Stats,5-11,197,4.43,,18.0,,7.15,4.1,Kansas City Chiefs / 1st / 15th pick / 2005,JohnDe25,8619
 Derrick Johnson,OLB,Texas,College Stats,6-3,242,4.52,37.5,,120.0,7.2,3.87,Kansas City Chiefs / 1st / 15th pick / 2005,JohnDe25,8430
 Marcus Johnson,OG,Mississippi,,6-6,321,5.45,27.5,21.0,104.0,7.71,4.71,Minnesota Vikings / 2nd / 49th pick / 2005,JohnMa20,8463
@@ -187,7 +187,7 @@ Jim Leonhard,S,Wisconsin,College Stats,5-8,191,4.63,,19.0,,,,,LeonJi23,9266
 Samuel Lightbody,OT,Michigan State,,6-9,321,5.62,30.0,,108.0,7.95,4.41,,-9999,N/A
 Dustin Long,QB,SMU,,6-2,208,4.67,30.5,,108.0,6.77,4.08,,-9999,N/A
 Khari Long,DE,Baylor,College Stats,6-4,257,4.74,38.5,27.0,121.0,7.22,4.07,Kansas City Chiefs / 6th / 199th pick / 2005,LongKh20,N/A
-Daniel Loper,OT,Texas Tech,,6-6,306,5.3,32.0,14.0,101.0,7.74,4.68,Tennessee Titans / 5th / 150th pick / 2005,LopeDa20,8564
+Daniel Loper,OT,Texas Tech,,6-6,306,5.3,32.0,14.0,101.0,7.74,4.68,Tennessee Titans / 5th / 150th pick / 2005,LopeDa20,N/A
 Chase Lyman,WR,California,College Stats,6-3,217,4.5,,,,,,New Orleans Saints / 4th / 118th pick / 2005,-9999,N/A
 Andre Maddox,S,Boise State,,6-1,205,4.46,36.5,17.0,127.0,7.33,,New York Jets / 5th / 161st pick / 2005,-9999,N/A
 Tony Madison,WR,Kansas State,College Stats,6-1,213,4.52,39.0,,121.0,7.13,4.3,,-9999,N/A
@@ -228,7 +228,7 @@ Doug Nienhuis,OG,Oregon State,,6-6,307,5.15,29.5,22.0,99.0,7.5,4.47,Seattle Seah
 Nick Novak,K,Maryland,College Stats,5-11,191,5.1,,,,,,,novaknic01,9329
 Mike Nugent,K,Ohio State,College Stats,5-10,182,4.72,,,,,,New York Jets / 2nd / 47th pick / 2005,nugenmik01,8461
 Craig Ochs,QB,Montana,,6-2,218,4.87,28.5,,104.0,7.03,4.13,,-9999,N/A
-Frank Omiyale,OT,Tennessee Tech,,6-4,310,5.3,29.5,22.0,101.0,8.19,4.72,Atlanta Falcons / 5th / 163rd pick / 2005,OmiyFr20,8577
+Frank Omiyale,OT,Tennessee Tech,,6-4,310,5.3,29.5,22.0,101.0,8.19,4.72,Atlanta Falcons / 5th / 163rd pick / 2005,OmiyFr20,N/A
 Dan Orlovsky,QB,Connecticut,College Stats,6-5,225,4.93,29.5,,107.0,7.33,4.39,Detroit Lions / 5th / 145th pick / 2005,OrloDa00,8559
 Kyle Orton,QB,Purdue,College Stats,6-4,233,5.06,26.5,,,7.38,4.52,Chicago Bears / 4th / 106th pick / 2005,OrtoKy00,8520
 Chad Owens,WR,Hawaii,College Stats,5-7,183,4.62,37.0,,116.0,6.7,3.94,Jacksonville Jaguars / 6th / 185th pick / 2005,OwenCh00,8599
@@ -303,7 +303,7 @@ Zach Tuiasosopo,FB,Washington,College Stats,6-2,249,5.0,25.5,19.0,100.0,7.57,4.6
 Marviel Underwood,S,San Diego State,College Stats,5-10,205,4.45,38.0,19.0,118.0,7.12,4.21,Green Bay Packers / 4th / 115th pick / 2005,UndeMa20,8529
 Jimmy Verdon,DE,Arizona State,College Stats,6-3,280,5.02,29.5,18.0,105.0,7.89,4.53,New Orleans Saints / 7th / 232nd pick / 2005,VerdJi20,N/A
 Kevin Vickerson,DT,Michigan State,,6-5,310,5.0,32.5,,103.0,7.78,4.64,Miami Dolphins / 7th / 216th pick / 2005,VickKe99,8630
-Cameron Wake,OLB,Penn State,College Stats,6-3,236,4.65,45.5,20.0,130.0,7.12,4.11,,WakeCa00,12417
+Cameron Wake,OLB,Penn State,College Stats,6-3,236,4.65,45.5,20.0,130.0,7.12,4.11,,WakeCa00,N/A
 Rian Wallace,OLB,Temple,College Stats,6-2,241,4.73,35.5,10.0,112.0,7.45,3.94,Pittsburgh Steelers / 5th / 166th pick / 2005,WallRi20,8580
 Andrew Walter,QB,Arizona State,College Stats,6-6,233,4.86,,,,,,Oakland Raiders / 3rd / 69th pick / 2005,WaltAn00,8483
 DeMarcus Ware,OLB,Troy,College Stats,6-4,251,4.56,38.5,27.0,122.0,6.83,4.07,Dallas Cowboys / 1st / 11th pick / 2005,WareDe99,8426
@@ -319,7 +319,7 @@ Manuel White,FB,UCLA,College Stats,6-2,244,4.64,,,,,,Washington Redskins / 4th /
 Roddy White,WR,Ala-Birmingham,College Stats,6-1,207,4.46,,,,,,Atlanta Falcons / 1st / 27th pick / 2005,WhitRo00,8442
 Sam Wilder,OT,Colorado,,6-5,298,5.31,26.5,23.0,102.0,7.43,4.5,,-9999,N/A
 Ben Wilkerson,C,LSU,College Stats,6-3,299,5.46,,,,,,,WilkBe20,9210
-Aric Williams,CB,Oregon State,College Stats,5-11,187,4.58,36.0,8.0,117.0,,,,-9999,11354
+Aric Williams,CB,Oregon State,College Stats,5-11,187,4.58,36.0,8.0,117.0,,,,-9999,N/A
 Cedrick Williams,CB,Kansas State,,5-10,168,4.5,35.0,13.0,121.0,7.24,4.22,,-9999,N/A
 Cadillac Williams,RB,Auburn,College Stats,5-11,217,4.43,35.5,19.0,118.0,6.94,4.15,Tampa Bay Buccaneers / 1st / 5th pick / 2005,WillCa02,8420
 Darrent Williams,CB,Oklahoma State,College Stats,5-9,176,4.3,39.0,16.0,124.0,6.97,3.96,Denver Broncos / 2nd / 56th pick / 2005,WillDa21,8470

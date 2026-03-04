@@ -115,7 +115,7 @@ Ernest Grant,DT,Ark-Pine Bluff,,6-5,316,5.31,29.5,24.0,98.0,8.0,5.03,Miami Dolph
 Jonathan Gray,OT,Texas Tech,,6-4,338,5.85,23.0,20.0,94.0,,,,-9999,N/A
 Brian Gray,CB,BYU,,6-1,214,4.94,33.5,19.0,116.0,7.38,4.24,,-9999,N/A
 Barrett Green,OLB,West Virginia,College Stats,6-0,233,4.56,36.0,22.0,120.0,,,Detroit Lions / 2nd / 50th pick / 2000,GreeBa20,2181
-Mike Green,S,NW State (LA),,6-0,189,4.53,38.5,,118.0,,4.2,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,2344
+Mike Green,S,NW State (LA),,6-0,189,4.53,38.5,,118.0,,4.2,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,N/A
 Mike Green,FB,Houston,College Stats,6-0,253,4.78,28.5,25.0,108.0,7.08,4.34,Tennessee Titans / 7th / 213th pick / 2000,GreeMi00,2344
 Damian Gregory,DT,Illinois State,,6-2,307,4.87,30.0,27.0,105.0,7.37,4.6,,GregDa20,2869
 Cornelius Griffin,DE,Alabama,,6-3,297,4.9,31.0,30.0,111.0,7.63,4.62,New York Giants / 2nd / 42nd pick / 2000,GrifCo20,2173
@@ -125,7 +125,7 @@ Dante' Hall,RB,Texas A&M,,5-8,191,4.44,38.0,18.0,123.0,6.62,3.82,,-9999,2284
 James Hall,DE,Michigan,,6-2,271,5.03,32.0,,111.0,7.86,4.51,,HallJa21,2432
 Troy Hambrick,RB,South Carolina,College Stats,6-0,237,4.66,34.5,21.0,118.0,7.48,4.44,,HambTr00,2535
 Joey Hamilton,WR,Jacksonville State,,6-1,201,4.54,36.0,,116.0,7.57,4.41,,-9999,2365
-Joe Hamilton,QB,Georgia Tech,College Stats,5-10,192,4.81,,,106.0,,,Tampa Bay Buccaneers / 7th / 234th pick / 2000,HamiJo20,2365
+Joe Hamilton,QB,Georgia Tech,College Stats,5-10,192,4.81,,,106.0,,,Tampa Bay Buccaneers / 7th / 234th pick / 2000,HamiJo20,N/A
 Thomas Hamner,RB,Minnesota,,6-0,197,4.5,32.0,17.0,125.0,6.97,4.07,Philadelphia Eagles / 6th / 171st pick / 2000,-9999,N/A
 D'Andre Hardeman,FB,Texas A&M,,5-10,238,4.81,30.0,,109.0,7.27,4.36,,-9999,N/A
 Antwan Harris,CB,Virginia,,5-9,186,4.34,39.0,16.0,121.0,6.75,4.01,New England Patriots / 6th / 187th pick / 2000,HarrAn21,2318
@@ -158,7 +158,7 @@ Ryan Johanningmeier,OG,Colorado,,6-6,310,5.25,29.0,,107.0,7.9,4.66,,-9999,N/A
 Matt Johnson,OG,BYU,,6-4,345,5.56,28.0,35.0,99.0,8.07,4.99,Indianapolis Colts / 5th / 138th pick / 2000,-9999,N/A
 Doug Johnson,QB,Florida,College Stats,6-2,226,4.95,29.5,,96.0,,,,JohnDo00,2405
 Dwight Johnson,DT,Baylor,,6-4,285,4.97,28.0,26.0,105.0,7.51,4.76,,JohnDw20,2426
-Eric Johnson,S,Yale,,6-0,215,4.6,38.0,12.0,121.0,6.96,4.17,San Francisco 49ers / 7th / 224th pick / 2001,JohnEr00,N/A
+Eric Johnson,S,Yale,,6-0,215,4.6,38.0,12.0,121.0,6.96,4.17,San Francisco 49ers / 7th / 224th pick / 2001,JohnEr00,2773
 Jerry Johnson,DT,Florida State,,6-0,293,5.03,28.5,26.0,102.0,,,Denver Broncos / 4th / 101st pick / 2000,JohnJe21,2232
 Dwaune Jones,WR,Richmond,,6-0,191,4.66,,,,,,,-9999,N/A
 Dhani Jones,OLB,Michigan,,6-1,240,4.68,,29.0,,,,New York Giants / 6th / 177th pick / 2000,JoneDh20,2308
@@ -195,9 +195,9 @@ Anthony Malbrough,CB,Texas Tech,College Stats,5-9,184,4.44,35.5,20.0,117.0,6.73,
 Tee Martin,QB,Tennessee,College Stats,6-2,227,4.58,34.5,,113.0,,,Pittsburgh Steelers / 5th / 163rd pick / 2000,MartTe00,2294
 Terrence McCaskey,TE,Mississippi State,,6-5,271,5.0,29.0,,101.0,,,,-9999,N/A
 Kevin McDougal,RB,Colorado State,College Stats,5-11,206,4.63,32.0,,108.0,7.08,4.12,,McDoKe01,2439
-Stockar McDougle,OT,Oklahoma,College Stats,6-5,361,5.5,,24.0,,,,Detroit Lions / 1st / 20th pick / 2000,McDoSt20,2151
+Stockar McDougle,OT,Oklahoma,College Stats,6-5,361,5.5,,24.0,,,,Detroit Lions / 1st / 20th pick / 2000,McDoSt20,N/A
 Chris McIntosh,OT,Wisconsin,College Stats,6-6,315,5.39,,28.0,,,,Seattle Seahawks / 1st / 22nd pick / 2000,McInCh20,N/A
-Damion McIntosh,OT,Kansas State,,6-4,328,5.31,26.0,23.0,97.0,7.72,4.71,San Diego Chargers / 3rd / 83rd pick / 2000,McInDa20,2214
+Damion McIntosh,OT,Kansas State,,6-4,328,5.31,26.0,23.0,97.0,7.72,4.71,San Diego Chargers / 3rd / 83rd pick / 2000,McInDa20,N/A
 Alvin McKinley,DT,Mississippi State,,6-4,289,5.09,27.5,22.0,102.0,7.73,4.61,Carolina Panthers / 4th / 120th pick / 2000,McKiAl20,2251
 Rondell Mealey,RB,LSU,College Stats,6-0,212,4.69,33.0,,120.0,6.89,4.15,Green Bay Packers / 7th / 252nd pick / 2000,MealRo00,2383
 Brad Meester,C,New Mexico,,6-3,298,5.12,34.0,25.0,110.0,7.46,4.43,Jacksonville Jaguars / 2nd / 60th pick / 2000,MeesBr20,2191
@@ -242,13 +242,13 @@ Chase Raynock,OT,Montana,,6-6,308,5.5,25.0,22.0,94.0,8.33,5.0,,-9999,N/A
 Chris Redman,QB,Louisville,College Stats,6-3,222,5.37,26.5,,98.0,7.8,4.78,Baltimore Ravens / 3rd / 75th pick / 2000,RedmCh00,2206
 J.R. Redmond,RB,Arizona State,College Stats,5-11,216,4.48,32.5,,121.0,,,New England Patriots / 3rd / 76th pick / 2000,RedmJ.00,2207
 Quinton Reese,DE,Auburn,,6-4,283,5.13,30.0,18.0,101.0,7.91,4.68,Detroit Lions / 6th / 181st pick / 2000,-9999,N/A
-Tutan Reyes,OT,Mississippi,,6-3,299,5.37,26.5,20.0,99.0,7.49,4.88,New Orleans Saints / 5th / 131st pick / 2000,ReyeTu20,2262
+Tutan Reyes,OT,Mississippi,,6-3,299,5.37,26.5,20.0,99.0,7.49,4.88,New Orleans Saints / 5th / 131st pick / 2000,ReyeTu20,N/A
 Rob Riti,C,Missouri,,6-2,293,5.19,29.5,17.0,106.0,,,,-9999,N/A
 Fred Robbins,DT,Wake Forest,,6-4,312,5.09,29.5,25.0,94.0,7.72,4.72,Minnesota Vikings / 2nd / 55th pick / 2000,RobbFr20,2186
 Roger Roesler,OG,Texas,,6-5,314,5.31,29.5,25.0,101.0,8.31,4.76,,-9999,N/A
 Phillip Rogers,RB,Georgia Tech,,6-1,232,4.68,37.0,19.0,124.0,7.21,4.31,,-9999,N/A
 Mark Roman,CB,LSU,,5-11,188,4.55,,,,,,Cincinnati Bengals / 2nd / 34th pick / 2000,RomaMa20,2165
-Blaine Saipaia,OG,Colorado State,,6-3,321,5.35,,,,,,,SaipBl20,5217
+Blaine Saipaia,OG,Colorado State,,6-3,321,5.35,,,,,,,SaipBl20,N/A
 Chris Samuels,OT,Alabama,College Stats,6-5,325,5.08,,,,,,Washington Redskins / 1st / 3rd pick / 2000,SamuCh00,2134
 Lewis Sanders,CB,Maryland,,6-0,202,4.5,37.0,10.0,116.0,,,Cleveland Browns / 4th / 95th pick / 2000,SandLe20,2226
 Ketric Sanford,RB,Houston,,5-7,199,4.6,32.0,12.0,118.0,6.63,4.3,,-9999,N/A
@@ -269,7 +269,7 @@ Peter Sirmon,ILB,Oregon,,6-2,246,4.84,34.5,20.0,115.0,7.21,4.27,Tennessee Titans
 T.J. Slaughter,ILB,Southern Miss,,6-0,247,4.87,30.0,24.0,112.0,7.08,4.26,Jacksonville Jaguars / 3rd / 92nd pick / 2000,SlauT.20,2223
 Dwyte Smiley,S,Youngstown State,,6-1,198,4.57,35.0,13.0,115.0,7.18,4.29,,-9999,N/A
 Jamel Smith,ILB,Virginia Tech,,6-0,245,5.18,29.5,,108.0,7.51,4.58,,-9999,N/A
-Keith Smith,RB,Arizona,,5-10,207,4.5,,,,,,,SmitKe03,17315
+Keith Smith,RB,Arizona,,5-10,207,4.5,,,,,,,SmitKe03,N/A
 Marvel Smith,OT,Arizona State,,6-5,320,5.37,27.5,24.0,100.0,7.87,4.83,Pittsburgh Steelers / 2nd / 38th pick / 2000,SmitMa55,2169
 Paul Smith,FB,Texas-El Paso,,5-11,220,4.65,,25.0,,,,San Francisco 49ers / 5th / 132nd pick / 2000,SmitPa00,2263
 Robaire Smith,DE,Michigan State,,6-4,275,4.88,,,,,,Tennessee Titans / 6th / 197th pick / 2000,SmitRo21,2328
@@ -310,9 +310,9 @@ Jerard White,CB,Massachusetts,,6-1,213,4.61,38.5,14.0,118.0,6.96,4.53,,-9999,N/A
 Dez White,WR,Georgia Tech,College Stats,6-1,218,4.62,37.5,,124.0,6.91,4.09,Chicago Bears / 3rd / 69th pick / 2000,WhitDe00,2200
 Michael Wiley,RB,Ohio State,College Stats,5-11,193,4.5,,,,,,Dallas Cowboys / 5th / 144th pick / 2000,WileMi00,2275
 Boo Williams,RB,South Carolina,,5-11,222,4.52,,,,,,,WillBo00,N/A
-Bobbie Williams,OT,Arkansas,,6-4,332,5.26,29.0,28.0,97.0,7.78,4.72,Philadelphia Eagles / 2nd / 61st pick / 2000,WillBo21,2192
+Bobbie Williams,OT,Arkansas,,6-4,332,5.26,29.0,28.0,97.0,7.78,4.72,Philadelphia Eagles / 2nd / 61st pick / 2000,WillBo21,N/A
 James Williams,WR,Marshall,College Stats,5-11,180,4.59,36.0,,123.0,7.22,4.16,Seattle Seahawks / 6th / 175th pick / 2000,WillJa01,2306
-Jack Williams,S,Azusa Pacific,,5-10,206,4.72,31.5,15.0,108.0,7.15,4.65,Denver Broncos / 4th / 119th pick / 2008,WillJa96,N/A
+Jack Williams,S,Azusa Pacific,,5-10,206,4.72,31.5,15.0,108.0,7.15,4.65,Denver Broncos / 4th / 119th pick / 2008,WillJa96,11354
 Josh Williams,DT,Michigan,,6-3,282,4.9,30.5,,111.0,7.22,4.25,Indianapolis Colts / 4th / 122nd pick / 2000,WillJo30,2253
 Antonio Wilson,OLB,Texas A&M-Commerce,,6-2,245,4.56,,11.0,,,,Minnesota Vikings / 4th / 106th pick / 2000,WilsAn20,2237
 Cedric Woodard,DT,Texas,,6-2,290,5.21,30.5,23.0,109.0,,,Baltimore Ravens / 6th / 191st pick / 2000,WoodCe20,2322
