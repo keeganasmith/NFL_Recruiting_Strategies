@@ -3,11 +3,18 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from analysis.position_assignment import filter_rows_to_primary_nfl_position
 
 DATA_PATH = Path("NFL_data/combine_with_stats.csv")
 OUTPUT_HTML = Path("outputs/visualizations/overperformer_quadrant.html")
@@ -215,6 +222,7 @@ def _zscore(series: pd.Series) -> pd.Series:
     return (series - series.mean()) / std
 
 
+
 def _position_stat_columns(pos: str, available_cols: set[str]) -> list[str]:
     if pos in QB_POSITIONS:
         candidates = PASSING_STATS + ["rushing_rushingYards", "rushing_rushingTouchdowns"]
@@ -251,6 +259,15 @@ def build_player_level_dataset(df: pd.DataFrame) -> pd.DataFrame:
     ]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    games_cols = [col for col in numeric_cols if col.endswith("_gamesPlayed")]
+    df = filter_rows_to_primary_nfl_position(
+        df,
+        player_key_col="player_key",
+        nfl_position_col="position",
+        fallback_position_col="Pos",
+        games_played_cols=games_cols,
+    )
 
     agg_spec: dict[str, str] = {col: "sum" for col in numeric_cols}
     agg_spec.update({col: "first" for col in COMBINE_METRICS if col in df.columns})
