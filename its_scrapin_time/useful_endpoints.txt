@@ -29,3 +29,5 @@ curl 'https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/athletes/
   -H 'Sec-Fetch-Site: same-site' \
   -H 'Priority: u=0' \
   -H 'TE: trailers'
+
+https://www.sports-reference.com/cfb/players/
