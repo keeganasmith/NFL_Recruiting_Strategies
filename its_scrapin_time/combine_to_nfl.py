@@ -87,7 +87,9 @@ class Athlete:
     norm_name: str
 
 
-def load_athletes(athletes_csv: str) -> Tuple[Dict[str, List[Athlete]], Dict[str, List[Athlete]]]:
+def load_athletes(
+    athletes_csv: str,
+) -> Tuple[Dict[str, List[Athlete]], Dict[str, List[Athlete]]]:
     exact: Dict[str, List[Athlete]] = {}
     by_last: Dict[str, List[Athlete]] = {}
 
@@ -195,7 +197,9 @@ def score_candidate(
     cschool = normalize_name(combine_school)
     meta_colleges = candidate_meta.get("colleges", set())
     if cschool and meta_colleges:
-        best_school_match = max((school_similarity(cschool, mc) for mc in meta_colleges), default=0.0)
+        best_school_match = max(
+            (school_similarity(cschool, mc) for mc in meta_colleges), default=0.0
+        )
         if best_school_match >= 0.90:
             score += 6.0
         elif best_school_match < 0.60:
@@ -246,20 +250,34 @@ def pick_best_match(
         def has_position_match(ath: Athlete) -> bool:
             if not cpos:
                 return False
-            meta_positions = athlete_meta.get(ath.athlete_id, {}).get("positions", set())
+            meta_positions = athlete_meta.get(ath.athlete_id, {}).get(
+                "positions", set()
+            )
             return bool(meta_positions) and cpos in meta_positions
 
         has_any_pos_match = any(has_position_match(a) for a in exact_matches)
         scored: List[Tuple[float, Athlete]] = []
         for a in exact_matches:
             if has_any_pos_match and cpos:
-                meta_positions = athlete_meta.get(a.athlete_id, {}).get("positions", set())
+                meta_positions = athlete_meta.get(a.athlete_id, {}).get(
+                    "positions", set()
+                )
                 if meta_positions and cpos not in meta_positions:
                     # If we have at least one exact-name candidate whose tracked NFL
                     # position matches the combine position, ignore exact-name
                     # candidates that confidently disagree on position.
                     continue
-            scored.append((score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(a.athlete_id, {})), a))
+            scored.append(
+                (
+                    score_candidate(
+                        anchor_year,
+                        combine_pos,
+                        combine_school,
+                        athlete_meta.get(a.athlete_id, {}),
+                    ),
+                    a,
+                )
+            )
 
         ranked = sorted(scored, key=lambda x: x[0], reverse=True)
         if not ranked:
@@ -280,7 +298,12 @@ def pick_best_match(
         if ath.athlete_id in excluded:
             continue
         r = similarity(cn, ath.norm_name)
-        r += 0.02 * score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(ath.athlete_id, {}))
+        r += 0.02 * score_candidate(
+            anchor_year,
+            combine_pos,
+            combine_school,
+            athlete_meta.get(ath.athlete_id, {}),
+        )
         if r > best_r:
             best_r = r
             best = ath
@@ -299,7 +322,12 @@ def pick_best_match(
             if ath.athlete_id in excluded:
                 continue
             r = similarity(cn, ath.norm_name)
-            r += 0.02 * score_candidate(anchor_year, combine_pos, combine_school, athlete_meta.get(ath.athlete_id, {}))
+            r += 0.02 * score_candidate(
+                anchor_year,
+                combine_pos,
+                combine_school,
+                athlete_meta.get(ath.athlete_id, {}),
+            )
             if r > best_r:
                 best_r = r
                 best = ath
@@ -496,7 +524,9 @@ def infer_draft_year(drafted_value: str) -> Optional[int]:
     return int(m.group(0)) if m else None
 
 
-def combine_player_fingerprint(row: pd.Series, combine_year: Optional[int], draft_year: Optional[int]) -> tuple:
+def combine_player_fingerprint(
+    row: pd.Series, combine_year: Optional[int], draft_year: Optional[int]
+) -> tuple:
     anchor_year = draft_year if draft_year is not None else combine_year
     return (
         normalize_name(row.get("Player", "")),
@@ -524,20 +554,43 @@ def fmt_duration(seconds: float) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--combine_glob", required=True, help='Glob for yearly combine CSVs, e.g. "combine/*.csv"')
-    ap.add_argument("--athletes_csv", required=True, help="CSV with columns athlete_id, athlete_display_name")
+    ap.add_argument(
+        "--combine_glob",
+        required=True,
+        help='Glob for yearly combine CSVs, e.g. "combine/*.csv"',
+    )
+    ap.add_argument(
+        "--athletes_csv",
+        required=True,
+        help="CSV with columns athlete_id, athlete_display_name",
+    )
     ap.add_argument("--out_csv", default="combine_with_stats.csv")
     ap.add_argument("--unmatched_csv", default="unmatched_players.csv")
     ap.add_argument("--cache_db", default="espn_cache.sqlite")
-    ap.add_argument("--min_delay_ms", type=int, default=200, help="Minimum delay between network requests")
+    ap.add_argument(
+        "--min_delay_ms",
+        type=int,
+        default=200,
+        help="Minimum delay between network requests",
+    )
     ap.add_argument("--min_match_ratio", type=float, default=0.92)
     ap.add_argument(
         "--combine_out_dir",
         default="",
         help="If set, write updated combine CSVs here instead of editing in place.",
     )
-    ap.add_argument("--print_every", type=int, default=500, help="Progress print frequency while matching NFL_id")
-    ap.add_argument("--print_every_fetch", type=int, default=50, help="Progress print frequency while fetching stats")
+    ap.add_argument(
+        "--print_every",
+        type=int,
+        default=500,
+        help="Progress print frequency while matching NFL_id",
+    )
+    ap.add_argument(
+        "--print_every_fetch",
+        type=int,
+        default=50,
+        help="Progress print frequency while fetching stats",
+    )
     args = ap.parse_args()
 
     t0 = time.time()
@@ -584,7 +637,9 @@ def main():
         year = infer_year_from_filename(fp)
         file_name = os.path.basename(fp)
 
-        print(f"\n[FILE {file_i}/{len(combine_files)}] Processing {file_name} (year={year if year else 'unknown'})")
+        print(
+            f"\n[FILE {file_i}/{len(combine_files)}] Processing {file_name} (year={year if year else 'unknown'})"
+        )
 
         df = pd.read_csv(fp)
 
@@ -605,7 +660,9 @@ def main():
         if drafted_col not in df.columns:
             cand = [c for c in df.columns if c.lower().startswith("drafted")]
             if not cand:
-                print(f"[WARN] No drafted column in {file_name}; will still update NFL_id, but skip stats output.")
+                print(
+                    f"[WARN] No drafted column in {file_name}; will still update NFL_id, but skip stats output."
+                )
                 drafted_col = None
             else:
                 drafted_col = cand[0]
@@ -642,7 +699,9 @@ def main():
                 cached_payload = cache_get(conn, cand.athlete_id)
                 if cached_payload is None:
                     try:
-                        cached_payload = fetch_espn_stats(session, limiter, cand.athlete_id)
+                        cached_payload = fetch_espn_stats(
+                            session, limiter, cand.athlete_id
+                        )
                         cache_put(conn, cand.athlete_id, cached_payload)
                     except Exception:
                         athlete_meta[cand.athlete_id] = {}
@@ -652,7 +711,9 @@ def main():
                 profile_payload = profile_cache_get(conn, cand.athlete_id)
                 if profile_payload is None:
                     try:
-                        profile_payload = fetch_espn_athlete_profile(session, limiter, cand.athlete_id)
+                        profile_payload = fetch_espn_athlete_profile(
+                            session, limiter, cand.athlete_id
+                        )
                         profile_cache_put(conn, cand.athlete_id, profile_payload)
                     except Exception:
                         profile_payload = {}
@@ -711,7 +772,9 @@ def main():
         if drafted_col is None:
             continue
 
-        df_drafted = df[df[drafted_col].notna() & (df[drafted_col].astype(str).str.strip() != "")]
+        df_drafted = df[
+            df[drafted_col].notna() & (df[drafted_col].astype(str).str.strip() != "")
+        ]
         drafted_n = len(df_drafted)
         print(f"[DRAFTED] {file_name}: drafted rows={drafted_n:,}")
 
@@ -757,7 +820,9 @@ def main():
                     payload = fetch_espn_stats(session, limiter, athlete_id)
                     total_network_fetches += 1
                     if total_network_fetches <= 5:
-                        print(f"[FETCH] athlete_id={athlete_id} (network) example_fetch#{total_network_fetches}")
+                        print(
+                            f"[FETCH] athlete_id={athlete_id} (network) example_fetch#{total_network_fetches}"
+                        )
                 except Exception as e:
                     total_fetch_failures += 1
                     unmatched_rows.append(
@@ -785,15 +850,21 @@ def main():
                 out.update(sr)
                 all_output_rows.append(out)
 
-        print(f"[STATS DONE] {file_name}: processed drafted rows in {fmt_duration(time.time() - t_stats0)}")
+        print(
+            f"[STATS DONE] {file_name}: processed drafted rows in {fmt_duration(time.time() - t_stats0)}"
+        )
 
     # Final writes
     if unmatched_rows:
         pd.DataFrame(unmatched_rows).to_csv(args.unmatched_csv, index=False)
-        print(f"[WRITE] Unmatched / failed fetch list -> {args.unmatched_csv} ({len(unmatched_rows):,} rows)")
+        print(
+            f"[WRITE] Unmatched / failed fetch list -> {args.unmatched_csv} ({len(unmatched_rows):,} rows)"
+        )
 
     if not all_output_rows:
-        print("⚠️  No stats output rows generated (maybe no drafted players, no matches, or missing drafted column).")
+        print(
+            "⚠️  No stats output rows generated (maybe no drafted players, no matches, or missing drafted column)."
+        )
     else:
         out_df = pd.DataFrame(all_output_rows)
 
@@ -819,7 +890,9 @@ def main():
             "teamSlug",
             "position",
         ]
-        cols = [c for c in front_cols if c in out_df.columns] + [c for c in out_df.columns if c not in front_cols]
+        cols = [c for c in front_cols if c in out_df.columns] + [
+            c for c in out_df.columns if c not in front_cols
+        ]
         out_df = out_df[cols]
         out_df.to_csv(args.out_csv, index=False)
         print(f"[WRITE] Stats CSV -> {args.out_csv} ({len(out_df):,} rows)")

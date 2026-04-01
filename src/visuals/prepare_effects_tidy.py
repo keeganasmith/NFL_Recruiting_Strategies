@@ -20,7 +20,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.modeling.position_models import PositionModelingConfig, run_position_modeling_workflow
+from src.modeling.position_models import (
+    PositionModelingConfig,
+    run_position_modeling_workflow,
+)
 
 REQUIRED_MODEL_COLUMNS = {
     "position_group",
@@ -36,8 +39,7 @@ def _validate_model_columns(df: pd.DataFrame) -> None:
     if missing:
         missing_cols = ", ".join(sorted(missing))
         raise ValueError(
-            "Input model-effects file is missing required columns: "
-            f"{missing_cols}."
+            "Input model-effects file is missing required columns: " f"{missing_cols}."
         )
 
 
@@ -66,7 +68,9 @@ def prepare_tidy_effects(
     if include_intercept:
         feature_mask = feature_mask | tidy["feature"].eq("intercept")
 
-    tidy = tidy.loc[feature_mask, ["position_group", "feature", "estimate", "ci_lower", "ci_upper"]].copy()
+    tidy = tidy.loc[
+        feature_mask, ["position_group", "feature", "estimate", "ci_lower", "ci_upper"]
+    ].copy()
     tidy = tidy.rename(
         columns={
             "feature": "metric",
@@ -91,7 +95,13 @@ RAW_COMBINE_REQUIRED_COLUMNS = {
     "3Cone",
     "Shuttle",
 }
-RAW_TARGET_REQUIRED_COLUMNS = {"career_year", "starts", "approximate_value", "snap_share", "seasons_active"}
+RAW_TARGET_REQUIRED_COLUMNS = {
+    "career_year",
+    "starts",
+    "approximate_value",
+    "snap_share",
+    "seasons_active",
+}
 
 
 def _looks_like_combine_with_stats(df: pd.DataFrame) -> bool:
@@ -99,7 +109,9 @@ def _looks_like_combine_with_stats(df: pd.DataFrame) -> bool:
 
     cols = set(df.columns)
     games_played_cols = [c for c in df.columns if c.endswith("_gamesPlayed")]
-    return {"season_year", "Player", "Pos"}.issubset(cols) and len(games_played_cols) >= 3
+    return {"season_year", "Player", "Pos"}.issubset(cols) and len(
+        games_played_cols
+    ) >= 3
 
 
 def _coalesce_player_id(df: pd.DataFrame) -> pd.Series:
@@ -109,7 +121,11 @@ def _coalesce_player_id(df: pd.DataFrame) -> pd.Series:
     nfl_id = nfl_id.astype(str).str.strip()
     has_id = nfl_id.notna() & nfl_id.ne("") & nfl_id.ne("N/A") & nfl_id.ne("nan")
 
-    player_name = df.get("Player", pd.Series(index=df.index, dtype=object)).astype(str).str.strip()
+    player_name = (
+        df.get("Player", pd.Series(index=df.index, dtype=object))
+        .astype(str)
+        .str.strip()
+    )
     return np.where(has_id, "id:" + nfl_id, "name:" + player_name)
 
 
@@ -132,32 +148,46 @@ def _derive_proxy_modeling_rows_from_combine_stats(df: pd.DataFrame) -> pd.DataF
     working["season_year"] = pd.to_numeric(working["season_year"], errors="coerce")
 
     # Preserve first non-null combine values per player.
-    combine_cols = ["combine_year", "Player", "NFL_id", "Pos", "Ht", "Wt", "40yd", "Vertical", "Bench", "Broad Jump", "3Cone", "Shuttle"]
+    combine_cols = [
+        "combine_year",
+        "Player",
+        "NFL_id",
+        "Pos",
+        "Ht",
+        "Wt",
+        "40yd",
+        "Vertical",
+        "Bench",
+        "Broad Jump",
+        "3Cone",
+        "Shuttle",
+    ]
     base = (
         working.sort_values(["_player_key", "season_year"], na_position="last")
         .groupby("_player_key", as_index=False)
         .first()[["_player_key", *[c for c in combine_cols if c in working.columns]]]
     )
 
-    agg = (
-        working.groupby("_player_key", as_index=False)
-        .agg(
-            starts_proxy=("_season_games_played", "sum"),
-            seasons_active=("season_year", "nunique"),
-        )
+    agg = working.groupby("_player_key", as_index=False).agg(
+        starts_proxy=("_season_games_played", "sum"),
+        seasons_active=("season_year", "nunique"),
     )
-    agg["snap_share"] = (agg["starts_proxy"] / (agg["seasons_active"].replace(0, np.nan) * 17.0)).clip(0.0, 1.0).fillna(0.0)
+    agg["snap_share"] = (
+        (agg["starts_proxy"] / (agg["seasons_active"].replace(0, np.nan) * 17.0))
+        .clip(0.0, 1.0)
+        .fillna(0.0)
+    )
     agg["approximate_value"] = (agg["starts_proxy"] * agg["snap_share"]).clip(lower=0.0)
     agg["production_value"] = (
-        0.35 * np.log1p(agg["starts_proxy"]) +
-        0.30 * np.log1p(agg["approximate_value"]) +
-        0.20 * agg["snap_share"] +
-        0.15 * np.sqrt(agg["seasons_active"].clip(lower=0.0))
+        0.35 * np.log1p(agg["starts_proxy"])
+        + 0.30 * np.log1p(agg["approximate_value"])
+        + 0.20 * agg["snap_share"]
+        + 0.15 * np.sqrt(agg["seasons_active"].clip(lower=0.0))
     )
 
     out = base.merge(agg, on="_player_key", how="inner")
     out = out.rename(columns={"starts_proxy": "starts"})
-    return out.drop(columns=["_player_key"]) 
+    return out.drop(columns=["_player_key"])
 
 
 def _raw_modeling_missing_columns(df: pd.DataFrame) -> list[str]:
@@ -205,7 +235,9 @@ def load_or_generate_model_effects(
                     bootstrap_iterations=bootstrap_iterations,
                     min_group_size=min_group_size,
                 )
-                run_position_modeling_workflow(df=source_df, output_dir=model_output_dir, config=config)
+                run_position_modeling_workflow(
+                    df=source_df, output_dir=model_output_dir, config=config
+                )
                 feature_effects_path = model_output_dir / "feature_effects.csv"
                 if not feature_effects_path.exists():
                     raise FileNotFoundError(
@@ -223,10 +255,14 @@ def load_or_generate_model_effects(
         bootstrap_iterations=bootstrap_iterations,
         min_group_size=min_group_size,
     )
-    run_position_modeling_workflow(df=source_df, output_dir=model_output_dir, config=config)
+    run_position_modeling_workflow(
+        df=source_df, output_dir=model_output_dir, config=config
+    )
     feature_effects_path = model_output_dir / "feature_effects.csv"
     if not feature_effects_path.exists():
-        raise FileNotFoundError(f"Modeling completed but no feature effects were found at {feature_effects_path}")
+        raise FileNotFoundError(
+            f"Modeling completed but no feature effects were found at {feature_effects_path}"
+        )
     return pd.read_csv(feature_effects_path, low_memory=False)
 
 

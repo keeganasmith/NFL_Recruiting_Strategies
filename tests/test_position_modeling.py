@@ -10,7 +10,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.modeling.position_models import PositionModelingConfig, run_position_modeling_workflow
+from src.modeling.position_models import (
+    PositionModelingConfig,
+    run_position_modeling_workflow,
+)
 
 
 class PositionModelingWorkflowTests(unittest.TestCase):
@@ -26,7 +29,10 @@ class PositionModelingWorkflowTests(unittest.TestCase):
         wt = rng.normal(205, 15, size=n)
         career_year = rng.integers(1, 8, size=n)
 
-        starts = np.maximum(0, 25 + (vertical - 35) * 1.2 - (forty - 4.5) * 35 + rng.normal(0, 5, size=n))
+        starts = np.maximum(
+            0,
+            25 + (vertical - 35) * 1.2 - (forty - 4.5) * 35 + rng.normal(0, 5, size=n),
+        )
         av = np.maximum(0, 12 + starts * 0.35 + rng.normal(0, 4, size=n))
         snap = np.clip(0.2 + starts / 120 + rng.normal(0, 0.05, size=n), 0, 1)
         seasons = np.clip(career_year + rng.normal(0, 0.7, size=n), 0, 20)
@@ -63,7 +69,9 @@ class PositionModelingWorkflowTests(unittest.TestCase):
             outputs = run_position_modeling_workflow(
                 df,
                 output_dir=td,
-                config=PositionModelingConfig(bootstrap_iterations=30, min_group_size=20),
+                config=PositionModelingConfig(
+                    bootstrap_iterations=30, min_group_size=20
+                ),
             )
 
             for key in ["predictions", "feature_effects", "diagnostics", "calibration"]:
@@ -78,7 +86,9 @@ class PositionModelingWorkflowTests(unittest.TestCase):
             preds = outputs["predictions"]
             self.assertIn("pred_interval_lower", preds.columns)
             self.assertIn("pred_interval_upper", preds.columns)
-            self.assertTrue((preds["pred_interval_upper"] >= preds["pred_interval_lower"]).all())
+            self.assertTrue(
+                (preds["pred_interval_upper"] >= preds["pred_interval_lower"]).all()
+            )
 
 
 if __name__ == "__main__":

@@ -34,8 +34,7 @@ def _validate_input_columns(effects_df: pd.DataFrame) -> None:
     if missing:
         missing_columns = ", ".join(sorted(missing))
         raise ValueError(
-            "Input effects table is missing required columns: "
-            f"{missing_columns}."
+            "Input effects table is missing required columns: " f"{missing_columns}."
         )
 
 
@@ -60,8 +59,8 @@ def prepare_effects_for_plot(effects_df: pd.DataFrame) -> pd.DataFrame:
     )
     metric_rank = {metric: idx for idx, metric in enumerate(metric_order["metric"])}
     clean_df["metric_order"] = clean_df["metric"].map(metric_rank).astype(int)
-    clean_df["effect_sign"] = clean_df["estimate"].ge(0).map(
-        {True: "positive", False: "negative"}
+    clean_df["effect_sign"] = (
+        clean_df["estimate"].ge(0).map({True: "positive", False: "negative"})
     )
 
     return clean_df
@@ -128,12 +127,20 @@ def build_effect_size_dotplot(
                     x=sign_df["estimate"],
                     y=sign_df["metric"],
                     mode="markers",
-                    marker={"size": 9, "color": sign_color, "line": {"width": 0.5, "color": "#2f2f2f"}},
+                    marker={
+                        "size": 9,
+                        "color": sign_color,
+                        "line": {"width": 0.5, "color": "#2f2f2f"},
+                    },
                     error_x={
                         "type": "data",
                         "symmetric": False,
-                        "array": (sign_df["ci_high"] - sign_df["estimate"]).clip(lower=0),
-                        "arrayminus": (sign_df["estimate"] - sign_df["ci_low"]).clip(lower=0),
+                        "array": (sign_df["ci_high"] - sign_df["estimate"]).clip(
+                            lower=0
+                        ),
+                        "arrayminus": (sign_df["estimate"] - sign_df["ci_low"]).clip(
+                            lower=0
+                        ),
                         "color": "#555555",
                         "thickness": 1.5,
                         "width": 0,
@@ -165,11 +172,14 @@ def build_effect_size_dotplot(
         fig.update_xaxes(row=row, col=col, zeroline=False)
 
     subtitle = (
-        f"Heuristic version: {heuristic_version} · "
-        f"Model version: {model_version}"
+        f"Heuristic version: {heuristic_version} · " f"Model version: {model_version}"
     )
     fig.update_layout(
-        title={"text": f"{chart_title}<br><sup>{subtitle}</sup>", "x": 0.02, "xanchor": "left"},
+        title={
+            "text": f"{chart_title}<br><sup>{subtitle}</sup>",
+            "x": 0.02,
+            "xanchor": "left",
+        },
         template="plotly_white",
         width=420 * ncols,
         height=max(320 * nrows, 420),

@@ -30,7 +30,6 @@ class EffectSizeHeatmapTests(unittest.TestCase):
         )
         self.assertEqual(metric_order, ["size", "speed"])
 
-
     def test_export_figure_writes_png_svg_pdf(self):
         fig = build_effect_size_heatmap(
             effects_df=self.effects,

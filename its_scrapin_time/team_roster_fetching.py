@@ -94,7 +94,9 @@ def fetch_json(
             last_err = e
             # small backoff; still respects limiter on next attempt
             time.sleep(0.2 * (attempt + 1))
-    raise RuntimeError(f"Failed after {retries} attempts: {url} :: {last_err}") from last_err
+    raise RuntimeError(
+        f"Failed after {retries} attempts: {url} :: {last_err}"
+    ) from last_err
 
 
 def iter_dicts(obj: Any) -> Iterable[Dict[str, Any]]:
@@ -160,6 +162,7 @@ def _iter_dicts(obj: Any):
     elif isinstance(obj, list):
         for it in obj:
             yield from _iter_dicts(it)
+
 
 def extract_athletes_from_stats(stats_payload: Dict[str, Any]) -> List[Tuple[str, str]]:
     """
@@ -281,10 +284,19 @@ def append_rows(csv_path: str, rows: List[Tuple[str, str]]) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="unique_athletes.csv", help="Shared output CSV path.")
-    ap.add_argument("--timeout", type=float, default=20.0, help="Per-request timeout seconds.")
+    ap.add_argument(
+        "--out", default="unique_athletes.csv", help="Shared output CSV path."
+    )
+    ap.add_argument(
+        "--timeout", type=float, default=20.0, help="Per-request timeout seconds."
+    )
     ap.add_argument("--retries", type=int, default=3, help="Retries per request.")
-    ap.add_argument("--min-delay-ms", type=int, default=200, help="Minimum delay between requests in ms (>=200).")
+    ap.add_argument(
+        "--min-delay-ms",
+        type=int,
+        default=200,
+        help="Minimum delay between requests in ms (>=200).",
+    )
     args = ap.parse_args()
 
     min_delay_s = max(0.200, args.min_delay_ms / 1000.0)
@@ -292,8 +304,14 @@ def main() -> int:
     ensure_csv_header(args.out)
     seen_ids = load_existing_ids(args.out)
     existing_duplicate_names = count_duplicate_display_names(args.out)
-    print(f"[info] Loaded {len(seen_ids)} existing athlete_ids from {args.out}", file=sys.stderr)
-    print(f"[info] Existing duplicate display names in CSV: {existing_duplicate_names}", file=sys.stderr)
+    print(
+        f"[info] Loaded {len(seen_ids)} existing athlete_ids from {args.out}",
+        file=sys.stderr,
+    )
+    print(
+        f"[info] Existing duplicate display names in CSV: {existing_duplicate_names}",
+        file=sys.stderr,
+    )
 
     limiter = RateLimiter(min_delay_s)
 
@@ -302,14 +320,23 @@ def main() -> int:
 
     # 1) Fetch all NFL teams (one request)
     try:
-        teams_payload = fetch_json(session, limiter, TEAM_LIST_URL, timeout_s=args.timeout, retries=args.retries)
+        teams_payload = fetch_json(
+            session,
+            limiter,
+            TEAM_LIST_URL,
+            timeout_s=args.timeout,
+            retries=args.retries,
+        )
     except Exception as e:
         print(f"[error] Could not fetch team list: {e}", file=sys.stderr)
         return 2
 
     team_abbrs = extract_team_abbrs(teams_payload)
     if not team_abbrs:
-        print("[error] No teams found in team list response (schema may have changed).", file=sys.stderr)
+        print(
+            "[error] No teams found in team list response (schema may have changed).",
+            file=sys.stderr,
+        )
         return 3
 
     print(f"[info] Found {len(team_abbrs)} teams", file=sys.stderr)
@@ -328,11 +355,20 @@ def main() -> int:
             for abbr in team_abbrs:
                 url = build_stats_url(abbr, year, seasontype)
                 try:
-                    payload = fetch_json(session, limiter, url, timeout_s=args.timeout, retries=args.retries)
+                    payload = fetch_json(
+                        session,
+                        limiter,
+                        url,
+                        timeout_s=args.timeout,
+                        retries=args.retries,
+                    )
                     total_requests += 1
                 except Exception as e:
                     total_requests += 1
-                    print(f"[warn] request failed year={year} type={seasontype} team={abbr}: {e}", file=sys.stderr)
+                    print(
+                        f"[warn] request failed year={year} type={seasontype} team={abbr}: {e}",
+                        file=sys.stderr,
+                    )
                     continue
 
                 athletes = extract_athletes_from_stats(payload)
@@ -369,7 +405,10 @@ def main() -> int:
         file=sys.stderr,
     )
     final_duplicate_names = count_duplicate_display_names(args.out)
-    print(f"[done] duplicate display names in CSV: {final_duplicate_names}", file=sys.stderr)
+    print(
+        f"[done] duplicate display names in CSV: {final_duplicate_names}",
+        file=sys.stderr,
+    )
     return 0
 
 

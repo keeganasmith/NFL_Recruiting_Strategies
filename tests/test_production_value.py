@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import sys
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -29,8 +30,14 @@ class ProductionValueTests(unittest.TestCase):
 
     def test_single_row_and_batch_match(self):
         single = compute_production_value(self.base_row, self.config)
-        batch = compute_production_value_batch(pd.DataFrame([self.base_row]), self.config).iloc[0].to_dict()
-        self.assertAlmostEqual(single["production_value"], batch["production_value"], places=12)
+        batch = (
+            compute_production_value_batch(pd.DataFrame([self.base_row]), self.config)
+            .iloc[0]
+            .to_dict()
+        )
+        self.assertAlmostEqual(
+            single["production_value"], batch["production_value"], places=12
+        )
         self.assertEqual(single["heuristic_version"], self.config["version"])
 
     def test_monotonicity_starts_increase(self):
@@ -53,7 +60,9 @@ class ProductionValueTests(unittest.TestCase):
         qb_row = dict(self.base_row)
         qb_row["Pos"] = "QB"
         qb_row["Player"] = "QB Player"
-        out = compute_production_value_batch(pd.DataFrame([wr_row, qb_row]), self.config)
+        out = compute_production_value_batch(
+            pd.DataFrame([wr_row, qb_row]), self.config
+        )
         wr_score = out.loc[out["Pos"] == "WR", "production_value"].iloc[0]
         qb_score = out.loc[out["Pos"] == "QB", "production_value"].iloc[0]
         self.assertNotEqual(qb_score, wr_score)

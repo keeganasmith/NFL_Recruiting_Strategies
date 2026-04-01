@@ -27,9 +27,20 @@ class DiagnosticsThresholds:
             return cls()
         return cls(
             max_mae=float(raw.get("max_mae", cls.max_mae)),
-            max_abs_calibration_intercept=float(raw.get("max_abs_calibration_intercept", cls.max_abs_calibration_intercept)),
-            max_abs_calibration_slope_deviation=float(raw.get("max_abs_calibration_slope_deviation", cls.max_abs_calibration_slope_deviation)),
-            max_abs_mean_residual=float(raw.get("max_abs_mean_residual", cls.max_abs_mean_residual)),
+            max_abs_calibration_intercept=float(
+                raw.get(
+                    "max_abs_calibration_intercept", cls.max_abs_calibration_intercept
+                )
+            ),
+            max_abs_calibration_slope_deviation=float(
+                raw.get(
+                    "max_abs_calibration_slope_deviation",
+                    cls.max_abs_calibration_slope_deviation,
+                )
+            ),
+            max_abs_mean_residual=float(
+                raw.get("max_abs_mean_residual", cls.max_abs_mean_residual)
+            ),
         )
 
 
@@ -44,11 +55,17 @@ def _load_thresholds(config_path: Path | None) -> DiagnosticsThresholds:
 def _calibration_by_position(predictions: pd.DataFrame, bins: int) -> pd.DataFrame:
     recs: list[dict] = []
     for position, group in predictions.groupby("position_group"):
-        panel = group[["predicted_production_value", "target_production_value"]].dropna().copy()
+        panel = (
+            group[["predicted_production_value", "target_production_value"]]
+            .dropna()
+            .copy()
+        )
         q = min(bins, panel["predicted_production_value"].nunique())
         if panel.empty or q < 2:
             continue
-        panel["bin"] = pd.qcut(panel["predicted_production_value"], q=q, duplicates="drop")
+        panel["bin"] = pd.qcut(
+            panel["predicted_production_value"], q=q, duplicates="drop"
+        )
         for interval, b in panel.groupby("bin", observed=False):
             n = len(b)
             if n == 0:
@@ -74,14 +91,18 @@ def _fit_calibration_line(df: pd.DataFrame) -> tuple[float, float]:
     data = df[["predicted_production_value", "target_production_value"]].dropna()
     if len(data) < 2:
         return 1.0, 0.0
-    slope, intercept = np.polyfit(data["predicted_production_value"], data["target_production_value"], 1)
+    slope, intercept = np.polyfit(
+        data["predicted_production_value"], data["target_production_value"], 1
+    )
     return float(slope), float(intercept)
 
 
 def _build_position_metrics(predictions: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for position, g in predictions.groupby("position_group"):
-        panel = g[["predicted_production_value", "target_production_value", "residual"]].dropna()
+        panel = g[
+            ["predicted_production_value", "target_production_value", "residual"]
+        ].dropna()
         if panel.empty:
             continue
         slope, intercept = _fit_calibration_line(panel)
@@ -98,19 +119,27 @@ def _build_position_metrics(predictions: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values("position_group")
 
 
-def _warning_messages(metrics: pd.DataFrame, thresholds: DiagnosticsThresholds) -> list[str]:
+def _warning_messages(
+    metrics: pd.DataFrame, thresholds: DiagnosticsThresholds
+) -> list[str]:
     warnings: list[str] = []
     for _, row in metrics.iterrows():
         issues = []
         if row["mae"] > thresholds.max_mae:
             issues.append(f"MAE {row['mae']:.2f}>{thresholds.max_mae:.2f}")
         if abs(row["calibration_intercept"]) > thresholds.max_abs_calibration_intercept:
-            issues.append(f"|int| {abs(row['calibration_intercept']):.2f}>{thresholds.max_abs_calibration_intercept:.2f}")
+            issues.append(
+                f"|int| {abs(row['calibration_intercept']):.2f}>{thresholds.max_abs_calibration_intercept:.2f}"
+            )
         slope_dev = abs(row["calibration_slope"] - 1.0)
         if slope_dev > thresholds.max_abs_calibration_slope_deviation:
-            issues.append(f"|slope-1| {slope_dev:.2f}>{thresholds.max_abs_calibration_slope_deviation:.2f}")
+            issues.append(
+                f"|slope-1| {slope_dev:.2f}>{thresholds.max_abs_calibration_slope_deviation:.2f}"
+            )
         if abs(row["mean_residual"]) > thresholds.max_abs_mean_residual:
-            issues.append(f"|mean resid| {abs(row['mean_residual']):.2f}>{thresholds.max_abs_mean_residual:.2f}")
+            issues.append(
+                f"|mean resid| {abs(row['mean_residual']):.2f}>{thresholds.max_abs_mean_residual:.2f}"
+            )
         if issues:
             warnings.append(f"{row['position_group']}: " + "; ".join(issues))
     return warnings
@@ -122,14 +151,29 @@ def build_model_diagnostics_figure(
     calibration_bins: int = 8,
     title: str = "Model Diagnostics by Position",
 ) -> tuple[go.Figure, pd.DataFrame, list[str]]:
-    required = {"position_group", "target_production_value", "predicted_production_value", "residual"}
+    required = {
+        "position_group",
+        "target_production_value",
+        "predicted_production_value",
+        "residual",
+    }
     missing = required - set(predictions.columns)
     if missing:
         raise ValueError(f"Missing required columns: {', '.join(sorted(missing))}")
 
     positions = sorted(predictions["position_group"].dropna().astype(str).unique())
     colors = [
-        "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", "#393b79",
+        "#1f77b4",
+        "#ff7f0e",
+        "#2ca02c",
+        "#d62728",
+        "#9467bd",
+        "#8c564b",
+        "#e377c2",
+        "#7f7f7f",
+        "#bcbd22",
+        "#17becf",
+        "#393b79",
     ]
     color_map = {p: colors[i % len(colors)] for i, p in enumerate(positions)}
 
@@ -164,7 +208,9 @@ def build_model_diagnostics_figure(
                     "type": "data",
                     "symmetric": False,
                     "array": (pcal["actual_ci_high"] - pcal["actual_mean"]).to_numpy(),
-                    "arrayminus": (pcal["actual_mean"] - pcal["actual_ci_low"]).to_numpy(),
+                    "arrayminus": (
+                        pcal["actual_mean"] - pcal["actual_ci_low"]
+                    ).to_numpy(),
                     "thickness": 1,
                 },
             ),
@@ -181,7 +227,13 @@ def build_model_diagnostics_figure(
         lo = float(vals.min() - pad)
         hi = float(vals.max() + pad)
     fig.add_trace(
-        go.Scatter(x=[lo, hi], y=[lo, hi], mode="lines", line={"dash": "dash", "color": "#444"}, name="Perfect calibration"),
+        go.Scatter(
+            x=[lo, hi],
+            y=[lo, hi],
+            mode="lines",
+            line={"dash": "dash", "color": "#444"},
+            name="Perfect calibration",
+        ),
         row=1,
         col=1,
     )
@@ -189,7 +241,13 @@ def build_model_diagnostics_figure(
     for p in positions:
         vals = predictions.loc[predictions["position_group"] == p, "residual"].dropna()
         fig.add_trace(
-            go.Box(y=vals, name=p, marker_color=color_map[p], boxmean=True, showlegend=False),
+            go.Box(
+                y=vals,
+                name=p,
+                marker_color=color_map[p],
+                boxmean=True,
+                showlegend=False,
+            ),
             row=2,
             col=1,
         )
@@ -224,19 +282,55 @@ def build_model_diagnostics_figure(
 
     fig.update_annotations(font={"size": 20})
 
-    fig.update_xaxes(title_text="Predicted (bin mean)", title_font={"size": 22}, tickfont={"size": 16}, row=1, col=1)
-    fig.update_yaxes(title_text="Observed (bin mean)", title_font={"size": 22}, tickfont={"size": 16}, row=1, col=1)
-    fig.update_yaxes(title_text="Residual", title_font={"size": 22}, tickfont={"size": 16}, row=2, col=1)
-    fig.update_xaxes(title_text="Position", title_font={"size": 22}, tickfont={"size": 15}, tickangle=-40, row=2, col=1)
-    fig.update_xaxes(title_text="Position", title_font={"size": 22}, tickfont={"size": 15}, tickangle=-40, row=2, col=2)
-    fig.update_yaxes(title_text="MAE", title_font={"size": 22}, tickfont={"size": 16}, row=2, col=2)
+    fig.update_xaxes(
+        title_text="Predicted (bin mean)",
+        title_font={"size": 22},
+        tickfont={"size": 16},
+        row=1,
+        col=1,
+    )
+    fig.update_yaxes(
+        title_text="Observed (bin mean)",
+        title_font={"size": 22},
+        tickfont={"size": 16},
+        row=1,
+        col=1,
+    )
+    fig.update_yaxes(
+        title_text="Residual",
+        title_font={"size": 22},
+        tickfont={"size": 16},
+        row=2,
+        col=1,
+    )
+    fig.update_xaxes(
+        title_text="Position",
+        title_font={"size": 22},
+        tickfont={"size": 15},
+        tickangle=-40,
+        row=2,
+        col=1,
+    )
+    fig.update_xaxes(
+        title_text="Position",
+        title_font={"size": 22},
+        tickfont={"size": 15},
+        tickangle=-40,
+        row=2,
+        col=2,
+    )
+    fig.update_yaxes(
+        title_text="MAE", title_font={"size": 22}, tickfont={"size": 16}, row=2, col=2
+    )
     fig.update_xaxes(range=[2.2, 4.4], row=1, col=1)
     fig.update_yaxes(range=[lo, hi], row=1, col=1)
 
     return fig, metrics, warnings
 
 
-def export_diagnostics_assets(fig: go.Figure, metrics: pd.DataFrame, warnings: list[str], output_stem: Path) -> dict[str, Path]:
+def export_diagnostics_assets(
+    fig: go.Figure, metrics: pd.DataFrame, warnings: list[str], output_stem: Path
+) -> dict[str, Path]:
     output_stem.parent.mkdir(parents=True, exist_ok=True)
     png = output_stem.with_suffix(".png")
     svg = output_stem.with_suffix(".svg")
@@ -248,16 +342,37 @@ def export_diagnostics_assets(fig: go.Figure, metrics: pd.DataFrame, warnings: l
     fig.write_image(str(svg))
     fig.write_image(str(pdf))
     metrics.to_csv(metrics_csv, index=False)
-    warnings_txt.write_text("\n".join(warnings) if warnings else "No threshold warnings detected.\n", encoding="utf-8")
+    warnings_txt.write_text(
+        "\n".join(warnings) if warnings else "No threshold warnings detected.\n",
+        encoding="utf-8",
+    )
 
-    return {"png": png, "svg": svg, "pdf": pdf, "metrics_csv": metrics_csv, "warnings_txt": warnings_txt}
+    return {
+        "png": png,
+        "svg": svg,
+        "pdf": pdf,
+        "metrics_csv": metrics_csv,
+        "warnings_txt": warnings_txt,
+    }
 
 
 def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate one-page diagnostics plot for model reporting.")
-    parser.add_argument("--predictions-csv", type=Path, default=Path("outputs/modeling/predictions.csv"))
-    parser.add_argument("--output-stem", type=Path, default=Path("outputs/visualizations/model_diagnostics"))
-    parser.add_argument("--threshold-config", type=Path, default=Path("src/visuals/config/diagnostics_thresholds.json"))
+    parser = argparse.ArgumentParser(
+        description="Generate one-page diagnostics plot for model reporting."
+    )
+    parser.add_argument(
+        "--predictions-csv", type=Path, default=Path("outputs/modeling/predictions.csv")
+    )
+    parser.add_argument(
+        "--output-stem",
+        type=Path,
+        default=Path("outputs/visualizations/model_diagnostics"),
+    )
+    parser.add_argument(
+        "--threshold-config",
+        type=Path,
+        default=Path("src/visuals/config/diagnostics_thresholds.json"),
+    )
     parser.add_argument("--calibration-bins", type=int, default=8)
     parser.add_argument("--title", default="Model Diagnostics by Position")
     return parser.parse_args(argv)
@@ -267,7 +382,9 @@ def main(argv: Iterable[str] | None = None) -> None:
     args = parse_args(argv)
     predictions = pd.read_csv(args.predictions_csv)
     thresholds = _load_thresholds(args.threshold_config)
-    fig, metrics, warnings = build_model_diagnostics_figure(predictions, thresholds, args.calibration_bins, args.title)
+    fig, metrics, warnings = build_model_diagnostics_figure(
+        predictions, thresholds, args.calibration_bins, args.title
+    )
     outputs = export_diagnostics_assets(fig, metrics, warnings, args.output_stem)
     for key, path in outputs.items():
         print(f"Saved {key}: {path}")

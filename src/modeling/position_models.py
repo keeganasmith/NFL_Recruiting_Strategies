@@ -10,9 +10,21 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.scoring.production_value import compute_production_value_batch, load_production_value_config
+from src.scoring.production_value import (
+    compute_production_value_batch,
+    load_production_value_config,
+)
 
-COMBINE_FEATURES = ["40yd", "Vertical", "Bench", "Broad Jump", "3Cone", "Shuttle", "Ht", "Wt"]
+COMBINE_FEATURES = [
+    "40yd",
+    "Vertical",
+    "Bench",
+    "Broad Jump",
+    "3Cone",
+    "Shuttle",
+    "Ht",
+    "Wt",
+]
 TIME_DRILLS = {"40yd", "3Cone", "Shuttle"}
 
 POSITION_GROUP_MAP = {
@@ -72,7 +84,9 @@ class PositionModelingWorkflow:
     @staticmethod
     def _normalize_height_to_inches(height_series: pd.Series) -> pd.Series:
         parsed = height_series.astype(str).str.extract(r"(?P<feet>\d+)-(?P<inches>\d+)")
-        out = pd.to_numeric(parsed["feet"], errors="coerce") * 12 + pd.to_numeric(parsed["inches"], errors="coerce")
+        out = pd.to_numeric(parsed["feet"], errors="coerce") * 12 + pd.to_numeric(
+            parsed["inches"], errors="coerce"
+        )
         fallback = pd.to_numeric(height_series, errors="coerce")
         return out.fillna(fallback)
 
@@ -80,9 +94,7 @@ class PositionModelingWorkflow:
         return pos_series.astype(str).map(POSITION_GROUP_MAP).fillna("OTHER")
 
     def _prepare_target(self, df: pd.DataFrame) -> pd.Series:
-
         if "production_value" in df.columns:
-            print("production value already in columns")
             return pd.to_numeric(df["production_value"], errors="coerce")
 
         required = list(self.scoring_config["components"].keys()) + [
@@ -99,8 +111,6 @@ class PositionModelingWorkflow:
         return pd.to_numeric(scored["production_value"], errors="coerce")
 
     def _preprocess(self, df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
-        if "production_value" in df.columns:
-            print("production value in columns")
         working = df.copy()
         if "combine_year" in working.columns:
             years = pd.to_numeric(working["combine_year"], errors="coerce")
@@ -119,7 +129,7 @@ class PositionModelingWorkflow:
                 working[col] = -1 * working[col]
 
         working["target_production_value"] = self._prepare_target(working)
-        working = working.dropna(subset=["target_production_value", "Pos"]) 
+        working = working.dropna(subset=["target_production_value", "Pos"])
 
         # Missingness indicators and position-cohort standardization
         prep_meta: dict[str, Any] = {"imputation": {}, "standardization": {}}
@@ -132,14 +142,21 @@ class PositionModelingWorkflow:
             working[col] = working[col].fillna(group_med).fillna(global_med)
 
             means = working.groupby("position_group")[col].transform("mean")
-            stds = working.groupby("position_group")[col].transform("std").replace(0, np.nan)
+            stds = (
+                working.groupby("position_group")[col]
+                .transform("std")
+                .replace(0, np.nan)
+            )
             working[f"{col}_z"] = ((working[col] - means) / stds).fillna(0.0)
 
             prep_meta["imputation"][col] = {
                 "global_median": float(global_med) if pd.notna(global_med) else None,
                 "position_medians": {
                     k: (float(v) if pd.notna(v) else None)
-                    for k, v in working.groupby("position_group")[col].median().to_dict().items()
+                    for k, v in working.groupby("position_group")[col]
+                    .median()
+                    .to_dict()
+                    .items()
                 },
             }
             prep_meta["standardization"][col] = {
@@ -147,7 +164,10 @@ class PositionModelingWorkflow:
                     "mean": float(v["mean"]) if pd.notna(v["mean"]) else None,
                     "std": float(v["std"]) if pd.notna(v["std"]) else None,
                 }
-                for k, v in working.groupby("position_group")[col].agg(["mean", "std"]).to_dict("index").items()
+                for k, v in working.groupby("position_group")[col]
+                .agg(["mean", "std"])
+                .to_dict("index")
+                .items()
             }
 
         return working, prep_meta
@@ -158,7 +178,9 @@ class PositionModelingWorkflow:
         eye[0, 0] = 0.0  # do not penalize intercept
         return np.linalg.pinv(X.T @ X + alpha * eye) @ (X.T @ y)
 
-    def _bootstrap_coefs(self, X: np.ndarray, y: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+    def _bootstrap_coefs(
+        self, X: np.ndarray, y: np.ndarray, rng: np.random.Generator
+    ) -> np.ndarray:
         coefs = []
         n = len(y)
         for _ in range(self.config.bootstrap_iterations):
@@ -171,16 +193,36 @@ class PositionModelingWorkflow:
         m = [f"{c}_missing" for c in COMBINE_FEATURES]
         return z + m
 
-    def _build_model_outputs(self, fitted_df: pd.DataFrame, model_rows: list[dict[str, Any]]) -> dict[str, pd.DataFrame]:
+    def _build_model_outputs(
+        self, fitted_df: pd.DataFrame, model_rows: list[dict[str, Any]]
+    ) -> dict[str, pd.DataFrame]:
         feat_df = pd.DataFrame(model_rows)
 
-        predictions = fitted_df[[
-            c for c in ["Player", "NFL_id", "Pos", "position_group", "combine_year", "target_production_value"] if c in fitted_df.columns
-        ]].copy()
-        predictions["predicted_production_value"] = fitted_df["predicted_production_value"]
-        predictions["residual"] = fitted_df["target_production_value"] - fitted_df["predicted_production_value"]
+        predictions = fitted_df[
+            [
+                c
+                for c in [
+                    "Player",
+                    "NFL_id",
+                    "Pos",
+                    "position_group",
+                    "combine_year",
+                    "target_production_value",
+                ]
+                if c in fitted_df.columns
+            ]
+        ].copy()
+        predictions["predicted_production_value"] = fitted_df[
+            "predicted_production_value"
+        ]
+        predictions["residual"] = (
+            fitted_df["target_production_value"]
+            - fitted_df["predicted_production_value"]
+        )
         predictions["baseline_prediction"] = fitted_df["baseline_prediction"]
-        predictions["baseline_residual"] = fitted_df["target_production_value"] - fitted_df["baseline_prediction"]
+        predictions["baseline_residual"] = (
+            fitted_df["target_production_value"] - fitted_df["baseline_prediction"]
+        )
         predictions["pred_interval_lower"] = fitted_df["pred_interval_lower"]
         predictions["pred_interval_upper"] = fitted_df["pred_interval_upper"]
         predictions["heuristic_version"] = self.heuristic_version
@@ -195,7 +237,9 @@ class PositionModelingWorkflow:
                         "mae": np.abs(g["residual"]).mean(),
                         "rmse": np.sqrt(np.mean(np.square(g["residual"]))),
                         "baseline_mae": np.abs(g["baseline_residual"]).mean(),
-                        "baseline_rmse": np.sqrt(np.mean(np.square(g["baseline_residual"]))),
+                        "baseline_rmse": np.sqrt(
+                            np.mean(np.square(g["baseline_residual"]))
+                        ),
                     }
                 )
             )
@@ -207,7 +251,10 @@ class PositionModelingWorkflow:
         cal = predictions.copy()
         cal["calibration_bin"] = pd.qcut(
             cal["predicted_production_value"],
-            q=min(self.config.calibration_bins, cal["predicted_production_value"].nunique()),
+            q=min(
+                self.config.calibration_bins,
+                cal["predicted_production_value"].nunique(),
+            ),
             duplicates="drop",
         )
         calibration = (
@@ -233,7 +280,9 @@ class PositionModelingWorkflow:
             "calibration": calibration,
         }
 
-    def run(self, df: pd.DataFrame, output_dir: str | Path = "outputs/modeling") -> dict[str, pd.DataFrame]:
+    def run(
+        self, df: pd.DataFrame, output_dir: str | Path = "outputs/modeling"
+    ) -> dict[str, pd.DataFrame]:
         working, prep_meta = self._preprocess(df)
         features = self._feature_cols()
 
@@ -281,8 +330,12 @@ class PositionModelingWorkflow:
             yhat = X @ coef
             boot_preds = X @ boot.T
             working.loc[group_df.index, "predicted_production_value"] = yhat
-            working.loc[group_df.index, "pred_interval_lower"] = np.quantile(boot_preds, 0.025, axis=1)
-            working.loc[group_df.index, "pred_interval_upper"] = np.quantile(boot_preds, 0.975, axis=1)
+            working.loc[group_df.index, "pred_interval_lower"] = np.quantile(
+                boot_preds, 0.025, axis=1
+            )
+            working.loc[group_df.index, "pred_interval_upper"] = np.quantile(
+                boot_preds, 0.975, axis=1
+            )
 
             for i, name in enumerate(names):
                 model_rows.append(
@@ -331,6 +384,7 @@ def run_position_modeling_workflow(
     scoring_config_path: str | Path | None = None,
 ) -> dict[str, pd.DataFrame]:
     """Convenience wrapper for pipeline execution."""
-    print(df.columns)
-    workflow = PositionModelingWorkflow(scoring_config_path=scoring_config_path, config=config)
+    workflow = PositionModelingWorkflow(
+        scoring_config_path=scoring_config_path, config=config
+    )
     return workflow.run(df=df, output_dir=output_dir)

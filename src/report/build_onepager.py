@@ -52,14 +52,18 @@ def _derive_data_cutoff_date(predictions_csv: Path | None, explicit: str | None)
     return date.today().isoformat()
 
 
-def _preflight_layout(layout: LayoutSpec, body_font_size: int, footer_font_size: int) -> None:
+def _preflight_layout(
+    layout: LayoutSpec, body_font_size: int, footer_font_size: int
+) -> None:
     if layout.margin != MARGIN:
         raise AssertionError("Template margin must remain exactly one inch.")
     if body_font_size < MIN_FONT_SIZE or footer_font_size < MIN_FONT_SIZE:
         raise AssertionError(f"All text must be Arial at >= {MIN_FONT_SIZE} pt.")
 
 
-def _merge_panel(base_page, panel_pdf: Path, x: float, y: float, width: float, height: float) -> None:
+def _merge_panel(
+    base_page, panel_pdf: Path, x: float, y: float, width: float, height: float
+) -> None:
     panel_reader = PdfReader(str(panel_pdf))
     panel = panel_reader.pages[0]
     panel_w = float(panel.mediabox.width)
@@ -78,7 +82,9 @@ def _preflight_pdf(output_pdf: Path) -> None:
     height = float(page.mediabox.height)
     expected_width, expected_height = PAGE_SIZE
     if abs(width - expected_width) > 1 or abs(height - expected_height) > 1:
-        raise AssertionError("Preflight failed: page size must be US Letter (8.5 x 11).")
+        raise AssertionError(
+            "Preflight failed: page size must be US Letter (8.5 x 11)."
+        )
 
 
 def build_onepager(
@@ -118,7 +124,7 @@ def build_onepager(
         "(speed, jumps, agility, size)",
         "NFL production value heuristic: weighted composite of starts, approximate value, snap share,",
         "and seasons played.",
-        "If the heatmap legend did not come out correctly, red means positive impact on NFL production, blue means negative impact on NFL production"
+        "If the heatmap legend did not come out correctly, red means positive impact on NFL production, blue means negative impact on NFL production",
     ]
     y = layout.margin + 94
     for line in lines:
@@ -133,8 +139,22 @@ def build_onepager(
     # Merge the diagnostics panel first so the effect-size panel is merged last.
     # Plotly heatmap PDFs can carry gradient resources that are occasionally
     # flattened incorrectly when another PDF page is merged afterwards.
-    _merge_panel(base_page, diagnostics_panel_pdf, x=0, y=bottom_y, width=layout.page_width, height=2.35 * inch)
-    _merge_panel(base_page, effect_panel_pdf, x=0, y=top_y, width=layout.page_width, height=3.25 * inch)
+    _merge_panel(
+        base_page,
+        diagnostics_panel_pdf,
+        x=0,
+        y=bottom_y,
+        width=layout.page_width,
+        height=2.35 * inch,
+    )
+    _merge_panel(
+        base_page,
+        effect_panel_pdf,
+        x=0,
+        y=top_y,
+        width=layout.page_width,
+        height=3.25 * inch,
+    )
 
     writer = PdfWriter()
     writer.add_page(base_page)
@@ -160,11 +180,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Optional explicit effect-size panel PDF path.",
     )
-    parser.add_argument("--diagnostics-panel-pdf", type=Path, default=Path("outputs/visualizations/model_diagnostics.pdf"))
-    parser.add_argument("--metadata-json", type=Path, default=Path("outputs/modeling/metadata.json"))
-    parser.add_argument("--predictions-csv", type=Path, default=Path("outputs/modeling/predictions.csv"))
+    parser.add_argument(
+        "--diagnostics-panel-pdf",
+        type=Path,
+        default=Path("outputs/visualizations/model_diagnostics.pdf"),
+    )
+    parser.add_argument(
+        "--metadata-json", type=Path, default=Path("outputs/modeling/metadata.json")
+    )
+    parser.add_argument(
+        "--predictions-csv", type=Path, default=Path("outputs/modeling/predictions.csv")
+    )
     parser.add_argument("--data-cutoff-date", default=None)
-    parser.add_argument("--output-pdf", type=Path, default=Path("output/NFL_recruiting_strategy_onepager.pdf"))
+    parser.add_argument(
+        "--output-pdf",
+        type=Path,
+        default=Path("output/NFL_recruiting_strategy_onepager.pdf"),
+    )
     return parser.parse_args(argv)
 
 

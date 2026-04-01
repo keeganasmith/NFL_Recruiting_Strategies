@@ -10,7 +10,9 @@ from typing import Any, Mapping
 import numpy as np
 import pandas as pd
 
-DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "config" / "production_value_config.json"
+DEFAULT_CONFIG_PATH = (
+    Path(__file__).resolve().parent / "config" / "production_value_config.json"
+)
 REQUIRED_CONFIG_KEYS = {
     "version",
     "components",
@@ -23,7 +25,9 @@ REQUIRED_CONFIG_KEYS = {
 SUPPORTED_MISSING_STRATEGIES = {"impute", "drop", "cap"}
 
 
-def load_production_value_config(config_path: str | Path | None = None) -> dict[str, Any]:
+def load_production_value_config(
+    config_path: str | Path | None = None,
+) -> dict[str, Any]:
     """Load scoring config from a single project entrypoint.
 
     Supports JSON by default and YAML when PyYAML is available.
@@ -66,7 +70,10 @@ def _validate_config(config: Mapping[str, Any]) -> None:
 
 
 def _validate_inputs(df: pd.DataFrame, config: Mapping[str, Any]) -> None:
-    required_cols = set(config["components"].keys()) | {config["time_decay"]["career_year_column"], "Pos"}
+    required_cols = set(config["components"].keys()) | {
+        config["time_decay"]["career_year_column"],
+        "Pos",
+    }
     missing_cols = sorted(required_cols - set(df.columns))
     if missing_cols:
         raise ValueError(f"Input dataframe missing required columns: {missing_cols}")
@@ -76,9 +83,13 @@ def _validate_inputs(df: pd.DataFrame, config: Mapping[str, Any]) -> None:
         min_allowed = spec.get("min")
         max_allowed = spec.get("max")
         if min_allowed is not None and (series < min_allowed).any(skipna=True):
-            raise ValueError(f"Column '{metric}' has values below configured min={min_allowed}")
+            raise ValueError(
+                f"Column '{metric}' has values below configured min={min_allowed}"
+            )
         if max_allowed is not None and (series > max_allowed).any(skipna=True):
-            raise ValueError(f"Column '{metric}' has values above configured max={max_allowed}")
+            raise ValueError(
+                f"Column '{metric}' has values above configured max={max_allowed}"
+            )
 
 
 def _apply_transform(values: pd.Series, transform: str, eps: float = 1e-6) -> pd.Series:
@@ -97,7 +108,9 @@ def _apply_transform(values: pd.Series, transform: str, eps: float = 1e-6) -> pd
     raise ValueError(f"Unsupported transform: {transform}")
 
 
-def _winsorize(series: pd.Series, lower_q: float | None, upper_q: float | None) -> pd.Series:
+def _winsorize(
+    series: pd.Series, lower_q: float | None, upper_q: float | None
+) -> pd.Series:
     out = series.copy()
     if lower_q is not None:
         out = out.clip(lower=out.quantile(lower_q))
@@ -106,7 +119,9 @@ def _winsorize(series: pd.Series, lower_q: float | None, upper_q: float | None) 
     return out
 
 
-def _time_decay_factor(career_year: pd.Series, time_decay_cfg: Mapping[str, Any]) -> pd.Series:
+def _time_decay_factor(
+    career_year: pd.Series, time_decay_cfg: Mapping[str, Any]
+) -> pd.Series:
     early_boost = float(time_decay_cfg.get("early_career_multiplier", 1.0))
     late_decay = float(time_decay_cfg.get("late_career_multiplier", 1.0))
     early_cutoff = int(time_decay_cfg.get("early_career_cutoff_year", 3))
@@ -118,9 +133,17 @@ def _time_decay_factor(career_year: pd.Series, time_decay_cfg: Mapping[str, Any]
     return factor
 
 
-def _position_weight_for_metric(metric: str, pos: str, config: Mapping[str, Any]) -> float:
+def _position_weight_for_metric(
+    metric: str, pos: str, config: Mapping[str, Any]
+) -> float:
     base_weight = float(config["components"][metric]["weight"])
-    override = config["position_overrides"].get(pos, {}).get("components", {}).get(metric, {}).get("weight")
+    override = (
+        config["position_overrides"]
+        .get(pos, {})
+        .get("components", {})
+        .get(metric, {})
+        .get("weight")
+    )
     return float(override) if override is not None else base_weight
 
 
@@ -147,7 +170,9 @@ def _prepare_batch(df: pd.DataFrame, config: Mapping[str, Any]) -> pd.DataFrame:
                 out[metric] = out[metric].fillna(fill_value)
             elif strategy == "cap":
                 cap_value = spec.get("max")
-                out[metric] = out[metric].fillna(cap_value if cap_value is not None else 0)
+                out[metric] = out[metric].fillna(
+                    cap_value if cap_value is not None else 0
+                )
 
     wins = config["winsorization"]
     if wins.get("enabled", False):
@@ -159,7 +184,9 @@ def _prepare_batch(df: pd.DataFrame, config: Mapping[str, Any]) -> pd.DataFrame:
     return out
 
 
-def compute_production_value(player_row: Mapping[str, Any], config: Mapping[str, Any]) -> dict[str, Any]:
+def compute_production_value(
+    player_row: Mapping[str, Any], config: Mapping[str, Any]
+) -> dict[str, Any]:
     """Compute production value for a single player row as a pure function."""
     row_df = pd.DataFrame([dict(player_row)])
     scored = compute_production_value_batch(row_df, config)
@@ -168,7 +195,9 @@ def compute_production_value(player_row: Mapping[str, Any], config: Mapping[str,
     return scored.iloc[0].to_dict()
 
 
-def compute_production_value_batch(df: pd.DataFrame, config: Mapping[str, Any]) -> pd.DataFrame:
+def compute_production_value_batch(
+    df: pd.DataFrame, config: Mapping[str, Any]
+) -> pd.DataFrame:
     """Vectorized deterministic production-value scorer."""
     cfg = copy.deepcopy(dict(config))
     _validate_config(cfg)
@@ -176,19 +205,20 @@ def compute_production_value_batch(df: pd.DataFrame, config: Mapping[str, Any]) 
 
     working = _prepare_batch(df, cfg)
     if working.empty:
-        return working.assign(production_value=pd.Series(dtype=float), heuristic_version=cfg["version"])
+        return working.assign(
+            production_value=pd.Series(dtype=float), heuristic_version=cfg["version"]
+        )
 
     career_col = cfg["time_decay"]["career_year_column"]
     career_year = pd.to_numeric(working[career_col], errors="coerce").fillna(0)
     time_factor = _time_decay_factor(career_year, cfg["time_decay"])
 
     score = pd.Series(np.zeros(len(working)), index=working.index, dtype=float)
-    print("got here")
     for metric, spec in cfg["components"].items():
-        print("metric: ", metric)
-        print("length of metric: ", len(working[metric]))
         transformed = _apply_transform(working[metric], spec["transform"])
-        weights = working["Pos"].apply(lambda pos: _position_weight_for_metric(metric, str(pos), cfg))
+        weights = working["Pos"].apply(
+            lambda pos: _position_weight_for_metric(metric, str(pos), cfg)
+        )
         score = score + transformed * weights
 
     score = score * time_factor
@@ -200,7 +230,9 @@ def compute_production_value_batch(df: pd.DataFrame, config: Mapping[str, Any]) 
     result["production_value"] = score
     result["heuristic_version"] = cfg["version"]
 
-    sort_cols = [c for c in cfg["output"].get("deterministic_sort", []) if c in result.columns]
+    sort_cols = [
+        c for c in cfg["output"].get("deterministic_sort", []) if c in result.columns
+    ]
     if sort_cols:
         result = result.sort_values(sort_cols, kind="mergesort")
 
