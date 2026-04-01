@@ -45,8 +45,7 @@ def _validate_input_columns(effects_df: pd.DataFrame) -> None:
     if missing:
         missing_columns = ", ".join(sorted(missing))
         raise ValueError(
-            "Input effects table is missing required columns: "
-            f"{missing_columns}."
+            "Input effects table is missing required columns: " f"{missing_columns}."
         )
 
 
@@ -72,15 +71,12 @@ def build_effect_size_heatmap(
     if not positions or not metric_order:
         raise ValueError("Input effects table is empty after validation.")
 
-    matrix_df = (
-        plot_df.pivot_table(
-            index="metric",
-            columns="position_group",
-            values="estimate",
-            aggfunc="mean",
-        )
-        .reindex(index=metric_order, columns=positions)
-    )
+    matrix_df = plot_df.pivot_table(
+        index="metric",
+        columns="position_group",
+        values="estimate",
+        aggfunc="mean",
+    ).reindex(index=metric_order, columns=positions)
 
     z_values = matrix_df.to_numpy(dtype=float)
     max_abs = float(np.nanmax(np.abs(z_values))) if np.isfinite(z_values).any() else 1.0
@@ -107,9 +103,15 @@ def build_effect_size_heatmap(
         )
     )
 
-    subtitle = f"Heuristic version: {heuristic_version} · Model version: {model_version}"
+    subtitle = (
+        f"Heuristic version: {heuristic_version} · Model version: {model_version}"
+    )
     fig.update_layout(
-        title={"text": f"{chart_title}<br><sup>{subtitle}</sup>", "x": 0.02, "xanchor": "left"},
+        title={
+            "text": f"{chart_title}<br><sup>{subtitle}</sup>",
+            "x": 0.02,
+            "xanchor": "left",
+        },
         template="plotly_white",
         width=max(900, 100 * len(positions) + 320),
         height=max(500, 34 * len(metric_order) + 210),

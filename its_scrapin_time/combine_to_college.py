@@ -25,9 +25,7 @@ import pandas as pd
 import requests
 
 
-ESPN_URL_TMPL = (
-    "https://site.web.api.espn.com/apis/common/v3/sports/football/college-football/athletes/{athlete_id}/stats"
-)
+ESPN_URL_TMPL = "https://site.web.api.espn.com/apis/common/v3/sports/football/college-football/athletes/{athlete_id}/stats"
 DEFAULT_PARAMS = {"region": "us", "lang": "en", "contentorigin": "espn"}
 
 
@@ -121,7 +119,9 @@ def fetch_espn_stats(
             is_retryable = not isinstance(e, requests.HTTPError)
             if isinstance(e, requests.HTTPError):
                 status = e.response.status_code if e.response is not None else None
-                is_retryable = bool(status is not None and is_retryable_http_status(status))
+                is_retryable = bool(
+                    status is not None and is_retryable_http_status(status)
+                )
 
             if not is_retryable:
                 break
@@ -218,7 +218,12 @@ def main():
     ap.add_argument("--out_csv", default="NFL_data/combine_with_college_stats.csv")
     ap.add_argument("--unmatched_csv", default="NFL_data/college_unmatched_ids.csv")
     ap.add_argument("--cache_db", default="espn_college_cache.sqlite")
-    ap.add_argument("--min_delay_ms", type=int, default=200, help="Minimum delay between network requests")
+    ap.add_argument(
+        "--min_delay_ms",
+        type=int,
+        default=200,
+        help="Minimum delay between network requests",
+    )
     ap.add_argument("--timeout_sec", type=float, default=30.0)
     ap.add_argument("--max_retries", type=int, default=2)
     ap.add_argument("--print_every_fetch", type=int, default=50)
@@ -286,7 +291,11 @@ def main():
     t_fetch0 = time.time()
     for i, athlete_id in enumerate(valid_ids, start=1):
         processed = i - 1
-        if args.print_every_fetch > 0 and processed > 0 and processed % args.print_every_fetch == 0:
+        if (
+            args.print_every_fetch > 0
+            and processed > 0
+            and processed % args.print_every_fetch == 0
+        ):
             print(
                 f"[FETCH] processed={processed:,}/{len(valid_ids):,} | "
                 f"cache_hits={total_cache_hits:,} fetched={total_network_fetches:,} failures={total_fetch_failures:,} | "
@@ -351,7 +360,9 @@ def main():
 
     if unmatched_rows:
         pd.DataFrame(unmatched_rows).to_csv(args.unmatched_csv, index=False)
-        print(f"[WRITE] Unmatched / failed IDs -> {args.unmatched_csv} ({len(unmatched_rows):,} rows)")
+        print(
+            f"[WRITE] Unmatched / failed IDs -> {args.unmatched_csv} ({len(unmatched_rows):,} rows)"
+        )
 
     if all_output_rows:
         out_df = pd.DataFrame(all_output_rows)
@@ -367,7 +378,9 @@ def main():
             "teamSlug",
             "position",
         ]
-        cols = [c for c in front_cols if c in out_df.columns] + [c for c in out_df.columns if c not in front_cols]
+        cols = [c for c in front_cols if c in out_df.columns] + [
+            c for c in out_df.columns if c not in front_cols
+        ]
         out_df = out_df[cols]
         out_df.to_csv(args.out_csv, index=False)
         print(f"[WRITE] Stats CSV -> {args.out_csv} ({len(out_df):,} rows)")
