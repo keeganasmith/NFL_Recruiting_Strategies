@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "SportsRef Final Season Scraper",
+  "version": "1.4.0",
+  "permissions": ["storage", "downloads"],
+  "host_permissions": ["https://www.sports-reference.com/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.sports-reference.com/cfb/players/*.html*"],
+      "js": ["auto_scrape.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
