@@ -170,10 +170,27 @@ function aggregateGameLog(table) {
   return total;
 }
 
-function scrapePage() {
+/**
+ * Read the draft/combine year that came from your CSV.
+ * This assumes you stored it in chrome.storage.local before opening the page.
+ */
+async function getExpectedDraftYear() {
+  const result = await chrome.storage.local.get(["currentPlayer"]);
+  return result.currentPlayer?.year ? Number(result.currentPlayer.year) : null;
+}
+
+function isYearMatch(finalSeasonYear, draftYear) {
+  const fs = Number(String(finalSeasonYear).replace(/\*/g, ""));
+  const dy = Number(draftYear);
+  if (!Number.isFinite(fs) || !Number.isFinite(dy)) return false;
+  return fs + 1 === dy;
+}
+
+async function scrapePage() {
   const player = getMetaPlayerName();
   const pos = getMetaPosition();
   const page_url = window.location.href;
+  const expected_draft_year = await getExpectedDraftYear();
   const allTables = getAllTables();
 
   let bestSeasonTable = null, bestSeasonScore = -1;
@@ -207,9 +224,21 @@ function scrapePage() {
 
   const final_season_year = (row.season || "").replace(/\*/g, "");
 
+  // Reject same-name wrong-player pages
+  if (expected_draft_year !== null && !isYearMatch(final_season_year, expected_draft_year)) {
+    console.log(
+      "[SportsRef scraper] rejected year mismatch:",
+      player,
+      "final season =", final_season_year,
+      "expected draft year =", expected_draft_year
+    );
+    return null;
+  }
+
   return {
     player,
     pos,
+    expected_draft_year,
     final_season_year,
     source_type,
     page_url,
@@ -236,7 +265,7 @@ function scrapePage() {
 }
 
 function dedupeKey(row) {
-  return `${row.player}|${row.final_season_year}|${row.page_url}`;
+  return `${row.player}|${row.expected_draft_year}|${row.page_url}`;
 }
 
 async function saveRow(row) {
@@ -253,15 +282,21 @@ async function saveRow(row) {
 // retry a few times in case the table loads late
 async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const row = scrapePage();
+    const row = await scrapePage();
     if (row && row.player) {
       await saveRow(row);
-      console.log("[SportsRef scraper] saved", row.player, row.final_season_year, row.source_type);
+      console.log(
+        "[SportsRef scraper] saved",
+        row.player,
+        "draft year:", row.expected_draft_year,
+        "final season:", row.final_season_year,
+        row.source_type
+      );
       return;
     }
     await new Promise(resolve => setTimeout(resolve, delayMs));
   }
-  console.log("[SportsRef scraper] no matching table found on", window.location.href);
+  console.log("[SportsRef scraper] no valid matching table found on", window.location.href);
 }
 
 autoScrapeWithRetry();
