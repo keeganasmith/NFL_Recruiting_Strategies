@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--defensive-csv",
-        default="extension_and_data/defensive_players_before_2000.csv",
+        default="extension_and_data/sportsref_final_season_data.csv",
         help="Path to defensive players CSV.",
     )
     parser.add_argument(
@@ -39,8 +39,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--join-key",
-        default="Player",
-        help="Column name used to match players across both files (default: Player).",
+        default="player",
+        help="Column name used to match players across both files (case-insensitive lookup, default: player).",
     )
     return parser.parse_args()
 
@@ -54,6 +54,18 @@ def _normalized_player_key(series: pd.Series) -> pd.Series:
         .str.replace(r"\s+", " ", regex=True)
     )
 
+
+
+def _resolve_column_name(df: pd.DataFrame, requested: str, dataset_label: str) -> str:
+    """Resolve a column name case-insensitively and preserve the on-disk casing."""
+    by_lower = {col.lower(): col for col in df.columns}
+    key = requested.lower()
+    if key not in by_lower:
+        raise KeyError(
+            f"Join key '{requested}' not found in {dataset_label} CSV columns: "
+            f"{list(df.columns)}"
+        )
+    return by_lower[key]
 
 def build_unified_dataset(
     defensive_csv: Path,
@@ -69,21 +81,13 @@ def build_unified_dataset(
     defensive_df = pd.read_csv(defensive_csv, low_memory=False)
     combine_df = pd.read_csv(combine_csv, low_memory=False)
 
-    if join_key not in defensive_df.columns:
-        raise KeyError(
-            f"Join key '{join_key}' not found in defensive CSV columns: "
-            f"{list(defensive_df.columns)}"
-        )
-    if join_key not in combine_df.columns:
-        raise KeyError(
-            f"Join key '{join_key}' not found in combine CSV columns: "
-            f"{list(combine_df.columns)}"
-        )
+    defensive_join_col = _resolve_column_name(defensive_df, join_key, "defensive")
+    combine_join_col = _resolve_column_name(combine_df, join_key, "combine")
 
     defensive_df = defensive_df.copy()
     combine_df = combine_df.copy()
-    defensive_df["__join_key"] = _normalized_player_key(defensive_df[join_key])
-    combine_df["__join_key"] = _normalized_player_key(combine_df[join_key])
+    defensive_df["__join_key"] = _normalized_player_key(defensive_df[defensive_join_col])
+    combine_df["__join_key"] = _normalized_player_key(combine_df[combine_join_col])
 
     defensive_df = defensive_df.loc[defensive_df["__join_key"] != ""].drop_duplicates(
         subset="__join_key"
