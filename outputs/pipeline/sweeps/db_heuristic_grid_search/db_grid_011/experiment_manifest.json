@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-04-02T20:07:57.677589+00:00",
+  "git_commit_hash": "69fa2c5f7b28cb5209a36701aabfa60754f8e252",
+  "heuristic": {
+    "name": "weighted_nfl_production_value",
+    "parameters": {
+      "heuristic": "weighted_nfl_production_value",
+      "feature_weights": {
+        "defensive_totalTackles": 0.7,
+        "defensive_sacks": 2.2,
+        "defensive_interceptions": 2.5,
+        "defensive_passesDefended": 1.8,
+        "defensive_gamesPlayed": 0.3
+      },
+      "thresholds": {},
+      "role_overrides": {}
+    },
+    "config_path": "/Users/keegansmith/Coding/Personal/NFL_Recruiting_Strategies/configs/heuristics/db_grid_011.yaml",
+    "resolved_config_artifact": "resolved_heuristic_config.yaml"
+  },
+  "data": {
+    "input_path": "/Users/keegansmith/Coding/Personal/NFL_Recruiting_Strategies/outputs/pipeline/sweeps/db_heuristic_grid_search/filtered_input.csv",
+    "slice": {
+      "rows": 3384,
+      "combine_year_min": 2000,
+      "combine_year_max": 2025,
+      "positions": 2,
+      "max_career_year_included": 4.0
+    }
+  },
+  "evaluation_settings": {
+    "calibration_bins": 10,
+    "ranking_top_n": 100,
+    "split_type": "time",
+    "time_split_year": 2018,
+    "seed": null
+  },
+  "artifacts": {
+    "score_summary": "score_summary.csv",
+    "calibration_table": "calibration_table.csv",
+    "ranking_stability": "ranking_stability.csv",
+    "top_players": "top_players.csv",
+    "scored_players": "scored_players.csv",
+    "plots": [
+      "plots/score_distribution.png",
+      "plots/calibration_curve.png"
+    ]
+  }
+}
