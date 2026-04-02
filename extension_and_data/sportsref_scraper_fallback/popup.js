@@ -247,10 +247,14 @@ async function refresh() {
   const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
   document.getElementById("count").textContent = `Saved records: ${rows.length}`;
   document.getElementById("lookupCount").textContent =
-    `Lookup: ${Object.keys(lookup).length} | Queue: ${queuePlayers.length} | Processed: ${processedCount} | Unmatched: ${unmatchedCount}`;
+    `Lookup: ${Object.keys(lookup).length} | Queue: ${queuePlayers.length} | Processed: ${processedCount} | Unmatched: ${unmatchedCount} | Run: ${result.runConfig?.status || "idle"}`;
   document.getElementById("preview").value = queuePlayers.length
     ? JSON.stringify(queuePlayers[Math.max(0, queueState.nextIndex || 0)] || queuePlayers[0], null, 2)
     : "";
+}
+
+async function sendControllerMessage(type, payload = {}) {
+  return chrome.runtime.sendMessage({ type, ...payload });
 }
 
 document.getElementById("importCombineCsvBtn").addEventListener("click", () => {
@@ -333,6 +337,30 @@ document.getElementById("exportCsvBtn").addEventListener("click", async () => {
   setStatus(`Exported ${rows.length} rows to CSV`);
 });
 
+document.getElementById("startRunBtn").addEventListener("click", async () => {
+  const response = await sendControllerMessage("START_RUN");
+  setStatus(response?.ok ? "Run started" : `Start failed: ${response?.reason || "unknown"}`);
+  await refresh();
+});
+
+document.getElementById("pauseRunBtn").addEventListener("click", async () => {
+  const response = await sendControllerMessage("PAUSE_RUN");
+  setStatus(response?.ok ? "Run paused" : `Pause failed: ${response?.reason || "unknown"}`);
+  await refresh();
+});
+
+document.getElementById("resumeRunBtn").addEventListener("click", async () => {
+  const response = await sendControllerMessage("RESUME_RUN");
+  setStatus(response?.ok ? "Run resumed" : `Resume failed: ${response?.reason || "unknown"}`);
+  await refresh();
+});
+
+document.getElementById("processNextBtn").addEventListener("click", async () => {
+  const response = await sendControllerMessage("PROCESS_NEXT");
+  setStatus(response?.ok ? "Queued next player" : `Process failed: ${response?.reason || "unknown"}`);
+  await refresh();
+});
+
 document.getElementById("exportJsonBtn").addEventListener("click", async () => {
   const result = await chrome.storage.local.get(["rows"]);
   const rows = result.rows || [];
@@ -354,7 +382,9 @@ document.getElementById("clearBtn").addEventListener("click", async () => {
     queueState: { players: [], nextIndex: 0 },
     processedKeys: [],
     unmatchedRows: [],
-    runConfig: {}
+    runConfig: {},
+    runTabId: null,
+    currentPlayer: null
   });
   setStatus("Cleared saved data");
   await refresh();

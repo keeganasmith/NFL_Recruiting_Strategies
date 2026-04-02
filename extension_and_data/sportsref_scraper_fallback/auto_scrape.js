@@ -307,6 +307,33 @@ async function saveRow(row) {
   await chrome.storage.local.set({ rows: deduped });
 }
 
+function isLikely404Page() {
+  const title = String(document.title || "").toLowerCase();
+  const bodyText = String(document.body?.innerText || "").toLowerCase();
+  return (
+    title.includes("404") ||
+    title.includes("not found") ||
+    bodyText.includes("404 error") ||
+    bodyText.includes("page not found")
+  );
+}
+
+async function sendResult(resultType, row = null) {
+  const { currentPlayer } = await chrome.storage.local.get(["currentPlayer"]);
+  if (!currentPlayer?.key) return;
+  try {
+    await chrome.runtime.sendMessage({
+      type: "MARK_RESULT",
+      playerKey: currentPlayer.key,
+      resultType,
+      row,
+      pageUrl: window.location.href
+    });
+  } catch (err) {
+    console.warn("[SportsRef scraper] failed to send MARK_RESULT", err);
+  }
+}
+
 // retry a few times in case the table loads late
 async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -320,11 +347,18 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
         "final season:", row.final_season_year,
         row.source_type
       );
+      await sendResult("matched", row);
       return;
     }
     await new Promise(resolve => setTimeout(resolve, delayMs));
   }
+  if (isLikely404Page()) {
+    console.log("[SportsRef scraper] 404 on", window.location.href);
+    await sendResult("not_found_404");
+    return;
+  }
   console.log("[SportsRef scraper] no valid matching table found on", window.location.href);
+  await sendResult("no_valid_row");
 }
 
 autoScrapeWithRetry();

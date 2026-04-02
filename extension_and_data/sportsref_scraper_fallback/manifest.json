@@ -2,8 +2,11 @@
   "manifest_version": 3,
   "name": "SportsRef Final Season Scraper",
   "version": "1.4.0",
-  "permissions": ["storage", "downloads"],
+  "permissions": ["storage", "downloads", "tabs"],
   "host_permissions": ["https://www.sports-reference.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html"
   },
