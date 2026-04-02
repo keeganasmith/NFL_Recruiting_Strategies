@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--defensive-csv",
-        default="extension_and_data/sportsref_final_season_data.csv",
+        default="extension_and_data/sportsref_final_season_data_db_all.csv",
         help="Path to defensive players CSV.",
     )
     parser.add_argument(
@@ -79,11 +79,18 @@ def build_unified_dataset(
         raise FileNotFoundError(f"Combine CSV not found: {combine_csv}")
 
     defensive_df = pd.read_csv(defensive_csv, low_memory=False)
+    
     combine_df = pd.read_csv(combine_csv, low_memory=False)
 
     defensive_join_col = _resolve_column_name(defensive_df, join_key, "defensive")
     combine_join_col = _resolve_column_name(combine_df, join_key, "combine")
-
+    defensive_df = defensive_df.rename(
+        columns={
+            col: f"college_{col}"
+            for col in defensive_df.columns
+            if col != defensive_join_col
+        }
+    )
     defensive_df = defensive_df.copy()
     combine_df = combine_df.copy()
     defensive_df["__join_key"] = _normalized_player_key(defensive_df[defensive_join_col])
@@ -92,6 +99,7 @@ def build_unified_dataset(
     defensive_df = defensive_df.loc[defensive_df["__join_key"] != ""].drop_duplicates(
         subset="__join_key"
     )
+    
     combine_df = combine_df.loc[combine_df["__join_key"] != ""]
 
     merged_df = combine_df.merge(
@@ -103,7 +111,7 @@ def build_unified_dataset(
 
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     merged_df.to_csv(output_csv, index=False)
-
+    
     logging.info("Defensive rows: %s", len(defensive_df))
     logging.info("Combine rows: %s", len(combine_df))
     logging.info("Unified rows written: %s", len(merged_df))
