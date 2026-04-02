@@ -215,96 +215,109 @@ function isYearMatch(finalSeasonYear, draftYear) {
 }
 
 async function scrapePage() {
-  const player = getMetaPlayerName();
-  const pos = getMetaPosition();
-  const page_url = window.location.href;
-  const expected_draft_year = await getExpectedDraftYear();
-  const allTables = getAllTables();
+  try {
+    const player = getMetaPlayerName();
+    const pos = getMetaPosition();
+    const page_url = window.location.href;
+    const expected_draft_year = await getExpectedDraftYear();
+    const allTables = getAllTables();
 
-  let bestSeasonTable = null, bestSeasonScore = -1;
-  let bestGameLogTable = null, bestGameLogScoreVal = -1;
+    let bestSeasonTable = null, bestSeasonScore = -1;
+    let bestGameLogTable = null, bestGameLogScoreVal = -1;
 
-  for (const table of allTables) {
-    const ss = seasonScore(table);
-    if (ss > bestSeasonScore) {
-      bestSeasonScore = ss;
-      bestSeasonTable = table;
+    for (const table of allTables) {
+      const ss = seasonScore(table);
+      if (ss > bestSeasonScore) {
+        bestSeasonScore = ss;
+        bestSeasonTable = table;
+      }
+      const gs = gameLogScore(table);
+      if (gs > bestGameLogScoreVal) {
+        bestGameLogScoreVal = gs;
+        bestGameLogTable = table;
+      }
     }
-    const gs = gameLogScore(table);
-    if (gs > bestGameLogScoreVal) {
-      bestGameLogScoreVal = gs;
-      bestGameLogTable = table;
+
+    let row = null;
+    let source_type = "";
+
+    if (bestSeasonTable) {
+      row = extractFinalSeasonRow(bestSeasonTable);
+      source_type = "season_totals";
+    } else if (bestGameLogTable) {
+      row = aggregateGameLog(bestGameLogTable);
+      source_type = "gamelog_aggregated";
     }
+
+    if (!row) {
+      return {
+        status: "no_table",
+        final_season_year: "",
+        expected_draft_year,
+        page_url
+      };
+    }
+
+    const final_season_year = (row.season || "").replace(/\*/g, "");
+
+    // Reject same-name wrong-player pages
+    if (expected_draft_year !== null && !isYearMatch(final_season_year, expected_draft_year)) {
+      console.log(
+        "[SportsRef scraper] rejected year mismatch:",
+        player,
+        "final season =", final_season_year,
+        "expected draft year =", expected_draft_year
+      );
+      return {
+        status: "mismatch",
+        final_season_year,
+        expected_draft_year,
+        page_url
+      };
+    }
+
+    return {
+      status: "matched",
+      final_season_year,
+      expected_draft_year,
+      page_url,
+      row: {
+        player,
+        pos,
+        expected_draft_year,
+        final_season_year,
+        source_type,
+        page_url,
+        school: row.team || "",
+        conference: row.conf || "",
+        class: row.class || "",
+        games: row.g || "",
+        solo_tackles: row.solo || "",
+        assisted_tackles: row.ast || "",
+        combined_tackles: row.comb || "",
+        tfl: row.tfl || "",
+        sacks: row.sk || "",
+        interceptions: row.int || "",
+        interception_yards: row.yds || "",
+        interception_tds: row.inttd || "",
+        passes_defended: row.pd || "",
+        forced_fumbles: row.ff || "",
+        fumble_recoveries: row.fr || "",
+        fumble_recovery_yards: row.yds_2 || row.yds_3 || "",
+        fumble_recovery_tds: row.frtd || "",
+        awards: row.awards || "",
+        scraped_at: new Date().toISOString()
+      }
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      reason: String(error?.message || error || "unknown_scrape_error"),
+      final_season_year: "",
+      expected_draft_year: await getExpectedDraftYear(),
+      page_url: window.location.href
+    };
   }
-
-  let row = null;
-  let source_type = "";
-
-  if (bestSeasonTable) {
-    row = extractFinalSeasonRow(bestSeasonTable);
-    source_type = "season_totals";
-  } else if (bestGameLogTable) {
-    row = aggregateGameLog(bestGameLogTable);
-    source_type = "gamelog_aggregated";
-  }
-
-  if (!row) return null;
-
-  const final_season_year = (row.season || "").replace(/\*/g, "");
-
-  // Reject same-name wrong-player pages
-  if (expected_draft_year !== null && !isYearMatch(final_season_year, expected_draft_year)) {
-    console.log(
-      "[SportsRef scraper] rejected year mismatch:",
-      player,
-      "final season =", final_season_year,
-      "expected draft year =", expected_draft_year
-    );
-    return { __yearMismatch: true, player, final_season_year, expected_draft_year };
-  }
-
-  return {
-    player,
-    pos,
-    expected_draft_year,
-    final_season_year,
-    source_type,
-    page_url,
-    school: row.team || "",
-    conference: row.conf || "",
-    class: row.class || "",
-    games: row.g || "",
-    solo_tackles: row.solo || "",
-    assisted_tackles: row.ast || "",
-    combined_tackles: row.comb || "",
-    tfl: row.tfl || "",
-    sacks: row.sk || "",
-    interceptions: row.int || "",
-    interception_yards: row.yds || "",
-    interception_tds: row.inttd || "",
-    passes_defended: row.pd || "",
-    forced_fumbles: row.ff || "",
-    fumble_recoveries: row.fr || "",
-    fumble_recovery_yards: row.yds_2 || row.yds_3 || "",
-    fumble_recovery_tds: row.frtd || "",
-    awards: row.awards || "",
-    scraped_at: new Date().toISOString()
-  };
-}
-
-function dedupeKey(row) {
-  return `${row.player}|${row.expected_draft_year}|${row.page_url}`;
-}
-
-async function saveRow(row) {
-  const result = await chrome.storage.local.get(["rows"]);
-  const rows = result.rows || [];
-  const key = dedupeKey(row);
-
-  const deduped = rows.filter(r => dedupeKey(r) !== key);
-  deduped.push(row);
-
-  await chrome.storage.local.set({ rows: deduped });
 }
 
 function isLikely404Page() {
@@ -337,33 +350,58 @@ async function sendResult(resultType, row = null) {
 // retry a few times in case the table loads late
 async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const row = await scrapePage();
-    if (row && row.__yearMismatch) {
-      console.log("[SportsRef scraper] year mismatch on", window.location.href);
-      await sendResult("year_mismatch");
-      return;
-    }
-    if (row && row.player) {
-      await saveRow(row);
+    const outcome = await scrapePage();
+
+    if (outcome.status === "matched") {
+      const row = outcome.row;
       console.log(
-        "[SportsRef scraper] saved",
+        "[SportsRef scraper] matched",
         row.player,
-        "draft year:", row.expected_draft_year,
-        "final season:", row.final_season_year,
+        "draft year:", outcome.expected_draft_year,
+        "final season:", outcome.final_season_year,
         row.source_type
       );
       await sendResult("matched", row);
       return;
     }
+
+    if (outcome.status === "mismatch") {
+      console.log("[SportsRef scraper] year mismatch on", window.location.href);
+      await sendResult("mismatch", outcome);
+      return;
+    }
+
+    if (outcome.status === "error") {
+      console.warn("[SportsRef scraper] scrape error on", window.location.href, outcome.reason || "");
+      await sendResult("error", outcome);
+      return;
+    }
+
+    if (outcome.status === "no_table" && attempt < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+      continue;
+    }
+
+    if (outcome.status === "no_table") {
+      if (isLikely404Page()) {
+        console.log("[SportsRef scraper] 404 on", window.location.href);
+        await sendResult("not_found_404", outcome);
+        return;
+      }
+      console.log("[SportsRef scraper] no valid matching table found on", window.location.href);
+      await sendResult("no_table", outcome);
+      return;
+    }
+
     await new Promise(resolve => setTimeout(resolve, delayMs));
   }
-  if (isLikely404Page()) {
-    console.log("[SportsRef scraper] 404 on", window.location.href);
-    await sendResult("not_found_404");
-    return;
-  }
-  console.log("[SportsRef scraper] no valid matching table found on", window.location.href);
-  await sendResult("no_valid_row");
+  await sendResult("error", {
+    status: "error",
+    reason: "retry_limit_exhausted",
+    final_season_year: "",
+    expected_draft_year: await getExpectedDraftYear(),
+    page_url: window.location.href
+  });
 }
 
 autoScrapeWithRetry();

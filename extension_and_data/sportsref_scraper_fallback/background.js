@@ -1,6 +1,21 @@
 importScripts("shared.js");
 
 const RUN_TAB_KEY = "runTabId";
+const MAX_SUFFIX_ATTEMPTS = 25;
+
+function dedupeKey(row) {
+  return `${row.player}|${row.expected_draft_year}|${row.page_url}`;
+}
+
+async function saveMatchedRow(row) {
+  if (!row || !row.player) return;
+  const result = await chrome.storage.local.get(["rows"]);
+  const rows = result.rows || [];
+  const key = dedupeKey(row);
+  const deduped = rows.filter(r => dedupeKey(r) !== key);
+  deduped.push(row);
+  await chrome.storage.local.set({ rows: deduped });
+}
 
 function nextPlayerIndex(players) {
   if (!Array.isArray(players) || !players.length) return -1;
@@ -72,6 +87,30 @@ async function processNext() {
 
   const player = players[index];
   const attemptIndex = Number.isInteger(player.attemptIndex) && player.attemptIndex > 0 ? player.attemptIndex : 1;
+
+  if (attemptIndex > MAX_SUFFIX_ATTEMPTS) {
+    players[index] = {
+      ...player,
+      status: "error",
+      completedAt: new Date().toISOString()
+    };
+    state.unmatchedRows.push({
+      playerKey: player.playerKey,
+      playerName: player.playerName,
+      draftYear: player.draftYear,
+      slug: player.slug,
+      lastTriedUrl: player.lastTriedUrl || "",
+      attemptedUrlsCount: attemptIndex - 1,
+      reason: "suffix_scan_cap_reached_non_404",
+      attemptedAt: new Date().toISOString()
+    });
+    await chrome.storage.local.set({
+      queueState: { ...state.queueState, players, nextIndex: nextPlayerIndex(players) },
+      unmatchedRows: state.unmatchedRows
+    });
+    return processNext();
+  }
+
   const targetUrl = computePlayerUrl(player.slug || player.playerName, attemptIndex);
   if (!targetUrl) {
     players[index] = {
@@ -138,6 +177,7 @@ async function handleMarkResult(message) {
   const now = new Date().toISOString();
 
   if (resultType === "matched") {
+    await saveMatchedRow(row);
     players[idx] = {
       ...player,
       status: "matched",
@@ -163,7 +203,7 @@ async function handleMarkResult(message) {
       attemptedAt: now
     });
     processedKeys.add(player.playerKey);
-  } else if (resultType === "year_mismatch" || resultType === "no_valid_row") {
+  } else if (resultType === "mismatch" || resultType === "no_table") {
     players[idx] = {
       ...player,
       status: "pending",
@@ -171,6 +211,35 @@ async function handleMarkResult(message) {
       completedAt: "",
       updatedAt: now
     };
+  } else if (resultType === "error") {
+    const nextAttempt = (Number(player.attemptIndex) || 1) + 1;
+    if (nextAttempt > MAX_SUFFIX_ATTEMPTS) {
+      players[idx] = {
+        ...player,
+        status: "error",
+        completedAt: now,
+        updatedAt: now
+      };
+      state.unmatchedRows.push({
+        playerKey: player.playerKey,
+        playerName: player.playerName,
+        draftYear: player.draftYear,
+        slug: player.slug,
+        lastTriedUrl: pageUrl || player.lastTriedUrl || "",
+        attemptedUrlsCount: Number(player.attemptIndex) || 1,
+        reason: row?.reason || "scrape_error",
+        attemptedAt: now
+      });
+      processedKeys.add(player.playerKey);
+    } else {
+      players[idx] = {
+        ...player,
+        status: "pending",
+        attemptIndex: nextAttempt,
+        completedAt: "",
+        updatedAt: now
+      };
+    }
   } else {
     players[idx] = {
       ...player,
