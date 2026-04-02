@@ -22,6 +22,84 @@ function normalizeSportsRefUrl(url) {
   }
 }
 
+function playerKey(row) {
+  const nflId = String(row.NFL_id || row.nfl_id || "").trim();
+  if (nflId) return `nfl:${nflId}`;
+
+  const name = String(row.Player || row.player || "").trim().toLowerCase();
+  const draftYear = String(row.draft_year || row.combine_year || "").trim();
+  const pos = String(row.Pos || row.position || "").trim().toLowerCase();
+  return `name:${name}|year:${draftYear}|pos:${pos}`;
+}
+
+function extractDraftYear(row) {
+  const direct = Number(String(row.draft_year || row.combine_year || "").trim());
+  if (Number.isFinite(direct)) return String(direct);
+
+  const drafted = String(row["Drafted (tm/rnd/yr)"] || "").trim();
+  const match = drafted.match(/\b(19|20)\d{2}\b/);
+  return match ? match[0] : "";
+}
+
+function isDraftedRow(row) {
+  const draftYear = extractDraftYear(row);
+  return Boolean(draftYear);
+}
+
+function buildPlayerRecord(row) {
+  const draftYear = extractDraftYear(row);
+  const key = playerKey({ ...row, draft_year: draftYear });
+  const playerName = String(row.Player || row.player || "").trim();
+  const pos = String(row.Pos || row.position || "").trim();
+  const slug = String(row["Player-additional"] || row.slug || "").trim();
+
+  return {
+    playerKey: key,
+    playerName,
+    pos,
+    draftYear,
+    slug,
+    attemptIndex: 1,
+    status: "pending",
+    lastTriedUrl: "",
+    matchedUrl: ""
+  };
+}
+
+function firstUnprocessedPendingIndex(players) {
+  const idx = players.findIndex(p => p.status === "pending");
+  return idx >= 0 ? idx : players.length;
+}
+
+function mergeQueueState(existingState, importedRecords) {
+  const queueState = existingState || {};
+  const existingPlayers = Array.isArray(queueState.players) ? queueState.players : [];
+  const byKey = new Map(existingPlayers.map(p => [p.playerKey, p]));
+
+  for (const imported of importedRecords) {
+    const prev = byKey.get(imported.playerKey);
+    if (!prev) {
+      byKey.set(imported.playerKey, imported);
+      continue;
+    }
+
+    byKey.set(imported.playerKey, {
+      ...prev,
+      playerName: imported.playerName || prev.playerName,
+      pos: imported.pos || prev.pos,
+      draftYear: imported.draftYear || prev.draftYear,
+      slug: imported.slug || prev.slug
+    });
+  }
+
+  const players = Array.from(byKey.values());
+  return {
+    ...queueState,
+    players,
+    nextIndex: firstUnprocessedPendingIndex(players)
+  };
+}
+
 function parseCsvLine(line) {
   const out = [];
   let value = "";
@@ -126,15 +204,52 @@ function toCsv(rows) {
   return lines.join("\n");
 }
 
+async function ensureLocalStateShape() {
+  const current = await chrome.storage.local.get([
+    "queueState",
+    "processedKeys",
+    "unmatchedRows",
+    "runConfig"
+  ]);
+  const queueState = current.queueState || {};
+  const normalizedQueueState = {
+    players: Array.isArray(queueState.players) ? queueState.players : [],
+    nextIndex:
+      Number.isInteger(queueState.nextIndex) && queueState.nextIndex >= 0
+        ? queueState.nextIndex
+        : 0
+  };
+
+  await chrome.storage.local.set({
+    queueState: normalizedQueueState,
+    processedKeys: Array.isArray(current.processedKeys) ? current.processedKeys : [],
+    unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
+    runConfig: current.runConfig || {}
+  });
+}
+
 async function refresh() {
-  const result = await chrome.storage.local.get(["rows", "draftYearLookup"]);
+  const result = await chrome.storage.local.get([
+    "rows",
+    "draftYearLookup",
+    "queueState",
+    "processedKeys",
+    "unmatchedRows",
+    "runConfig"
+  ]);
   const rows = result.rows || [];
   const lookup = result.draftYearLookup || {};
+  const queueState = result.queueState || {};
+  const queuePlayers = Array.isArray(queueState.players) ? queueState.players : [];
+  const processedCount = Array.isArray(result.processedKeys)
+    ? result.processedKeys.length
+    : Object.keys(result.processedKeys || {}).length;
+  const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
   document.getElementById("count").textContent = `Saved records: ${rows.length}`;
   document.getElementById("lookupCount").textContent =
-    `Draft-year lookup entries: ${Object.keys(lookup).length}`;
-  document.getElementById("preview").value = rows.length
-    ? JSON.stringify(rows[rows.length - 1], null, 2)
+    `Lookup: ${Object.keys(lookup).length} | Queue: ${queuePlayers.length} | Processed: ${processedCount} | Unmatched: ${unmatchedCount}`;
+  document.getElementById("preview").value = queuePlayers.length
+    ? JSON.stringify(queuePlayers[Math.max(0, queueState.nextIndex || 0)] || queuePlayers[0], null, 2)
     : "";
 }
 
@@ -150,17 +265,52 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
     const text = await file.text();
     const rows = parseCsv(text);
     const lookup = buildDraftYearLookup(rows);
+    const draftedRows = rows.filter(isDraftedRow);
+    const importedRecordsByKey = new Map();
+    for (const row of draftedRows) {
+      const record = buildPlayerRecord(row);
+      if (!record.playerKey || importedRecordsByKey.has(record.playerKey)) continue;
+      importedRecordsByKey.set(record.playerKey, record);
+    }
+    const importedRecords = Array.from(importedRecordsByKey.values());
+
+    const current = await chrome.storage.local.get([
+      "queueState",
+      "processedKeys",
+      "unmatchedRows",
+      "runConfig"
+    ]);
+
+    const mergedQueueState = mergeQueueState(current.queueState, importedRecords);
+    const processedSet = new Set(
+      Array.isArray(current.processedKeys)
+        ? current.processedKeys
+        : Object.keys(current.processedKeys || {})
+    );
+
+    for (const p of mergedQueueState.players) {
+      if (p.status === "matched" || p.status === "unmatched") {
+        processedSet.add(p.playerKey);
+      }
+    }
+
     await chrome.storage.local.set({
       draftYearLookup: lookup,
       draftYearLookupMeta: {
         imported_at: new Date().toISOString(),
         filename: file.name,
         source_rows: rows.length,
+        drafted_rows: draftedRows.length,
+        queue_players: importedRecords.length,
         lookup_entries: Object.keys(lookup).length
-      }
+      },
+      queueState: mergedQueueState,
+      processedKeys: Array.from(processedSet),
+      unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
+      runConfig: current.runConfig || {}
     });
     setStatus(
-      `Imported ${rows.length} CSV rows; built ${Object.keys(lookup).length} draft-year lookup entries`
+      `Imported ${rows.length} rows (${draftedRows.length} drafted). Queue now has ${mergedQueueState.players.length} players; ${Object.keys(lookup).length} lookup entries`
     );
     await refresh();
   } catch (err) {
@@ -199,9 +349,15 @@ document.getElementById("exportJsonBtn").addEventListener("click", async () => {
 });
 
 document.getElementById("clearBtn").addEventListener("click", async () => {
-  await chrome.storage.local.set({ rows: [] });
+  await chrome.storage.local.set({
+    rows: [],
+    queueState: { players: [], nextIndex: 0 },
+    processedKeys: [],
+    unmatchedRows: [],
+    runConfig: {}
+  });
   setStatus("Cleared saved data");
   await refresh();
 });
 
-refresh();
+ensureLocalStateShape().then(refresh);
