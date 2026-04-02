@@ -1,50 +1,84 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import pandas as pd
 
+from pipeline.config import BinRule, HeuristicConfig, REQUIRED_FEATURES, validate_heuristic_inputs
+
 
 @dataclass(frozen=True)
-class WeightedNflProductionHeuristic:
-    offense_weight: float = 1.0
-    touchdowns_weight: float = 10.0
-    defense_weight: float = 1.0
-    special_teams_weight: float = 0.5
-    availability_weight: float = 20.0
+class ConfigurableNflProductionHeuristic:
+    config: HeuristicConfig
 
     def name(self) -> str:
-        return "weighted_nfl_production_value"
+        return self.config.heuristic_id
 
     def required_columns(self) -> set[str]:
-        return {
-            "offense_yards",
-            "touchdowns",
-            "defense_impact",
-            "special_teams_impact",
-            "availability_factor",
-        }
+        return set(REQUIRED_FEATURES)
+
+    def _role_for_row(self, row: pd.Series) -> str | None:
+        pos = str(row.get("Pos", "")).upper().strip()
+        role = str(row.get("role", "")).lower().strip()
+
+        if pos == "CB":
+            return "CB"
+        if pos in {"S", "SS", "FS"}:
+            return "S"
+        if role in {"slot", "outside"}:
+            return role
+        return None
+
+    @staticmethod
+    def _bin_adjustment(value: float, bins: list[BinRule]) -> float:
+        for rule in bins:
+            min_ok = rule.min is None or value >= rule.min
+            max_ok = rule.max is None or value < rule.max
+            if min_ok and max_ok:
+                return rule.value
+        return 0.0
+
+    def _weights_for_role(self, role: str | None) -> dict[str, float]:
+        weights = dict(self.config.feature_weights)
+        if role and role in self.config.role_overrides:
+            weights.update(self.config.role_overrides[role].get("feature_weights", {}))
+        return weights
+
+    def _thresholds_for_role(self, role: str | None) -> dict[str, list[BinRule]]:
+        thresholds = dict(self.config.thresholds)
+        if role and role in self.config.role_overrides:
+            thresholds.update(self.config.role_overrides[role].get("thresholds", {}))
+        return thresholds
 
     def score(self, df: pd.DataFrame) -> pd.Series:
-        missing = sorted(self.required_columns() - set(df.columns))
-        if missing:
-            raise ValueError(f"Heuristic input missing required columns: {missing}")
+        validate_heuristic_inputs(df, self.config)
 
-        raw_score = (
-            self.offense_weight * df["offense_yards"]
-            + self.touchdowns_weight * df["touchdowns"]
-            + self.defense_weight * df["defense_impact"]
-            + self.special_teams_weight * df["special_teams_impact"]
-            + self.availability_weight * df["availability_factor"]
-        )
-        return raw_score.clip(lower=0.0)
+        scores: list[float] = []
+        for _, row in df.iterrows():
+            role = self._role_for_row(row)
+            weights = self._weights_for_role(role)
+            thresholds = self._thresholds_for_role(role)
 
-    def metadata(self) -> dict[str, float | str]:
+            total = 0.0
+            for feature, weight in weights.items():
+                value = float(pd.to_numeric(row.get(feature), errors="coerce"))
+                if pd.isna(value):
+                    value = 0.0
+                total += weight * value
+                if feature in thresholds:
+                    total += self._bin_adjustment(value, thresholds[feature])
+
+            scores.append(max(total, 0.0))
+
+        return pd.Series(scores, index=df.index, dtype=float)
+
+    def metadata(self) -> dict[str, Any]:
         return {
             "heuristic": self.name(),
-            "offense_weight": self.offense_weight,
-            "touchdowns_weight": self.touchdowns_weight,
-            "defense_weight": self.defense_weight,
-            "special_teams_weight": self.special_teams_weight,
-            "availability_weight": self.availability_weight,
+            "feature_weights": self.config.feature_weights,
+            "thresholds": {
+                k: [rule.__dict__ for rule in v] for k, v in self.config.thresholds.items()
+            },
+            "role_overrides": self.config.role_overrides,
         }

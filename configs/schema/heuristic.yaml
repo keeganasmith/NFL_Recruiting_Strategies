@@ -1,0 +1,51 @@
+# Heuristic configuration schema (documentation-first schema)
+# Required fields:
+# - heuristic_id: string
+# - feature_weights: mapping of feature -> numeric weight
+# Optional fields:
+# - thresholds: per-feature bins (list of min/max/value rules)
+# - role_overrides: CB/S/slot/outside-specific overrides
+heuristic_id: weighted_nfl_production_value
+feature_weights:
+  offense_yards: 1.0
+  touchdowns: 10.0
+  defense_impact: 1.0
+  special_teams_impact: 0.5
+  availability_factor: 20.0
+thresholds:
+  offense_yards:
+    bins:
+      - max: 500
+        value: -5
+      - min: 500
+        max: 2000
+        value: 0
+      - min: 2000
+        value: 8
+role_overrides:
+  CB:
+    feature_weights:
+      defense_impact: 1.4
+      special_teams_impact: 0.3
+    thresholds:
+      defense_impact:
+        bins:
+          - max: 50
+            value: -2
+          - min: 50
+            max: 140
+            value: 0
+          - min: 140
+            value: 4
+  S:
+    feature_weights:
+      defense_impact: 1.2
+      availability_factor: 22.0
+  slot:
+    feature_weights:
+      offense_yards: 1.1
+      touchdowns: 9.0
+  outside:
+    feature_weights:
+      offense_yards: 1.0
+      touchdowns: 10.5
