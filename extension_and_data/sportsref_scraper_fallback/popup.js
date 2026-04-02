@@ -344,17 +344,52 @@ async function sendControllerMessage(type, payload = {}) {
   return chrome.runtime.sendMessage({ type, ...payload });
 }
 
+console.log("[popup] initial visibilityState:", document.visibilityState);
+console.log("[popup] current window handlers:", {
+  onblur: window.onblur,
+  onunload: window.onunload
+});
+document.addEventListener("visibilitychange", () => {
+  console.log("[popup] visibilitychange:", document.visibilityState);
+});
+window.addEventListener("blur", event => {
+  console.log("[popup] blur event fired", {
+    visibilityState: document.visibilityState,
+    eventType: event?.type
+  });
+});
+window.addEventListener("unload", event => {
+  console.log("[popup] unload event fired", {
+    visibilityState: document.visibilityState,
+    eventType: event?.type
+  });
+});
+
 document.getElementById("importCombineCsvBtn").addEventListener("click", () => {
   document.getElementById("combineCsvInput").click();
 });
 
 document.getElementById("combineCsvInput").addEventListener("change", async event => {
   const file = event.target.files && event.target.files[0];
+  console.log("[combineCsvInput] file selected:", file ? {
+    name: file.name,
+    size: file.size,
+    type: file.type,
+    visibilityState: document.visibilityState
+  } : null);
   if (!file) return;
 
   try {
     const text = await file.text();
+    console.log("[combineCsvInput] file.text() complete:", {
+      length: text.length,
+      visibilityState: document.visibilityState
+    });
     const rows = parseCsv(text);
+    console.log("[combineCsvInput] parseCsv(text) complete:", {
+      rowCount: rows.length,
+      visibilityState: document.visibilityState
+    });
     const lookup = buildDraftYearLookup(rows);
     const draftedRows = rows.filter(isDraftedRow);
     const importedRecordsByKey = new Map();
@@ -385,6 +420,13 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
       }
     }
 
+    console.log("[combineCsvInput] before chrome.storage.local.set", {
+      visibilityState: document.visibilityState,
+      sourceRows: rows.length,
+      draftedRows: draftedRows.length,
+      queuePlayers: mergedQueueState.players.length,
+      lookupEntries: Object.keys(lookup).length
+    });
     await chrome.storage.local.set({
       draftYearLookup: lookup,
       draftYearLookupMeta: {
@@ -400,11 +442,15 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
       unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
       runConfig: current.runConfig || {}
     });
+    console.log("[combineCsvInput] after chrome.storage.local.set", {
+      visibilityState: document.visibilityState
+    });
     setStatus(
       `Imported ${rows.length} rows (${draftedRows.length} drafted). Queue now has ${mergedQueueState.players.length} players; ${Object.keys(lookup).length} lookup entries`
     );
     await refresh();
   } catch (err) {
+    console.log("[combineCsvInput] import failed with error object:", err);
     setStatus(`Import failed: ${err && err.message ? err.message : String(err)}`);
   } finally {
     event.target.value = "";
