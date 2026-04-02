@@ -55,6 +55,14 @@ class TrainExplainableModelsIdentityTests(unittest.TestCase):
                     self.assertFalse(features_lower.str.contains("nfl_id").any())
                     self.assertFalse(features_lower.str.contains("record_id").any())
 
+            for model_name in ["ridge", "elastic_net", "decision_tree"]:
+                self.assertTrue((Path("visuals/outputs") / f"predicted_vs_expected_{model_name}.svg").exists())
+
+            autogluon_predictions = output_dir / "autogluon_extreme_test_predictions.csv"
+            autogluon_plot = Path("visuals/outputs") / "predicted_vs_expected_autogluon_extreme.svg"
+            if autogluon_predictions.exists():
+                self.assertTrue(autogluon_plot.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
