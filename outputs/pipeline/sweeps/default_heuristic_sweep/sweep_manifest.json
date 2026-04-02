@@ -1,0 +1,9 @@
+{
+  "timestamp_utc": "2026-04-02T18:42:42.206907+00:00",
+  "experiment_config_path": "/Users/keegansmith/Coding/Personal/NFL_Recruiting_Strategies/configs/experiments/default_experiment.yaml",
+  "output_root": "/Users/keegansmith/Coding/Personal/NFL_Recruiting_Strategies/outputs/pipeline/sweeps/default_heuristic_sweep",
+  "comparison_table": "comparison_table.csv",
+  "variants": [
+    "baseline"
+  ]
+}

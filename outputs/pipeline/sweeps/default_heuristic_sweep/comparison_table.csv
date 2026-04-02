@@ -1,0 +1,2 @@
+variant_id,run_directory,mean_score,std_score,p90_score,rows_scored,heuristic_name
+baseline,outputs/pipeline/sweeps/default_heuristic_sweep/baseline,116.55961580415888,168.15600615509908,204.66470588235325,5123,weighted_nfl_production_value

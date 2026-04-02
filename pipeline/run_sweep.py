@@ -7,7 +7,11 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+import sys
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 from pipeline.config import load_experiment_config
 from pipeline.run_experiment import run_experiment
 
