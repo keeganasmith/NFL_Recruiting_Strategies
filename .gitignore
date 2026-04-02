@@ -3,3 +3,4 @@ __pycache__
 espn_cache.sqlite
 .DS_Store
 *.sqlite
+outputs/model_training/autogluon_extreme_predictor/models/

@@ -306,16 +306,19 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
     else:
         autogluon_path = output_dir / "autogluon_extreme_predictor"
         train_val_ag = pd.concat([X_train_val, y_train_val.rename(TARGET_COLUMN)], axis=1)
+
         fit_kwargs = {
             "train_data": train_val_ag,
             "presets": "extreme",
         }
+
         if not val_df.empty:
             val_ag = val_df[feature_columns].copy()
             val_ag[TARGET_COLUMN] = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
             val_ag = val_ag.loc[val_ag[TARGET_COLUMN].notna()]
             if not val_ag.empty:
                 fit_kwargs["tuning_data"] = val_ag
+                fit_kwargs["use_bag_holdout"] = True
 
         predictor = TabularPredictor(
             label=TARGET_COLUMN,
@@ -323,6 +326,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             problem_type="regression",
             eval_metric="root_mean_squared_error",
         ).fit(**fit_kwargs)
+
         print("predictor finished")
         ag_predictions = predictor.predict(X_test)
         ag_rmse = float(np.sqrt(mean_squared_error(y_test, ag_predictions)))
