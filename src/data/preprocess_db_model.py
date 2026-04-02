@@ -12,6 +12,7 @@ INPUT_CSV = Path("outputs/pipeline/sweeps/db_heuristic_grid_search/best_heuristi
 DEFAULT_OUTPUT_CSV = Path("artifacts/db_model_preprocessed.csv")
 DEFAULT_MANIFEST_PATH = Path("artifacts/feature_manifest.json")
 RANDOM_SEED = 42
+TARGET_COLUMN = "NFL_production_value"
 
 DB_POSITIONS = {
     "CB",
@@ -107,6 +108,38 @@ def _filter_db_rows(df: pd.DataFrame) -> pd.DataFrame:
     return df.loc[pos_mask | college_pos_mask].copy()
 
 
+def _collapse_to_player_level(df: pd.DataFrame) -> pd.DataFrame:
+    """Collapse season-level rows to one row per draft prospect.
+
+    Input scored-player files often contain one row per player-season.
+    For the DB model we need one row per player, so we aggregate target label
+    across seasons while preserving combine/college covariates.
+    """
+    if df.empty:
+        return df.copy()
+
+    group_keys = [column for column in ["NFL_id", "Player", "combine_year"] if column in df.columns]
+    if not group_keys:
+        return df.copy()
+
+    working = df.copy()
+    if TARGET_COLUMN in working.columns:
+        working[TARGET_COLUMN] = pd.to_numeric(working[TARGET_COLUMN], errors="coerce")
+
+    aggregated = (
+        working.groupby(group_keys, dropna=False, as_index=False)
+        .agg(
+            {
+                column: ("sum" if column == TARGET_COLUMN else "first")
+                for column in working.columns
+                if column not in group_keys
+            }
+        )
+        .copy()
+    )
+    return aggregated
+
+
 def _select_and_standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     working = df.copy()
 
@@ -133,6 +166,8 @@ def _select_and_standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
         for column in ["Player", "NFL_id", "Pos", "combine_year", "college_name"]
         if column in working.columns
     ] + list(source_features.keys())
+    if TARGET_COLUMN in working.columns:
+        selected_columns.append(TARGET_COLUMN)
 
     out = working[selected_columns].copy()
     out = out.rename(columns=source_features)
@@ -234,7 +269,8 @@ def preprocess_db_model_dataset(
 ) -> tuple[pd.DataFrame, dict[str, object]]:
     raw = pd.read_csv(input_csv, low_memory=False)
     db_only = _filter_db_rows(raw)
-    selected = _select_and_standardize_columns(db_only)
+    player_level = _collapse_to_player_level(db_only)
+    selected = _select_and_standardize_columns(player_level)
 
     base_features = list(BASE_COMBINE_FEATURE_MAP.values()) + list(
         BASE_COLLEGE_FEATURE_MAP.values()
