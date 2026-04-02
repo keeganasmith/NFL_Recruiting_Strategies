@@ -2,6 +2,36 @@ function setStatus(msg) {
   document.getElementById("status").textContent = msg;
 }
 
+function countQueueStatuses(players) {
+  return (Array.isArray(players) ? players : []).reduce(
+    (acc, player) => {
+      const status = String(player.status || "").toLowerCase();
+      if (status === "pending") acc.pending += 1;
+      else if (status === "processing") acc.processing += 1;
+      else if (status === "matched") acc.matched += 1;
+      else if (status === "unmatched") acc.unmatched += 1;
+      else if (status === "error") acc.errors += 1;
+      return acc;
+    },
+    { pending: 0, processing: 0, matched: 0, unmatched: 0, errors: 0 }
+  );
+}
+
+function reasonMessage(reason, fallbackPrefix) {
+  const reasonMap = {
+    empty_queue: "No queued players are pending or processing.",
+    not_running: "Run is not currently marked as running.",
+    player_not_processing: "No processing player matched the reported result."
+  };
+  if (!reason) return `${fallbackPrefix}: unknown`;
+  return reasonMap[reason] || `${fallbackPrefix}: ${reason}`;
+}
+
+function formatControllerStatus(response, successMessage, failurePrefix) {
+  if (response?.ok) return successMessage;
+  return reasonMessage(response?.reason, failurePrefix);
+}
+
 const NAV_THROTTLE_MS = 5000;
 let throttleTicker = null;
 
@@ -278,7 +308,8 @@ async function refresh() {
     "processedKeys",
     "unmatchedRows",
     "runConfig",
-    "lastNavigationAt"
+    "lastNavigationAt",
+    "draftYearLookupMeta"
   ]);
   const rows = result.rows || [];
   const lookup = result.draftYearLookup || {};
@@ -288,18 +319,12 @@ async function refresh() {
     ? result.processedKeys.length
     : Object.keys(result.processedKeys || {}).length;
   const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
-  const statusCounts = queuePlayers.reduce(
-    (acc, player) => {
-      const status = String(player.status || "").toLowerCase();
-      if (status === "pending") acc.pending += 1;
-      else if (status === "processing") acc.processing += 1;
-      else if (status === "matched") acc.matched += 1;
-      else if (status === "unmatched") acc.unmatched += 1;
-      else if (status === "error") acc.errors += 1;
-      return acc;
-    },
-    { pending: 0, processing: 0, matched: 0, unmatched: 0, errors: 0 }
-  );
+  const statusCounts = countQueueStatuses(queuePlayers);
+  const importMeta = result.draftYearLookupMeta || {};
+  const importSummary = importMeta.filename
+    ? `${importMeta.filename} (${Number(importMeta.source_rows) || 0} rows, drafted ${Number(importMeta.drafted_rows) || 0}, queued ${Number(importMeta.queue_players) || 0})`
+    : "none";
+  const runStatus = result.runConfig?.status || "idle";
   document.getElementById("count").textContent = `Saved records: ${rows.length}`;
   document.getElementById("lookupCount").textContent =
     `Lookup: ${Object.keys(lookup).length} | Queue: ${queuePlayers.length} | Processed: ${processedCount} | Unmatched: ${unmatchedCount} | Run: ${result.runConfig?.status || "idle"}`;
@@ -308,6 +333,10 @@ async function refresh() {
     : "";
   document.getElementById("queueCounts").textContent =
     `Pending: ${statusCounts.pending} | Processing: ${statusCounts.processing} | Matched: ${statusCounts.matched} | Unmatched: ${statusCounts.unmatched} | Errors: ${statusCounts.errors}`;
+  document.getElementById("diagQueueSize").textContent = `Queue size: ${queuePlayers.length}`;
+  document.getElementById("diagPending").textContent = `Pending: ${statusCounts.pending}`;
+  document.getElementById("diagImportMeta").textContent = `Last import: ${importSummary}`;
+  document.getElementById("diagRunStatus").textContent = `Run status: ${runStatus}`;
   startThrottleTicker(result.lastNavigationAt);
 }
 
@@ -390,26 +419,37 @@ document.getElementById("exportCsvBtn").addEventListener("click", async () => {
 });
 
 document.getElementById("startRunBtn").addEventListener("click", async () => {
+  const localState = await chrome.storage.local.get(["queueState", "runConfig"]);
+  const queueState = localState.queueState || {};
+  const players = Array.isArray(queueState.players) ? queueState.players : [];
+  const counts = countQueueStatuses(players);
+  if (counts.pending + counts.processing === 0) {
+    setStatus(
+      `Start blocked: empty_queue (pending=${counts.pending}, processing=${counts.processing}, run=${localState.runConfig?.status || "idle"})`
+    );
+    await refresh();
+    return;
+  }
   const response = await sendControllerMessage("START_RUN");
-  setStatus(response?.ok ? "Run started" : `Start failed: ${response?.reason || "unknown"}`);
+  setStatus(formatControllerStatus(response, "Run started", "Start failed"));
   await refresh();
 });
 
 document.getElementById("pauseRunBtn").addEventListener("click", async () => {
   const response = await sendControllerMessage("PAUSE_RUN");
-  setStatus(response?.ok ? "Run paused" : `Pause failed: ${response?.reason || "unknown"}`);
+  setStatus(formatControllerStatus(response, "Run paused", "Pause failed"));
   await refresh();
 });
 
 document.getElementById("resumeRunBtn").addEventListener("click", async () => {
   const response = await sendControllerMessage("RESUME_RUN");
-  setStatus(response?.ok ? "Run resumed" : `Resume failed: ${response?.reason || "unknown"}`);
+  setStatus(formatControllerStatus(response, "Run resumed", "Resume failed"));
   await refresh();
 });
 
 document.getElementById("processNextBtn").addEventListener("click", async () => {
   const response = await sendControllerMessage("PROCESS_NEXT");
-  setStatus(response?.ok ? "Queued next player" : `Process failed: ${response?.reason || "unknown"}`);
+  setStatus(formatControllerStatus(response, "Queued next player", "Process failed"));
   await refresh();
 });
 

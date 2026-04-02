@@ -87,7 +87,9 @@ async function getOrCreateRunTab(targetUrl, existingTabId) {
 
 async function processNext() {
   const state = await getRunState();
-  if (state.runConfig.status !== "running") return { ok: false, reason: "not_running" };
+  if (state.runConfig.status !== "running") {
+    return { ok: false, reason: "not_running", runStatus: state.runConfig.status };
+  }
 
   const players = state.queueState.players;
   const index = nextPlayerIndex(players);
@@ -97,7 +99,7 @@ async function processNext() {
       queueState: { ...state.queueState, nextIndex: players.length }
     });
     await setRunStatus("complete");
-    return { ok: true, done: true };
+    return { ok: false, reason: "empty_queue", queueSize: players.length };
   }
 
   const player = players[index];
@@ -186,7 +188,14 @@ async function handleMarkResult(message) {
   );
   const players = state.queueState.players;
   const idx = players.findIndex(p => p.playerKey === playerKey && p.status === "processing");
-  if (idx < 0) return { ok: false, reason: "player_not_processing" };
+  if (idx < 0) {
+    return {
+      ok: false,
+      reason: "player_not_processing",
+      playerKey: playerKey || "",
+      processingCount: players.filter(p => p.status === "processing").length
+    };
+  }
 
   const player = players[idx];
   const now = new Date().toISOString();
