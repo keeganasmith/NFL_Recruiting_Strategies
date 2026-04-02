@@ -16,10 +16,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
 
-try:
-    from autogluon.tabular import TabularPredictor
-except ImportError:  # pragma: no cover - exercised in environments without AutoGluon
-    TabularPredictor = None  # type: ignore[assignment]
+from autogluon.tabular import TabularPredictor
 
 TARGET_COLUMN = "NFL_production_value"
 SPLIT_COLUMN = "dataset_split"
@@ -326,7 +323,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             problem_type="regression",
             eval_metric="root_mean_squared_error",
         ).fit(**fit_kwargs)
-
+        print("predictor finished")
         ag_predictions = predictor.predict(X_test)
         ag_rmse = float(np.sqrt(mean_squared_error(y_test, ag_predictions)))
         ag_mae = float(mean_absolute_error(y_test, ag_predictions))

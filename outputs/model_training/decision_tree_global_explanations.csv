@@ -1,87 +1,87 @@
 feature,importance,abs_value
-num__combine_year,0.6292236997011563,0.6292236997011563
-num__college_interceptions_z,0.37077630029884373,0.37077630029884373
-num__vertical_jump_in,0.0,0.0
-num__bench_reps,0.0,0.0
-num__broad_jump_in,0.0,0.0
+num__combine_year,0.6292236997011552,0.6292236997011552
+num__college_interceptions_z,0.3707763002988448,0.3707763002988448
+cat__college_name_Wake Forest,0.0,0.0
+num__college_fumble_recovery_yards_missing,0.0,0.0
+num__college_fumble_recoveries_missing,0.0,0.0
+num__college_forced_fumbles_z,0.0,0.0
+num__college_forced_fumbles_missing,0.0,0.0
+num__college_tfl_z,0.0,0.0
+num__college_tfl_missing,0.0,0.0
+num__college_sacks_z,0.0,0.0
+num__college_sacks_missing,0.0,0.0
+num__college_assisted_tackles_z,0.0,0.0
+num__college_assisted_tackles_missing,0.0,0.0
+num__college_solo_tackles_z,0.0,0.0
+num__college_solo_tackles_missing,0.0,0.0
+num__college_combined_tackles_z,0.0,0.0
+num__college_combined_tackles_missing,0.0,0.0
+num__college_passes_defended_z,0.0,0.0
+num__college_passes_defended_missing,0.0,0.0
+num__college_interception_tds_z,0.0,0.0
+num__college_interception_tds_missing,0.0,0.0
+num__college_fumble_recoveries_z,0.0,0.0
+num__college_fumble_recovery_yards_z,0.0,0.0
+cat__college_name_Tulsa,0.0,0.0
+num__college_interception_yards_z,0.0,0.0
+cat__college_name_Texas A&M,0.0,0.0
+cat__college_name_Penn State,0.0,0.0
+cat__college_name_Ohio State,0.0,0.0
+cat__college_name_North Carolina State,0.0,0.0
+cat__college_name_Nevada,0.0,0.0
+cat__college_name_Nebraska,0.0,0.0
+cat__college_name_Mississippi State,0.0,0.0
+cat__college_name_Maryland,0.0,0.0
+cat__college_name_Marshall,0.0,0.0
+cat__college_name_LSU,0.0,0.0
+cat__college_name_Georgia Tech,0.0,0.0
+cat__college_name_Colorado State,0.0,0.0
+cat__college_name_College Stats,0.0,0.0
+cat__college_name_Arkansas,0.0,0.0
+cat__Pos_S,0.0,0.0
+cat__Pos_CB,0.0,0.0
+num__college_fumble_recovery_tds_z,0.0,0.0
+num__college_fumble_recovery_tds_missing,0.0,0.0
+num__college_interception_yards_missing,0.0,0.0
 num__forty_yard_sec,0.0,0.0
-num__shuttle_sec,0.0,0.0
-num__height_in,0.0,0.0
-num__weight_lb,0.0,0.0
-num__college_games,0.0,0.0
-num__college_interceptions,0.0,0.0
 num__college_interception_yards,0.0,0.0
-num__college_interception_tds,0.0,0.0
-num__college_passes_defended,0.0,0.0
-num__college_combined_tackles,0.0,0.0
-num__college_solo_tackles,0.0,0.0
-num__college_assisted_tackles,0.0,0.0
-num__college_sacks,0.0,0.0
-num__college_tfl,0.0,0.0
 num__college_forced_fumbles,0.0,0.0
-num__college_fumble_recoveries,0.0,0.0
+num__college_tfl,0.0,0.0
+num__college_sacks,0.0,0.0
+num__college_assisted_tackles,0.0,0.0
+num__college_solo_tackles,0.0,0.0
+num__college_combined_tackles,0.0,0.0
+num__college_passes_defended,0.0,0.0
+num__college_interception_tds,0.0,0.0
+num__college_interceptions,0.0,0.0
+num__college_interceptions_missing,0.0,0.0
+num__college_games,0.0,0.0
+num__weight_lb,0.0,0.0
+num__height_in,0.0,0.0
+num__shuttle_sec,0.0,0.0
 num__three_cone_sec,0.0,0.0
+num__broad_jump_in,0.0,0.0
+num__bench_reps,0.0,0.0
+num__vertical_jump_in,0.0,0.0
+num__college_fumble_recoveries,0.0,0.0
 num__college_fumble_recovery_yards,0.0,0.0
 num__college_fumble_recovery_tds,0.0,0.0
-num__forty_yard_sec_z,0.0,0.0
 num__forty_yard_sec_missing,0.0,0.0
-num__vertical_jump_in_z,0.0,0.0
-num__bench_reps_missing,0.0,0.0
-num__bench_reps_z,0.0,0.0
-num__vertical_jump_in_missing,0.0,0.0
-num__broad_jump_in_z,0.0,0.0
-num__three_cone_sec_missing,0.0,0.0
-num__three_cone_sec_z,0.0,0.0
-num__shuttle_sec_missing,0.0,0.0
-num__shuttle_sec_z,0.0,0.0
-num__height_in_missing,0.0,0.0
-num__height_in_z,0.0,0.0
-num__broad_jump_in_missing,0.0,0.0
-num__weight_lb_missing,0.0,0.0
-num__weight_lb_z,0.0,0.0
 num__college_games_z,0.0,0.0
 num__college_games_missing,0.0,0.0
-num__college_interceptions_missing,0.0,0.0
-num__college_interception_yards_missing,0.0,0.0
-num__college_interception_yards_z,0.0,0.0
-num__college_interception_tds_missing,0.0,0.0
-num__college_interception_tds_z,0.0,0.0
-num__college_passes_defended_missing,0.0,0.0
-num__college_passes_defended_z,0.0,0.0
-num__college_combined_tackles_missing,0.0,0.0
-num__college_combined_tackles_z,0.0,0.0
-num__college_solo_tackles_missing,0.0,0.0
-num__college_solo_tackles_z,0.0,0.0
-num__college_assisted_tackles_missing,0.0,0.0
-num__college_assisted_tackles_z,0.0,0.0
-num__college_sacks_missing,0.0,0.0
-num__college_sacks_z,0.0,0.0
-num__college_tfl_missing,0.0,0.0
-num__college_tfl_z,0.0,0.0
-num__college_forced_fumbles_missing,0.0,0.0
-num__college_forced_fumbles_z,0.0,0.0
-num__college_fumble_recoveries_missing,0.0,0.0
-num__college_fumble_recoveries_z,0.0,0.0
-num__college_fumble_recovery_yards_missing,0.0,0.0
-num__college_fumble_recovery_yards_z,0.0,0.0
-num__college_fumble_recovery_tds_missing,0.0,0.0
-num__college_fumble_recovery_tds_z,0.0,0.0
-cat__Pos_CB,0.0,0.0
-cat__Pos_S,0.0,0.0
-cat__college_name_Arkansas,0.0,0.0
-cat__college_name_College Stats,0.0,0.0
-cat__college_name_Colorado State,0.0,0.0
-cat__college_name_Georgia Tech,0.0,0.0
-cat__college_name_LSU,0.0,0.0
-cat__college_name_Marshall,0.0,0.0
-cat__college_name_Maryland,0.0,0.0
-cat__college_name_Mississippi State,0.0,0.0
-cat__college_name_Nebraska,0.0,0.0
-cat__college_name_Nevada,0.0,0.0
-cat__college_name_North Carolina State,0.0,0.0
-cat__college_name_Ohio State,0.0,0.0
-cat__college_name_Penn State,0.0,0.0
-cat__college_name_Texas A&M,0.0,0.0
-cat__college_name_Tulsa,0.0,0.0
-cat__college_name_Wake Forest,0.0,0.0
+num__weight_lb_z,0.0,0.0
+num__weight_lb_missing,0.0,0.0
+num__height_in_z,0.0,0.0
+num__height_in_missing,0.0,0.0
+num__shuttle_sec_z,0.0,0.0
+num__shuttle_sec_missing,0.0,0.0
+num__three_cone_sec_z,0.0,0.0
+num__three_cone_sec_missing,0.0,0.0
+num__broad_jump_in_z,0.0,0.0
+num__broad_jump_in_missing,0.0,0.0
+num__bench_reps_z,0.0,0.0
+num__bench_reps_missing,0.0,0.0
+num__vertical_jump_in_z,0.0,0.0
+num__vertical_jump_in_missing,0.0,0.0
+num__forty_yard_sec_z,0.0,0.0
 cat__college_name_Wisconsin,0.0,0.0
