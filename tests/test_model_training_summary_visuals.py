@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.visual_scripts.plot_model_training_summary import (
+    _prepare_prediction_frame,
     build_error_profile_figure,
     build_explanation_figure,
     build_performance_figure,
@@ -27,14 +28,16 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
         self.predictions = {
             "decision_tree": pd.DataFrame(
                 {
-                    "predicted": [120, 220, 150, 330],
-                    "actual": [140, 250, 120, 300],
+                    "dataset_split": ["train", "test", "test", "train"],
+                    "NFL_production_value": [140, 250, 120, 300],
+                    "decision_tree_prediction": [120, 220, 150, 330],
                 }
             ),
             "ridge": pd.DataFrame(
                 {
-                    "predicted": [110, 200, 170, 320],
-                    "actual": [130, 260, 150, 290],
+                    "dataset_split": ["train", "test", "test", "train"],
+                    "NFL_production_value": [130, 260, 150, 290],
+                    "ridge_prediction": [110, 200, 170, 320],
                 }
             ),
         }
@@ -56,7 +59,8 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
 
     def test_builders_and_export(self):
         perf_fig = build_performance_figure(self.metrics)
-        err_fig = build_error_profile_figure(self.predictions)
+        prepared_predictions = {k: _prepare_prediction_frame(v) for k, v in self.predictions.items()}
+        err_fig = build_error_profile_figure(prepared_predictions)
         exp_fig = build_explanation_figure(self.explanations, top_n=5)
 
         self.assertGreaterEqual(len(perf_fig.axes), 2)
@@ -72,6 +76,11 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
             self.assertTrue((output_base / "model_performance.png").exists())
             self.assertTrue((output_base / "prediction_error_profile.png").exists())
             self.assertTrue((output_base / "global_explanation_map.png").exists())
+
+    def test_prepare_prediction_frame_supports_repository_schema(self):
+        prepared = _prepare_prediction_frame(self.predictions["decision_tree"])
+        self.assertListEqual(prepared.columns.tolist(), ["predicted", "actual"])
+        self.assertEqual(len(prepared), 2)
 
 
 if __name__ == "__main__":

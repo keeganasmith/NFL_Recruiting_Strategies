@@ -9,6 +9,7 @@ This script reads model training outputs and exports three PNG figures:
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -33,8 +34,32 @@ def _slug_to_label(model_slug: str) -> str:
     return model_slug.replace("_", " ").title()
 
 
+def _derive_status_column(metrics_df: pd.DataFrame) -> pd.Series:
+    if "status" in metrics_df.columns:
+        return metrics_df["status"].fillna("unknown").astype(str)
+
+    status = pd.Series(index=metrics_df.index, dtype=object)
+    if "test_rmse" in metrics_df.columns:
+        status = status.where(metrics_df["test_rmse"].isna(), "trained")
+
+    if "best_params" in metrics_df.columns:
+        for idx, raw in metrics_df["best_params"].items():
+            if pd.isna(raw):
+                continue
+            try:
+                payload = json.loads(raw) if isinstance(raw, str) else raw
+            except json.JSONDecodeError:
+                continue
+            if isinstance(payload, dict) and payload.get("status") and pd.isna(status.loc[idx]):
+                status.loc[idx] = str(payload["status"])
+
+    return status.fillna("unknown")
+
+
 def build_performance_figure(metrics_df: pd.DataFrame) -> plt.Figure:
-    trained = metrics_df.loc[metrics_df["status"] == "trained"].copy()
+    enriched = metrics_df.copy()
+    enriched["status"] = _derive_status_column(enriched)
+    trained = enriched.loc[enriched["status"] == "trained"].copy()
     if trained.empty:
         raise ValueError("No trained models found in model metrics.")
 
@@ -184,6 +209,39 @@ def save_figure(fig: plt.Figure, output_path: Path) -> None:
     plt.close(fig)
 
 
+def _prepare_prediction_frame(raw_df: pd.DataFrame) -> pd.DataFrame:
+    df = raw_df.copy()
+    if "dataset_split" in df.columns:
+        test_mask = df["dataset_split"].astype(str).str.lower().eq("test")
+        if test_mask.any():
+            df = df.loc[test_mask].copy()
+
+    actual_candidates = ["actual", "NFL_production_value", "target_production_value"]
+    actual_col = next((col for col in actual_candidates if col in df.columns), None)
+    if actual_col is None:
+        raise ValueError("Prediction CSV is missing an actual value column.")
+
+    pred_candidates = ["predicted", "prediction"]
+    predicted_col = next((col for col in pred_candidates if col in df.columns), None)
+    if predicted_col is None:
+        prediction_cols = [col for col in df.columns if col.endswith("_prediction")]
+        if len(prediction_cols) == 1:
+            predicted_col = prediction_cols[0]
+        elif len(prediction_cols) > 1:
+            raise ValueError(
+                "Prediction CSV contains multiple *_prediction columns; provide only one prediction column."
+            )
+    if predicted_col is None:
+        raise ValueError("Prediction CSV is missing a predicted value column.")
+
+    prepared = df[[predicted_col, actual_col]].copy()
+    prepared.columns = ["predicted", "actual"]
+    prepared["predicted"] = pd.to_numeric(prepared["predicted"], errors="coerce")
+    prepared["actual"] = pd.to_numeric(prepared["actual"], errors="coerce")
+    prepared = prepared.dropna(subset=["predicted", "actual"])
+    return prepared
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Create model training summary visuals.")
     parser.add_argument(
@@ -218,13 +276,14 @@ def main() -> None:
 
     metrics_df = _read_csv(
         args.metrics_csv,
-        {"model", "status", "test_rmse", "test_mae", "test_r2"},
+        {"model", "test_rmse", "test_mae", "test_r2"},
     )
 
     prediction_frames: dict[str, pd.DataFrame] = {}
     for path in sorted(args.predictions_dir.glob("*_test_predictions.csv")):
         model = path.stem.replace("_test_predictions", "")
-        df = _read_csv(path, {"predicted", "actual"})
+        df = pd.read_csv(path)
+        df = _prepare_prediction_frame(df)
         if df.empty:
             continue
         prediction_frames[model] = df
