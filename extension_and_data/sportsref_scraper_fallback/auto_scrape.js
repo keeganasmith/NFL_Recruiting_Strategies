@@ -10,6 +10,45 @@ function cleanKey(s) {
     .replace(/^_+|_+$/g, "");
 }
 
+const HEADER_ALIASES = {
+  year_id: "season",
+  games: "g",
+  team_name_abbr: "team",
+  conf_abbr: "conf",
+  def_int: "int",
+  def_int_yds: "yds",
+  def_int_td: "inttd",
+  def_int_yds_per_int: "avg",
+  int_td: "inttd",
+  inttd: "inttd",
+  int_yds: "yds",
+  int_yds_: "yds",
+  interception_yds: "yds",
+  interception_yards: "yds",
+  yds: "yds",
+  yards: "yds",
+  pass_defended: "pd",
+  passes_defended: "pd",
+  pass_breakups: "pd",
+  pbus: "pd",
+  pbu: "pd"
+};
+
+function normalizeHeaderKey(label) {
+  const cleaned = cleanKey(label);
+  return HEADER_ALIASES[cleaned] || cleaned;
+}
+
+function getNormalizedHeaders(table) {
+  const row = getHeaderRow(table);
+  if (!row) return [];
+  return Array.from(row.querySelectorAll("th, td")).map(el => {
+    const dataStat = normalizeHeaderKey(el.getAttribute("data-stat") || "");
+    if (dataStat && !/^header_empty/.test(dataStat)) return dataStat;
+    return normalizeHeaderKey(txt(el));
+  });
+}
+
 function extractTablesFromComments() {
   const tables = [];
   const walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_COMMENT);
@@ -60,13 +99,64 @@ function findRows(table) {
 }
 
 function seasonScore(table) {
-  const headers = getHeaders(table).map(h => h.toLowerCase());
+  const details = seasonScoreDetails(table);
+  return details.score;
+}
+
+function seasonScoreDetails(table, options = {}) {
+  const minDenseDefensiveKeys = Number.isFinite(options.minDenseDefensiveKeys)
+    ? options.minDenseDefensiveKeys
+    : 3;
+  const minSparseSubsetKeys = Number.isFinite(options.minSparseSubsetKeys)
+    ? options.minSparseSubsetKeys
+    : 2;
+
+  const headers = getNormalizedHeaders(table);
   const hs = new Set(headers);
-  if (!hs.has("season") || !hs.has("g")) return -1;
+  if (!hs.has("season") || !hs.has("g")) {
+    return {
+      score: -1,
+      reason: "rejected_missing_base_headers",
+      headers,
+      statKeyScore: 0,
+      sparseSubsetHits: 0
+    };
+  }
+
   const keys = ["solo", "ast", "comb", "tfl", "sk", "int", "pd", "ff", "fr"];
   let score = 0;
   for (const k of keys) if (hs.has(k)) score += 1;
-  return score >= 3 ? score : -1;
+
+  if (score >= minDenseDefensiveKeys) {
+    return {
+      score,
+      reason: "accepted_dense_defensive_keys",
+      headers,
+      statKeyScore: score,
+      sparseSubsetHits: 0
+    };
+  }
+
+  const sparseSubset = ["int", "inttd", "yds", "pd"];
+  let sparseSubsetHits = 0;
+  for (const k of sparseSubset) if (hs.has(k)) sparseSubsetHits += 1;
+  if (sparseSubsetHits >= minSparseSubsetKeys) {
+    return {
+      score: sparseSubsetHits,
+      reason: "accepted_sparse_defensive_summary",
+      headers,
+      statKeyScore: score,
+      sparseSubsetHits
+    };
+  }
+
+  return {
+    score: -1,
+    reason: "rejected_insufficient_defensive_keys",
+    headers,
+    statKeyScore: score,
+    sparseSubsetHits
+  };
 }
 
 function gameLogScore(table) {
@@ -80,7 +170,9 @@ function gameLogScore(table) {
 }
 
 function extractFinalSeasonRow(table) {
-  const headers = getHeaders(table);
+  const headerRow = getHeaderRow(table);
+  const headerCells = headerRow ? Array.from(headerRow.querySelectorAll("th, td")) : [];
+  const headers = headerCells.map(el => normalizeHeaderKey(el.getAttribute("data-stat") || txt(el)));
   const rows = findRows(table).filter(row => {
     const first = txt(row.querySelector("th, td"));
     return /^\d{4}\*?$/.test(first);
@@ -92,7 +184,7 @@ function extractFinalSeasonRow(table) {
   const raw = {};
 
   headers.forEach((h, i) => {
-    let key = cleanKey(h);
+    let key = normalizeHeaderKey(h);
     if (raw[key] !== undefined) {
       let n = 2;
       while (raw[`${key}_${n}`] !== undefined) n++;
@@ -232,14 +324,29 @@ async function scrapePage() {
     const allTables = getAllTables();
 
     let bestSeasonTable = null, bestSeasonScore = -1;
+    let bestSeasonDiagnosticRank = -1;
+    let seasonTableMatchReason = "no_season_table_candidate";
     let bestGameLogTable = null, bestGameLogScoreVal = -1;
 
     for (const table of allTables) {
-      const ss = seasonScore(table);
+      const seasonDetails = seasonScoreDetails(table);
+      const ss = seasonDetails.score;
       if (ss > bestSeasonScore) {
         bestSeasonScore = ss;
         bestSeasonTable = table;
+        seasonTableMatchReason = seasonDetails.reason;
       }
+
+      const candidateRank = ss >= 0
+        ? 100 + ss
+        : seasonDetails.statKeyScore + (seasonDetails.sparseSubsetHits * 0.1);
+      if (candidateRank > bestSeasonDiagnosticRank) {
+        bestSeasonDiagnosticRank = candidateRank;
+        if (ss < 0 || !bestSeasonTable) {
+          seasonTableMatchReason = seasonDetails.reason;
+        }
+      }
+
       const gs = gameLogScore(table);
       if (gs > bestGameLogScoreVal) {
         bestGameLogScoreVal = gs;
@@ -259,6 +366,7 @@ async function scrapePage() {
       source_type,
       bestSeasonScore,
       bestGameLogScoreVal,
+      seasonTableMatchReason,
       ...extra
     });
 
@@ -282,6 +390,7 @@ async function scrapePage() {
         source_type,
         bestSeasonScore,
         bestGameLogScoreVal,
+        seasonTableMatchReason,
         diagnostic
       };
     }
@@ -315,6 +424,7 @@ async function scrapePage() {
         source_type,
         bestSeasonScore,
         bestGameLogScoreVal,
+        seasonTableMatchReason,
         diagnostic
       };
     }
@@ -330,6 +440,7 @@ async function scrapePage() {
       source_type,
       bestSeasonScore,
       bestGameLogScoreVal,
+      seasonTableMatchReason,
       diagnostic,
       row: {
         player,
@@ -375,7 +486,8 @@ async function scrapePage() {
       final_season_year: "",
       source_type: "",
       bestSeasonScore: -1,
-      bestGameLogScoreVal: -1
+      bestGameLogScoreVal: -1,
+      seasonTableMatchReason: "error_before_table_scoring"
     };
     return {
       status: "error",
@@ -388,6 +500,7 @@ async function scrapePage() {
       source_type: "",
       bestSeasonScore: -1,
       bestGameLogScoreVal: -1,
+      seasonTableMatchReason: "error_before_table_scoring",
       diagnostic
     };
   }
@@ -480,7 +593,8 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
     page_url: window.location.href,
     source_type: "",
     bestSeasonScore: -1,
-    bestGameLogScoreVal: -1
+    bestGameLogScoreVal: -1,
+    seasonTableMatchReason: "retry_limit_exhausted"
   }, {
     status: "error",
     player: getMetaPlayerName(),
@@ -490,7 +604,8 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
     final_season_year: "",
     source_type: "",
     bestSeasonScore: -1,
-    bestGameLogScoreVal: -1
+    bestGameLogScoreVal: -1,
+    seasonTableMatchReason: "retry_limit_exhausted"
   });
 }
 
