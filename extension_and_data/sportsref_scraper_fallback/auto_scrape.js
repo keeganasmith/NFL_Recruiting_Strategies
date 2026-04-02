@@ -240,6 +240,17 @@ async function scrapePage() {
 
     let row = null;
     let source_type = "";
+    const makeDiagnostic = (status, extra = {}) => ({
+      status,
+      player,
+      page_url,
+      expected_draft_year,
+      final_season_year: extra.final_season_year ?? "",
+      source_type,
+      bestSeasonScore,
+      bestGameLogScoreVal,
+      ...extra
+    });
 
     if (bestSeasonTable) {
       row = extractFinalSeasonRow(bestSeasonTable);
@@ -250,11 +261,17 @@ async function scrapePage() {
     }
 
     if (!row) {
+      const diagnostic = makeDiagnostic("no_table");
       return {
         status: "no_table",
+        player,
         final_season_year: "",
         expected_draft_year,
-        page_url
+        page_url,
+        source_type,
+        bestSeasonScore,
+        bestGameLogScoreVal,
+        diagnostic
       };
     }
 
@@ -262,6 +279,15 @@ async function scrapePage() {
 
     // Reject same-name wrong-player pages
     if (expected_draft_year !== null && !isYearMatch(final_season_year, expected_draft_year)) {
+      const fs = Number(String(final_season_year).replace(/\*/g, ""));
+      const dy = Number(expected_draft_year);
+      const eitherParseNonFinite = !Number.isFinite(fs) || !Number.isFinite(dy);
+      const diagnostic = makeDiagnostic("mismatch", {
+        final_season_year,
+        fs,
+        dy,
+        eitherParseNonFinite
+      });
       console.log(
         "[SportsRef scraper] rejected year mismatch:",
         player,
@@ -270,17 +296,28 @@ async function scrapePage() {
       );
       return {
         status: "mismatch",
+        player,
         final_season_year,
         expected_draft_year,
-        page_url
+        page_url,
+        source_type,
+        bestSeasonScore,
+        bestGameLogScoreVal,
+        diagnostic
       };
     }
 
+    const diagnostic = makeDiagnostic("matched", { final_season_year });
     return {
       status: "matched",
+      player,
       final_season_year,
       expected_draft_year,
       page_url,
+      source_type,
+      bestSeasonScore,
+      bestGameLogScoreVal,
+      diagnostic,
       row: {
         player,
         pos,
@@ -310,12 +347,30 @@ async function scrapePage() {
       }
     };
   } catch (error) {
+    const expected_draft_year = await getExpectedDraftYear();
+    const page_url = window.location.href;
+    const player = getMetaPlayerName();
+    const diagnostic = {
+      status: "error",
+      player,
+      page_url,
+      expected_draft_year,
+      final_season_year: "",
+      source_type: "",
+      bestSeasonScore: -1,
+      bestGameLogScoreVal: -1
+    };
     return {
       status: "error",
       reason: String(error?.message || error || "unknown_scrape_error"),
+      player,
       final_season_year: "",
-      expected_draft_year: await getExpectedDraftYear(),
-      page_url: window.location.href
+      expected_draft_year,
+      page_url,
+      source_type: "",
+      bestSeasonScore: -1,
+      bestGameLogScoreVal: -1,
+      diagnostic
     };
   }
 }
@@ -331,7 +386,7 @@ function isLikely404Page() {
   );
 }
 
-async function sendResult(resultType, row = null) {
+async function sendResult(resultType, row = null, diagnostic = null) {
   const { currentPlayer } = await chrome.storage.local.get(["currentPlayer"]);
   if (!currentPlayer?.key) return;
   try {
@@ -340,6 +395,7 @@ async function sendResult(resultType, row = null) {
       playerKey: currentPlayer.key,
       resultType,
       row,
+      diagnostic,
       pageUrl: window.location.href
     });
   } catch (err) {
@@ -361,19 +417,19 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
         "final season:", outcome.final_season_year,
         row.source_type
       );
-      await sendResult("matched", row);
+      await sendResult("matched", row, outcome.diagnostic || null);
       return;
     }
 
     if (outcome.status === "mismatch") {
       console.log("[SportsRef scraper] year mismatch on", window.location.href);
-      await sendResult("mismatch", outcome);
+      await sendResult("mismatch", outcome, outcome.diagnostic || null);
       return;
     }
 
     if (outcome.status === "error") {
       console.warn("[SportsRef scraper] scrape error on", window.location.href, outcome.reason || "");
-      await sendResult("error", outcome);
+      await sendResult("error", outcome, outcome.diagnostic || null);
       return;
     }
 
@@ -385,11 +441,11 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
     if (outcome.status === "no_table") {
       if (isLikely404Page()) {
         console.log("[SportsRef scraper] 404 on", window.location.href);
-        await sendResult("not_found_404", outcome);
+        await sendResult("not_found_404", outcome, outcome.diagnostic || null);
         return;
       }
       console.log("[SportsRef scraper] no valid matching table found on", window.location.href);
-      await sendResult("no_table", outcome);
+      await sendResult("no_table", outcome, outcome.diagnostic || null);
       return;
     }
 
@@ -398,9 +454,22 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
   await sendResult("error", {
     status: "error",
     reason: "retry_limit_exhausted",
+    player: getMetaPlayerName(),
     final_season_year: "",
     expected_draft_year: await getExpectedDraftYear(),
-    page_url: window.location.href
+    page_url: window.location.href,
+    source_type: "",
+    bestSeasonScore: -1,
+    bestGameLogScoreVal: -1
+  }, {
+    status: "error",
+    player: getMetaPlayerName(),
+    page_url: window.location.href,
+    expected_draft_year: await getExpectedDraftYear(),
+    final_season_year: "",
+    source_type: "",
+    bestSeasonScore: -1,
+    bestGameLogScoreVal: -1
   });
 }
 

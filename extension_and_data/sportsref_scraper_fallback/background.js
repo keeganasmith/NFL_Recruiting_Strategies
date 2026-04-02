@@ -26,7 +26,13 @@ function nextPlayerIndex(players) {
 }
 
 async function getRunState() {
-  const result = await chrome.storage.local.get(["queueState", "runConfig", RUN_TAB_KEY, "unmatchedRows"]);
+  const result = await chrome.storage.local.get([
+    "queueState",
+    "runConfig",
+    RUN_TAB_KEY,
+    "unmatchedRows",
+    "diagnosticRows"
+  ]);
   const queueState = result.queueState || {};
   return {
     queueState: {
@@ -40,7 +46,31 @@ async function getRunState() {
       completedAt: result.runConfig?.completedAt || ""
     },
     runTabId: Number.isInteger(result[RUN_TAB_KEY]) ? result[RUN_TAB_KEY] : null,
-    unmatchedRows: Array.isArray(result.unmatchedRows) ? result.unmatchedRows : []
+    unmatchedRows: Array.isArray(result.unmatchedRows) ? result.unmatchedRows : [],
+    diagnosticRows: Array.isArray(result.diagnosticRows) ? result.diagnosticRows : []
+  };
+}
+
+function buildDiagnosticRow(player, resultType, pageUrl, diagnostic) {
+  return {
+    playerKey: player?.playerKey || "",
+    playerName: player?.playerName || "",
+    draftYear: player?.draftYear || "",
+    slug: player?.slug || "",
+    resultType: resultType || "",
+    pageUrl: pageUrl || player?.lastTriedUrl || "",
+    status: diagnostic?.status || resultType || "",
+    player: diagnostic?.player || player?.playerName || "",
+    page_url: diagnostic?.page_url || pageUrl || player?.lastTriedUrl || "",
+    expected_draft_year: diagnostic?.expected_draft_year ?? player?.draftYear ?? "",
+    final_season_year: diagnostic?.final_season_year ?? "",
+    source_type: diagnostic?.source_type || "",
+    bestSeasonScore: diagnostic?.bestSeasonScore ?? "",
+    bestGameLogScoreVal: diagnostic?.bestGameLogScoreVal ?? "",
+    fs: diagnostic?.fs ?? "",
+    dy: diagnostic?.dy ?? "",
+    eitherParseNonFinite: diagnostic?.eitherParseNonFinite ?? "",
+    timestamp: new Date().toISOString()
   };
 }
 
@@ -178,7 +208,7 @@ async function processNext() {
 }
 
 async function handleMarkResult(message) {
-  const { playerKey, resultType, row, pageUrl } = message;
+  const { playerKey, resultType, row, pageUrl, diagnostic } = message;
   const state = await getRunState();
   const processedState = await chrome.storage.local.get(["processedKeys"]);
   const processedKeys = new Set(
@@ -199,6 +229,7 @@ async function handleMarkResult(message) {
 
   const player = players[idx];
   const now = new Date().toISOString();
+  state.diagnosticRows.push(buildDiagnosticRow(player, resultType, pageUrl, diagnostic));
 
   if (resultType === "matched") {
     await saveMatchedRow(row);
@@ -224,7 +255,8 @@ async function handleMarkResult(message) {
       lastTriedUrl: pageUrl || player.lastTriedUrl || "",
       attemptedUrlsCount,
       reason: "not_found_after_suffix_scan",
-      attemptedAt: now
+      attemptedAt: now,
+      diagnostic: diagnostic || null
     });
     processedKeys.add(player.playerKey);
   } else if (resultType === "mismatch" || resultType === "no_table") {
@@ -252,7 +284,8 @@ async function handleMarkResult(message) {
         lastTriedUrl: pageUrl || player.lastTriedUrl || "",
         attemptedUrlsCount: Number(player.attemptIndex) || 1,
         reason: row?.reason || "scrape_error",
-        attemptedAt: now
+        attemptedAt: now,
+        diagnostic: diagnostic || null
       });
       processedKeys.add(player.playerKey);
     } else {
@@ -277,6 +310,7 @@ async function handleMarkResult(message) {
   await chrome.storage.local.set({
     queueState: { ...state.queueState, players, nextIndex: nextPlayerIndex(players) },
     unmatchedRows: state.unmatchedRows,
+    diagnosticRows: state.diagnosticRows,
     processedKeys: Array.from(processedKeys)
   });
 
