@@ -159,6 +159,30 @@ def _write_summary_markdown(path: Path, table: pd.DataFrame) -> None:
     path.write_text("\n".join(lines) + "\n")
 
 
+def _write_best_scored_players(output_root: Path, comparison_df: pd.DataFrame) -> tuple[str, str]:
+    if comparison_df.empty:
+        raise ValueError("Cannot create best scored players artifact from an empty comparison table.")
+
+    best_row = comparison_df.iloc[0]
+    best_variant_id = str(best_row["variant_id"])
+    best_run_directory = Path(str(best_row["run_directory"]))
+    best_scored_players_path = best_run_directory / "scored_players.csv"
+    if not best_scored_players_path.exists():
+        raise FileNotFoundError(
+            f"Expected scored_players.csv for best variant '{best_variant_id}' at {best_scored_players_path}"
+        )
+
+    best_scored_players = pd.read_csv(best_scored_players_path, low_memory=False)
+    if "NFL_production_value" not in best_scored_players.columns:
+        raise ValueError(
+            f"Expected NFL_production_value column in {best_scored_players_path} for best variant '{best_variant_id}'."
+        )
+
+    output_name = "best_heuristic_scored_players.csv"
+    best_scored_players.to_csv(output_root / output_name, index=False)
+    return output_name, best_variant_id
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run heuristic sweep experiments from YAML config.")
     parser.add_argument(
@@ -248,6 +272,7 @@ def main() -> None:
     )
     comparison_df.to_csv(output_root / "comparison_table.csv", index=False)
     _write_summary_markdown(output_root / "comparison_summary.md", comparison_df.head(15))
+    best_scored_players_artifact, best_variant_id = _write_best_scored_players(output_root, comparison_df)
 
     sweep_manifest = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -255,6 +280,8 @@ def main() -> None:
         "output_root": str(output_root.resolve()),
         "comparison_table": "comparison_table.csv",
         "comparison_summary": "comparison_summary.md",
+        "best_variant_id": best_variant_id,
+        "best_scored_players": best_scored_players_artifact,
         "variants": [v["id"] for v in variants_to_run],
         "auto_grid_enabled": bool(auto_grid_variants),
     }
