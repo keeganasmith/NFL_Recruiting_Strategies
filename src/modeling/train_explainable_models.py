@@ -26,6 +26,7 @@ EXPLICIT_IDENTITY_COLUMNS = {
     "player_id",
     "record_id",
 }
+VISUAL_OUTPUT_DIR = Path("visuals/outputs")
 
 
 def _build_preprocessor(
@@ -206,6 +207,55 @@ def _extract_autogluon_global_explanations(
     return explanation.sort_values("abs_value", ascending=False)
 
 
+def _save_predicted_vs_expected_scatterplot(
+    expected_values: pd.Series | np.ndarray,
+    predicted_values: pd.Series | np.ndarray,
+    model_name: str,
+    output_dir: Path = VISUAL_OUTPUT_DIR,
+) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    expected_array = np.asarray(expected_values, dtype=float)
+    predicted_array = np.asarray(predicted_values, dtype=float)
+    lower_bound = float(np.nanmin([expected_array.min(), predicted_array.min()]))
+    upper_bound = float(np.nanmax([expected_array.max(), predicted_array.max()]))
+    span = upper_bound - lower_bound
+    if span == 0:
+        span = 1.0
+
+    width = 800
+    height = 600
+    margin = 60
+    plot_width = width - 2 * margin
+    plot_height = height - 2 * margin
+
+    def _scale(value: float) -> tuple[float, float]:
+        x = margin + ((value - lower_bound) / span) * plot_width
+        y = margin + (1.0 - ((value - lower_bound) / span)) * plot_height
+        return x, y
+
+    points_svg: list[str] = []
+    for expected, predicted in zip(expected_array, predicted_array):
+        x = margin + ((expected - lower_bound) / span) * plot_width
+        y = margin + (1.0 - ((predicted - lower_bound) / span)) * plot_height
+        points_svg.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="3" fill="#1f77b4" fill-opacity="0.7" />')
+
+    diagonal_start = _scale(lower_bound)
+    diagonal_end = _scale(upper_bound)
+    svg_markup = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">
+  <rect width="100%" height="100%" fill="white" />
+  <text x="{width / 2}" y="28" text-anchor="middle" font-size="18" font-family="Arial">Predicted vs Expected: {model_name}</text>
+  <line x1="{margin}" y1="{height - margin}" x2="{width - margin}" y2="{height - margin}" stroke="#222" />
+  <line x1="{margin}" y1="{margin}" x2="{margin}" y2="{height - margin}" stroke="#222" />
+  <line x1="{diagonal_start[0]:.2f}" y1="{diagonal_start[1]:.2f}" x2="{diagonal_end[0]:.2f}" y2="{diagonal_end[1]:.2f}" stroke="#666" stroke-dasharray="6,6" />
+  {''.join(points_svg)}
+  <text x="{width / 2}" y="{height - 12}" text-anchor="middle" font-size="13" font-family="Arial">Expected Value</text>
+  <text x="18" y="{height / 2}" text-anchor="middle" font-size="13" font-family="Arial" transform="rotate(-90 18 {height / 2})">Predicted Value</text>
+</svg>
+"""
+    (output_dir / f"predicted_vs_expected_{model_name}.svg").write_text(svg_markup, encoding="utf-8")
+
+
 def train_models(input_csv: Path, output_dir: Path) -> None:
     df = pd.read_csv(input_csv)
 
@@ -284,6 +334,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
         predictions_df[[SPLIT_COLUMN, TARGET_COLUMN, f"{model_name}_prediction"]].to_csv(
             output_dir / f"{model_name}_test_predictions.csv", index=False
         )
+        _save_predicted_vs_expected_scatterplot(
+            expected_values=y_test,
+            predicted_values=predictions,
+            model_name=model_name,
+        )
 
     autogluon_model_name = "autogluon_extreme"
     if TabularPredictor is None:
@@ -356,6 +411,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
         ag_predictions_df[
             [SPLIT_COLUMN, TARGET_COLUMN, f"{autogluon_model_name}_prediction"]
         ].to_csv(output_dir / f"{autogluon_model_name}_test_predictions.csv", index=False)
+        _save_predicted_vs_expected_scatterplot(
+            expected_values=y_test,
+            predicted_values=ag_predictions.to_numpy(),
+            model_name=autogluon_model_name,
+        )
 
     metrics_df = pd.DataFrame(metrics_records).sort_values("test_rmse")
     metrics_df.to_csv(output_dir / "model_metrics.csv", index=False)
