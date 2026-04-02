@@ -8,10 +8,13 @@
 <body>
   <div class="wrap">
     <h3>Final Season Scraper</h3>
+    <button id="importCombineCsvBtn">Import Combine CSV</button>
+    <input id="combineCsvInput" type="file" accept=".csv,text/csv" hidden>
     <button id="exportCsvBtn">Export CSV</button>
     <button id="exportJsonBtn">Export JSON</button>
     <button id="clearBtn">Clear Saved Data</button>
     <div id="count">Saved records: 0</div>
+    <div id="lookupCount">Draft-year lookup entries: 0</div>
     <textarea id="preview" readonly></textarea>
     <div id="status"></div>
   </div>
