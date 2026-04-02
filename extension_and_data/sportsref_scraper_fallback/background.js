@@ -2,6 +2,7 @@ importScripts("shared.js");
 
 const RUN_TAB_KEY = "runTabId";
 const MAX_SUFFIX_ATTEMPTS = 25;
+const NAV_THROTTLE_MS = 5000;
 
 function dedupeKey(row) {
   return `${row.player}|${row.expected_draft_year}|${row.page_url}`;
@@ -59,15 +60,29 @@ async function setRunStatus(status, extra = {}) {
   });
 }
 
+async function waitForNavigationWindow() {
+  const result = await chrome.storage.local.get(["lastNavigationAt"]);
+  const lastNavigationAt = Number(result.lastNavigationAt) || 0;
+  const waitMs = Math.max(0, NAV_THROTTLE_MS - (Date.now() - lastNavigationAt));
+  if (waitMs > 0) {
+    await new Promise(resolve => setTimeout(resolve, waitMs));
+  }
+}
+
 async function getOrCreateRunTab(targetUrl, existingTabId) {
+  await waitForNavigationWindow();
   if (existingTabId !== null) {
     try {
-      return await chrome.tabs.update(existingTabId, { url: targetUrl, active: false });
+      const updatedTab = await chrome.tabs.update(existingTabId, { url: targetUrl, active: false });
+      await chrome.storage.local.set({ lastNavigationAt: Date.now() });
+      return updatedTab;
     } catch {
       // fall through to create
     }
   }
-  return chrome.tabs.create({ url: targetUrl, active: false });
+  const createdTab = await chrome.tabs.create({ url: targetUrl, active: false });
+  await chrome.storage.local.set({ lastNavigationAt: Date.now() });
+  return createdTab;
 }
 
 async function processNext() {

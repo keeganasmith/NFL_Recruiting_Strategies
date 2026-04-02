@@ -2,6 +2,22 @@ function setStatus(msg) {
   document.getElementById("status").textContent = msg;
 }
 
+const NAV_THROTTLE_MS = 5000;
+let throttleTicker = null;
+
+function renderThrottleStatus(lastNavigationAt) {
+  const last = Number(lastNavigationAt) || 0;
+  const remainingMs = Math.max(0, NAV_THROTTLE_MS - (Date.now() - last));
+  const remainingSeconds = Math.ceil(remainingMs / 1000);
+  document.getElementById("throttleStatus").textContent = `Next request in ${remainingSeconds}s`;
+}
+
+function startThrottleTicker(lastNavigationAt) {
+  if (throttleTicker) clearInterval(throttleTicker);
+  renderThrottleStatus(lastNavigationAt);
+  throttleTicker = setInterval(() => renderThrottleStatus(lastNavigationAt), 500);
+}
+
 function normalizeName(name) {
   return String(name || "")
     .toLowerCase()
@@ -209,7 +225,8 @@ async function ensureLocalStateShape() {
     "queueState",
     "processedKeys",
     "unmatchedRows",
-    "runConfig"
+    "runConfig",
+    "lastNavigationAt"
   ]);
   const queueState = current.queueState || {};
   const normalizedQueueState = {
@@ -224,7 +241,8 @@ async function ensureLocalStateShape() {
     queueState: normalizedQueueState,
     processedKeys: Array.isArray(current.processedKeys) ? current.processedKeys : [],
     unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
-    runConfig: current.runConfig || {}
+    runConfig: current.runConfig || {},
+    lastNavigationAt: Number(current.lastNavigationAt) || 0
   });
 }
 
@@ -235,7 +253,8 @@ async function refresh() {
     "queueState",
     "processedKeys",
     "unmatchedRows",
-    "runConfig"
+    "runConfig",
+    "lastNavigationAt"
   ]);
   const rows = result.rows || [];
   const lookup = result.draftYearLookup || {};
@@ -251,6 +270,7 @@ async function refresh() {
   document.getElementById("preview").value = queuePlayers.length
     ? JSON.stringify(queuePlayers[Math.max(0, queueState.nextIndex || 0)] || queuePlayers[0], null, 2)
     : "";
+  startThrottleTicker(result.lastNavigationAt);
 }
 
 async function sendControllerMessage(type, payload = {}) {
@@ -384,7 +404,8 @@ document.getElementById("clearBtn").addEventListener("click", async () => {
     unmatchedRows: [],
     runConfig: {},
     runTabId: null,
-    currentPlayer: null
+    currentPlayer: null,
+    lastNavigationAt: 0
   });
   setStatus("Cleared saved data");
   await refresh();
