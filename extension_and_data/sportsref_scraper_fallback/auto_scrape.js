@@ -112,6 +112,24 @@ function parseNum(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
+function normalizeLookupName(name) {
+  return String(name || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeCurrentSportsRefUrl(url) {
+  try {
+    const u = new URL(String(url || window.location.href).trim());
+    return `${u.origin.toLowerCase()}${u.pathname.toLowerCase()}`;
+  } catch {
+    return "";
+  }
+}
+
 function inferYear() {
   const url = window.location.href;
   const m1 = url.match(/\/(\d{4})\/gamelog/);
@@ -175,8 +193,18 @@ function aggregateGameLog(table) {
  * This assumes you stored it in chrome.storage.local before opening the page.
  */
 async function getExpectedDraftYear() {
-  const result = await chrome.storage.local.get(["currentPlayer"]);
-  return result.currentPlayer?.year ? Number(result.currentPlayer.year) : null;
+  const result = await chrome.storage.local.get(["currentPlayer", "draftYearLookup"]);
+  const direct = result.currentPlayer?.year ? Number(result.currentPlayer.year) : null;
+  if (Number.isFinite(direct)) return direct;
+
+  const lookup = result.draftYearLookup || {};
+  const byUrl = lookup[`url:${normalizeCurrentSportsRefUrl(window.location.href)}`];
+  if (Number.isFinite(Number(byUrl))) return Number(byUrl);
+
+  const byName = lookup[`name:${normalizeLookupName(getMetaPlayerName())}`];
+  if (Number.isFinite(Number(byName))) return Number(byName);
+
+  return null;
 }
 
 function isYearMatch(finalSeasonYear, draftYear) {
