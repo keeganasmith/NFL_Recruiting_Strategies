@@ -1,22 +1,6 @@
-const SPORTSREF_ORIGIN = "https://www.sports-reference.com";
+importScripts("shared.js");
+
 const RUN_TAB_KEY = "runTabId";
-
-function normalizeSlugBase(slug) {
-  return String(slug || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\.html$/i, "")
-    .replace(/\/+$/g, "")
-    .replace(/^.*\/cfb\/players\//, "")
-    .replace(/-\d+$/, "");
-}
-
-function computePlayerUrl(slug, attemptIndex) {
-  const safeAttempt = Number.isInteger(attemptIndex) && attemptIndex > 0 ? attemptIndex : 1;
-  const base = normalizeSlugBase(slug);
-  if (!base) return "";
-  return `${SPORTSREF_ORIGIN}/cfb/players/${base}-${safeAttempt}.html`;
-}
 
 function nextPlayerIndex(players) {
   if (!Array.isArray(players) || !players.length) return -1;
@@ -88,7 +72,7 @@ async function processNext() {
 
   const player = players[index];
   const attemptIndex = Number.isInteger(player.attemptIndex) && player.attemptIndex > 0 ? player.attemptIndex : 1;
-  const targetUrl = computePlayerUrl(player.slug, attemptIndex);
+  const targetUrl = computePlayerUrl(player.slug || player.playerName, attemptIndex);
   if (!targetUrl) {
     players[index] = {
       ...player,
@@ -167,16 +151,26 @@ async function handleMarkResult(message) {
       status: "unmatched",
       completedAt: now
     };
+    const attemptedUrlsCount = Number(player.attemptIndex) || 1;
     state.unmatchedRows.push({
       playerKey: player.playerKey,
       playerName: player.playerName,
       draftYear: player.draftYear,
       slug: player.slug,
       lastTriedUrl: pageUrl || player.lastTriedUrl || "",
-      reason: "404",
+      attemptedUrlsCount,
+      reason: "not_found_after_suffix_scan",
       attemptedAt: now
     });
     processedKeys.add(player.playerKey);
+  } else if (resultType === "year_mismatch" || resultType === "no_valid_row") {
+    players[idx] = {
+      ...player,
+      status: "pending",
+      attemptIndex: (Number(player.attemptIndex) || 1) + 1,
+      completedAt: "",
+      updatedAt: now
+    };
   } else {
     players[idx] = {
       ...player,
