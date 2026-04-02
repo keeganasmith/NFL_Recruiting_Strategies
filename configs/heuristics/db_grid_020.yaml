@@ -1,0 +1,9 @@
+heuristic_id: weighted_nfl_production_value
+feature_weights:
+  defensive_totalTackles: 1.0
+  defensive_sacks: 1.5
+  defensive_interceptions: 2.5
+  defensive_passesDefended: 1.8
+  defensive_gamesPlayed: 0.7
+thresholds: {}
+role_overrides: {}

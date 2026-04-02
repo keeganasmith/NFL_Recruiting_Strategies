@@ -110,6 +110,25 @@ python -m pipeline.run_experiment \
   --time-split-year 2018
 ```
 
+### Heuristic sweep objective (why this function)
+
+When sweeping heuristic configs, we rank each candidate with a composite objective:
+
+`objective_score = 0.55*proxy_spearman + 0.25*rank_corr + 0.20*top_overlap - 0.15*calibration_rmse`
+
+This was chosen to balance four practical needs:
+
+- **Primary signal quality (proxy_spearman, 55%)**: the score should be strongly monotonic with an independent production proxy rather than only produce large raw values.
+- **Temporal ranking robustness (rank_corr, 25%)**: we want top prospects to remain similarly ordered across train/test eras, reducing overfit to a single slice.
+- **Top-board consistency (top_overlap, 20%)**: for recruiting use-cases, overlap in the top of the board matters more than tiny reorderings deep in the list.
+- **Calibration penalty (calibration_rmse, -15%)**: heuristics that separate players but distort relative bin quality are penalized.
+
+Weights are intentionally interpretable and sum to 1.0 on the positive terms so the objective can be tuned transparently in future experiments.
+
+### First-contract window (first 4 NFL seasons)
+
+All `pipeline/` heuristic experiments now compute `NFL_production_value` only on each player's **first four NFL seasons** (`career_year = season_year - combine_year + 1 <= 4`). This aligns with typical rookie-contract decision windows and makes comparisons more relevant to recruiting and early-career projection.
+
 ### Outputs produced per run
 
 - `scored_players.csv`: full dataset with derived features + `NFL_production_value`

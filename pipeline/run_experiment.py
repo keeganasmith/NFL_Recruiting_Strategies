@@ -112,6 +112,9 @@ def run_experiment(
         "combine_year_min": int(pd.to_numeric(featured["combine_year"], errors="coerce").min()),
         "combine_year_max": int(pd.to_numeric(featured["combine_year"], errors="coerce").max()),
         "positions": int(featured["Pos"].nunique(dropna=True)),
+        "max_career_year_included": float(pd.to_numeric(featured.get("career_year"), errors="coerce").max())
+        if "career_year" in featured.columns
+        else None,
     }
     evaluation_settings = {
         "calibration_bins": calibration_bins,
