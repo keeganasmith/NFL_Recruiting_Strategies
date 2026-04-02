@@ -8,8 +8,10 @@ import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.impute import SimpleImputer
-from sklearn.linear_model import ElasticNet, Ridge
+from sklearn.isotonic import IsotonicRegression
+from sklearn.linear_model import ElasticNet, HuberRegressor, Ridge
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV, KFold, PredefinedSplit
 from sklearn.pipeline import Pipeline
@@ -135,6 +137,58 @@ def _build_searches(X_train_val: pd.DataFrame, cv_strategy: PredefinedSplit | KF
                 "model__min_samples_leaf": [5, 10, 20],
             },
         },
+        "huber_linear": {
+            "pipeline": Pipeline(
+                steps=[
+                    ("preprocessor", linear_preprocessor),
+                    ("model", HuberRegressor(max_iter=1_000)),
+                ]
+            ),
+            "grid": {
+                "model__epsilon": [1.1, 1.35, 1.7, 2.0],
+                "model__alpha": [0.0001, 0.001, 0.01],
+            },
+        },
+        "gbm_huber": {
+            "pipeline": Pipeline(
+                steps=[
+                    ("preprocessor", tree_preprocessor),
+                    (
+                        "model",
+                        GradientBoostingRegressor(
+                            loss="huber",
+                            random_state=42,
+                        ),
+                    ),
+                ]
+            ),
+            "grid": {
+                "model__n_estimators": [100, 200],
+                "model__learning_rate": [0.03, 0.1],
+                "model__max_depth": [2, 3],
+                "model__alpha": [0.85, 0.9, 0.95],
+            },
+        },
+        "gbm_quantile": {
+            "pipeline": Pipeline(
+                steps=[
+                    ("preprocessor", tree_preprocessor),
+                    (
+                        "model",
+                        GradientBoostingRegressor(
+                            loss="quantile",
+                            random_state=42,
+                        ),
+                    ),
+                ]
+            ),
+            "grid": {
+                "model__n_estimators": [100, 200],
+                "model__learning_rate": [0.03, 0.1],
+                "model__max_depth": [2, 3],
+                "model__alpha": [0.5, 0.8, 0.9],
+            },
+        },
     }
 
     searches = {
@@ -156,10 +210,10 @@ def _extract_global_explanations(best_pipeline: Pipeline, model_name: str) -> pd
     model = best_pipeline.named_steps["model"]
     feature_names = preprocessor.get_feature_names_out()
 
-    if model_name in {"ridge", "elastic_net"}:
+    if model_name in {"ridge", "elastic_net", "huber_linear"}:
         values = model.coef_
         metric = "coefficient"
-    elif model_name == "decision_tree":
+    elif model_name in {"decision_tree", "gbm_huber", "gbm_quantile"}:
         values = model.feature_importances_
         metric = "importance"
     else:
@@ -256,6 +310,101 @@ def _save_predicted_vs_expected_scatterplot(
     (output_dir / f"predicted_vs_expected_{model_name}.svg").write_text(svg_markup, encoding="utf-8")
 
 
+def _target_is_heavy_tailed(target_values: pd.Series) -> bool:
+    positive_target = target_values[target_values > 0]
+    if positive_target.empty:
+        return False
+    skewness = float(positive_target.skew())
+    median = float(positive_target.median())
+    if median <= 0:
+        return skewness > 1.0
+    p95 = float(positive_target.quantile(0.95))
+    return skewness > 1.0 or (p95 / median) > 3.0
+
+
+def _fit_calibrator(
+    val_predictions: np.ndarray,
+    val_actuals: np.ndarray,
+) -> tuple[str, float | IsotonicRegression]:
+    residuals = val_actuals - val_predictions
+    if len(val_predictions) >= 20 and np.unique(val_predictions).size >= 5:
+        isotonic = IsotonicRegression(out_of_bounds="clip")
+        isotonic.fit(val_predictions, residuals)
+        return "isotonic_residual", isotonic
+
+    mean_bias = float(np.mean(residuals))
+    return "mean_bias", mean_bias
+
+
+def _apply_calibration(
+    predictions: np.ndarray,
+    calibration_payload: float | IsotonicRegression,
+    calibration_method: str,
+) -> np.ndarray:
+    if calibration_method == "isotonic_residual":
+        return predictions + calibration_payload.predict(predictions)
+    return predictions + float(calibration_payload)
+
+
+def _export_diagnostics(
+    model_name: str,
+    output_dir: Path,
+    test_frame: pd.DataFrame,
+    actual: np.ndarray,
+    predicted: np.ndarray,
+) -> None:
+    residual = actual - predicted
+    diagnostics = pd.DataFrame(
+        {
+            "actual": actual,
+            "predicted": predicted,
+            "residual": residual,
+            "absolute_residual": np.abs(residual),
+        }
+    )
+    diagnostics.to_csv(output_dir / f"{model_name}_residual_vs_pred.csv", index=False)
+
+    quantile_summary = pd.DataFrame(
+        {
+            "quantile": [0.05, 0.25, 0.5, 0.75, 0.95],
+            "residual_quantile": np.quantile(residual, [0.05, 0.25, 0.5, 0.75, 0.95]),
+            "abs_residual_quantile": np.quantile(np.abs(residual), [0.05, 0.25, 0.5, 0.75, 0.95]),
+        }
+    )
+    quantile_summary.to_csv(output_dir / f"{model_name}_quantile_residual_summary.csv", index=False)
+
+    subgroup_specs = {
+        "position": ["position", "Position", "primary_position"],
+        "cohort_year": ["cohort_year", "draft_year", "class_year", "cohort"],
+    }
+    subgroup_records: list[dict[str, float | str | int]] = []
+    for subgroup_name, candidates in subgroup_specs.items():
+        column = next((candidate for candidate in candidates if candidate in test_frame.columns), None)
+        if column is None:
+            continue
+        subgroup_df = test_frame[[column]].copy()
+        subgroup_df["actual"] = actual
+        subgroup_df["predicted"] = predicted
+        subgroup_df["residual"] = residual
+
+        grouped = subgroup_df.groupby(column, dropna=False)
+        for subgroup_value, chunk in grouped:
+            if chunk.empty:
+                continue
+            subgroup_records.append(
+                {
+                    "subgroup_dimension": subgroup_name,
+                    "subgroup_value": str(subgroup_value),
+                    "n_obs": int(len(chunk)),
+                    "rmse": float(np.sqrt(mean_squared_error(chunk["actual"], chunk["predicted"]))),
+                    "mae": float(mean_absolute_error(chunk["actual"], chunk["predicted"])),
+                    "mean_residual": float(chunk["residual"].mean()),
+                }
+            )
+
+    pd.DataFrame(subgroup_records).to_csv(output_dir / f"{model_name}_subgroup_metrics.csv", index=False)
+
+
 def train_models(
     input_csv: Path,
     output_dir: Path,
@@ -279,22 +428,31 @@ def train_models(
     ]
 
     X_train_val = train_val_df[feature_columns]
-    y_train_val = pd.to_numeric(train_val_df[TARGET_COLUMN], errors="coerce")
+    y_train_val_raw = pd.to_numeric(train_val_df[TARGET_COLUMN], errors="coerce")
     X_test = test_df[feature_columns]
-    y_test = pd.to_numeric(test_df[TARGET_COLUMN], errors="coerce")
+    y_test_raw = pd.to_numeric(test_df[TARGET_COLUMN], errors="coerce")
 
-    valid_train_val_mask = y_train_val.notna()
-    valid_test_mask = y_test.notna()
+    valid_train_val_mask = y_train_val_raw.notna()
+    valid_test_mask = y_test_raw.notna()
 
     X_train_val = X_train_val.loc[valid_train_val_mask]
-    y_train_val = y_train_val.loc[valid_train_val_mask]
+    y_train_val_raw = y_train_val_raw.loc[valid_train_val_mask]
     X_test = X_test.loc[valid_test_mask]
-    y_test = y_test.loc[valid_test_mask]
+    y_test_raw = y_test_raw.loc[valid_test_mask]
 
     if X_train_val.empty:
         raise ValueError("No non-null targets available in train/val rows.")
     if X_test.empty:
         raise ValueError("No non-null targets available in test rows.")
+
+    use_target_log1p = _target_is_heavy_tailed(y_train_val_raw)
+    if use_target_log1p and (y_train_val_raw < 0).any():
+        use_target_log1p = False
+
+    if use_target_log1p:
+        y_train_val = np.log1p(y_train_val_raw)
+    else:
+        y_train_val = y_train_val_raw.copy()
 
     if val_df.empty:
         cv_strategy: PredefinedSplit | KFold = KFold(n_splits=5, shuffle=True, random_state=42)
@@ -304,20 +462,51 @@ def train_models(
         cv_strategy = PredefinedSplit(test_fold=split_marker)
 
     searches = _build_searches(X_train_val, cv_strategy=cv_strategy)
+    high_production_threshold = float(y_train_val_raw.quantile(0.75))
+    train_sample_weight = np.where(y_train_val_raw >= high_production_threshold, 2.0, 1.0)
+    y_test_array = y_test_raw.to_numpy(dtype=float)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     metrics_records: list[dict[str, float | str]] = []
 
     for model_name, search in searches.items():
-        search.fit(X_train_val, y_train_val)
+        search.fit(X_train_val, y_train_val, model__sample_weight=train_sample_weight)
         best_pipeline = search.best_estimator_
         transformed_feature_names = best_pipeline.named_steps["preprocessor"].get_feature_names_out()
         _assert_no_forbidden_features(transformed_feature_names, forbidden_columns=identity_columns)
 
-        predictions = best_pipeline.predict(X_test)
-        rmse = float(np.sqrt(mean_squared_error(y_test, predictions)))
-        mae = float(mean_absolute_error(y_test, predictions))
-        r2 = float(r2_score(y_test, predictions))
+        raw_predictions = best_pipeline.predict(X_test)
+        if use_target_log1p:
+            predictions = np.expm1(raw_predictions)
+        else:
+            predictions = raw_predictions
+
+        calibration_method = "none"
+        if not val_df.empty:
+            val_features = val_df[feature_columns]
+            val_targets_raw = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
+            val_valid_mask = val_targets_raw.notna()
+            val_features = val_features.loc[val_valid_mask]
+            val_targets_raw = val_targets_raw.loc[val_valid_mask]
+            if not val_features.empty:
+                val_predictions_raw = best_pipeline.predict(val_features)
+                if use_target_log1p:
+                    val_predictions = np.expm1(val_predictions_raw)
+                else:
+                    val_predictions = val_predictions_raw
+                calibration_method, calibration_payload = _fit_calibrator(
+                    val_predictions=np.asarray(val_predictions, dtype=float),
+                    val_actuals=val_targets_raw.to_numpy(dtype=float),
+                )
+                predictions = _apply_calibration(
+                    predictions=np.asarray(predictions, dtype=float),
+                    calibration_payload=calibration_payload,
+                    calibration_method=calibration_method,
+                )
+
+        rmse = float(np.sqrt(mean_squared_error(y_test_array, predictions)))
+        mae = float(mean_absolute_error(y_test_array, predictions))
+        r2 = float(r2_score(y_test_array, predictions))
 
         metrics_records.append(
             {
@@ -326,6 +515,9 @@ def train_models(
                 "test_rmse": rmse,
                 "test_mae": mae,
                 "test_r2": r2,
+                "target_transform": "log1p" if use_target_log1p else "none",
+                "calibration_method": calibration_method,
+                "sample_weighting": "high_production>=p75:2x",
                 "best_params": json.dumps(search.best_params_, sort_keys=True),
             }
         )
@@ -338,8 +530,15 @@ def train_models(
         predictions_df[[SPLIT_COLUMN, TARGET_COLUMN, f"{model_name}_prediction"]].to_csv(
             output_dir / f"{model_name}_test_predictions.csv", index=False
         )
+        _export_diagnostics(
+            model_name=model_name,
+            output_dir=output_dir,
+            test_frame=predictions_df,
+            actual=y_test_array,
+            predicted=np.asarray(predictions, dtype=float),
+        )
         _save_predicted_vs_expected_scatterplot(
-            expected_values=y_test,
+            expected_values=y_test_raw,
             predicted_values=predictions,
             model_name=model_name,
         )
@@ -357,6 +556,9 @@ def train_models(
                 "test_rmse": np.nan,
                 "test_mae": np.nan,
                 "test_r2": np.nan,
+                "target_transform": "log1p" if use_target_log1p else "none",
+                "calibration_method": "none",
+                "sample_weighting": "not_applied",
                 "best_params": json.dumps(
                     {"status": "skipped", "reason": "autogluon.tabular is not installed"},
                     sort_keys=True,
@@ -370,6 +572,9 @@ def train_models(
     else:
         autogluon_path = output_dir / f"{autogluon_model_name}_predictor"
         train_val_ag = train_val_df.loc[valid_train_val_mask, feature_columns + [TARGET_COLUMN]]
+        if use_target_log1p:
+            train_val_ag = train_val_ag.copy()
+            train_val_ag[TARGET_COLUMN] = np.log1p(train_val_ag[TARGET_COLUMN])
 
         fit_kwargs = {
             "train_data": train_val_ag,
@@ -384,10 +589,36 @@ def train_models(
         ).fit(**fit_kwargs)
 
         print("predictor finished")
-        ag_predictions = predictor.predict(X_test)
-        ag_rmse = float(np.sqrt(mean_squared_error(y_test, ag_predictions)))
-        ag_mae = float(mean_absolute_error(y_test, ag_predictions))
-        ag_r2 = float(r2_score(y_test, ag_predictions))
+        ag_predictions_raw = predictor.predict(X_test)
+        if use_target_log1p:
+            ag_predictions = np.expm1(ag_predictions_raw.to_numpy())
+        else:
+            ag_predictions = ag_predictions_raw.to_numpy()
+        ag_calibration_method = "none"
+        if not val_df.empty:
+            val_features = val_df[feature_columns]
+            val_targets_raw = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
+            val_valid_mask = val_targets_raw.notna()
+            val_features = val_features.loc[val_valid_mask]
+            val_targets_raw = val_targets_raw.loc[val_valid_mask]
+            if not val_features.empty:
+                ag_val_predictions_raw = predictor.predict(val_features).to_numpy()
+                if use_target_log1p:
+                    ag_val_predictions = np.expm1(ag_val_predictions_raw)
+                else:
+                    ag_val_predictions = ag_val_predictions_raw
+                ag_calibration_method, ag_calibration_payload = _fit_calibrator(
+                    val_predictions=np.asarray(ag_val_predictions, dtype=float),
+                    val_actuals=val_targets_raw.to_numpy(dtype=float),
+                )
+                ag_predictions = _apply_calibration(
+                    predictions=np.asarray(ag_predictions, dtype=float),
+                    calibration_payload=ag_calibration_payload,
+                    calibration_method=ag_calibration_method,
+                )
+        ag_rmse = float(np.sqrt(mean_squared_error(y_test_array, ag_predictions)))
+        ag_mae = float(mean_absolute_error(y_test_array, ag_predictions))
+        ag_r2 = float(r2_score(y_test_array, ag_predictions))
 
         ag_importance = predictor.feature_importance(train_val_ag, silent=True)
         explanation_df = _extract_autogluon_global_explanations(ag_importance)
@@ -404,6 +635,9 @@ def train_models(
                 "test_rmse": ag_rmse,
                 "test_mae": ag_mae,
                 "test_r2": ag_r2,
+                "target_transform": "log1p" if use_target_log1p else "none",
+                "calibration_method": ag_calibration_method,
+                "sample_weighting": "not_applied",
                 "best_params": json.dumps(
                     {
                         "model_best": predictor.model_best,
@@ -415,13 +649,20 @@ def train_models(
         )
 
         ag_predictions_df = test_df.loc[valid_test_mask].copy()
-        ag_predictions_df[f"{autogluon_model_name}_prediction"] = ag_predictions.to_numpy()
+        ag_predictions_df[f"{autogluon_model_name}_prediction"] = ag_predictions
         ag_predictions_df[
             [SPLIT_COLUMN, TARGET_COLUMN, f"{autogluon_model_name}_prediction"]
         ].to_csv(output_dir / f"{autogluon_model_name}_test_predictions.csv", index=False)
+        _export_diagnostics(
+            model_name=autogluon_model_name,
+            output_dir=output_dir,
+            test_frame=ag_predictions_df,
+            actual=y_test_raw.to_numpy(),
+            predicted=np.asarray(ag_predictions, dtype=float),
+        )
         _save_predicted_vs_expected_scatterplot(
-            expected_values=y_test,
-            predicted_values=ag_predictions.to_numpy(),
+            expected_values=y_test_raw.to_numpy(),
+            predicted_values=ag_predictions,
             model_name=autogluon_model_name,
         )
 
