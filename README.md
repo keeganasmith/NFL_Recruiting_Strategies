@@ -76,3 +76,51 @@ Outputs:
 
 - `outputs/visualizations/effect_size_dotplot.svg`
 - `outputs/visualizations/effect_size_dotplot.pdf`
+
+## NFL production-value heuristic pipeline
+
+The `pipeline/` package is a configurable experiment runner focused on generating an `NFL_production_value` feature and evaluating how informative that heuristic is as a production proxy (not combine talent grading).
+
+### Package layout
+
+- `pipeline/io/`: load + validate `all_data.csv`
+- `pipeline/features/`: shared preprocessing and derived features used by heuristics
+- `pipeline/heuristics/`: heuristic interface, registry/factory, and implementations
+- `pipeline/evaluation/`: score diagnostics, calibration, and rank analysis
+- `pipeline/reporting/`: plots + summary table writers
+- `configs/`: experiment/heuristic config files
+
+### Run a baseline experiment
+
+```bash
+python -m pipeline.run_experiment \
+  --input-data all_data.csv \
+  --heuristic-config configs/heuristics/nfl_production_value_baseline.json \
+  --output-dir outputs/pipeline/default_run \
+  --split-seed 42
+```
+
+Optional time split (for forward-looking rank stability):
+
+```bash
+python -m pipeline.run_experiment \
+  --input-data all_data.csv \
+  --heuristic-config configs/heuristics/nfl_production_value_baseline.json \
+  --output-dir outputs/pipeline/time_split_2018 \
+  --time-split-year 2018
+```
+
+### Outputs produced per run
+
+- `scored_players.csv`: full dataset with derived features + `NFL_production_value`
+- `score_summary.csv`: overall scoring distribution metrics
+- `calibration_table.csv`: quantile bins of score vs. proxy NFL outcome
+- `ranking_stability.csv`: top-N overlap / Spearman rank stability across train/test split
+- `top_players.csv`: top ranked players under the configured heuristic
+- `plots/score_distribution.png`
+- `plots/calibration_curve.png`
+- `experiment_manifest.json`: reproducibility manifest with timestamp, git commit, heuristic metadata, data slice details, and evaluation settings
+
+### Swapping heuristics without changing pipeline code
+
+Heuristics are created by key through `pipeline/heuristics/registry.py`. To swap heuristics, provide a different config file with a different `heuristic_key` and parameter block.
