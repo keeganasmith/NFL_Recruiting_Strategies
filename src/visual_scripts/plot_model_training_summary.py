@@ -56,14 +56,26 @@ def _derive_status_column(metrics_df: pd.DataFrame) -> pd.Series:
     return status.fillna("unknown")
 
 
-def build_performance_figure(metrics_df: pd.DataFrame) -> plt.Figure:
+def derive_model_order(metrics_df: pd.DataFrame) -> list[str]:
     enriched = metrics_df.copy()
     enriched["status"] = _derive_status_column(enriched)
     trained = enriched.loc[enriched["status"] == "trained"].copy()
     if trained.empty:
         raise ValueError("No trained models found in model metrics.")
 
-    trained = trained.sort_values("test_rmse")
+    trained = trained.dropna(subset=["test_rmse"])
+    trained = trained.sort_values("test_rmse", ascending=True)
+    return trained["model"].astype(str).tolist()
+
+
+def build_performance_figure(metrics_df: pd.DataFrame, model_order: list[str]) -> plt.Figure:
+    enriched = metrics_df.copy()
+    enriched["status"] = _derive_status_column(enriched)
+    trained = enriched.loc[enriched["status"] == "trained"].copy().set_index("model")
+    trained = trained.loc[[model for model in model_order if model in trained.index]].copy()
+    if trained.empty:
+        raise ValueError("No trained models found in model metrics.")
+
     x = np.arange(len(trained))
     width = 0.38
 
@@ -83,18 +95,20 @@ def build_performance_figure(metrics_df: pd.DataFrame) -> plt.Figure:
     axes[1].grid(axis="y", alpha=0.25)
 
     axes[1].set_xticks(x)
-    axes[1].set_xticklabels([_slug_to_label(m) for m in trained["model"]], rotation=0)
+    axes[1].set_xticklabels([_slug_to_label(m) for m in trained.index], rotation=0)
 
     fig.suptitle("Explainable Model Training Summary", fontsize=14, y=0.98)
     fig.tight_layout(rect=[0, 0.01, 1, 0.96])
     return fig
 
 
-def build_error_profile_figure(prediction_frames: dict[str, pd.DataFrame]) -> plt.Figure:
+def build_error_profile_figure(prediction_frames: dict[str, pd.DataFrame], model_order: list[str]) -> plt.Figure:
     if not prediction_frames:
         raise ValueError("No prediction frames available to visualize.")
 
-    models = sorted(prediction_frames)
+    models = [model for model in model_order if model in prediction_frames]
+    if not models:
+        raise ValueError("No prediction frames matched the provided model order.")
     abs_errors = []
     mean_errors = []
 
@@ -156,9 +170,16 @@ def _standardize_explanation_columns(df: pd.DataFrame) -> pd.DataFrame:
     return standardized
 
 
-def build_explanation_figure(explanations: dict[str, pd.DataFrame], top_n: int = 12) -> plt.Figure:
+def build_explanation_figure(
+    explanations: dict[str, pd.DataFrame],
+    model_order: list[str],
+    top_n: int = 12,
+) -> plt.Figure:
     usable: dict[str, pd.DataFrame] = {}
-    for model, df in explanations.items():
+    for model in model_order:
+        if model not in explanations:
+            continue
+        df = explanations[model]
         if df.empty:
             continue
         standardized = _standardize_explanation_columns(df)
@@ -177,7 +198,7 @@ def build_explanation_figure(explanations: dict[str, pd.DataFrame], top_n: int =
     if not top_features:
         raise ValueError("No features available after ranking explanation values.")
 
-    matrix = pd.DataFrame(index=sorted(top_features), columns=sorted(usable.keys()), dtype=float)
+    matrix = pd.DataFrame(index=sorted(top_features), columns=list(usable.keys()), dtype=float)
     for model, df in usable.items():
         values = df.groupby("feature")["value"].mean()
         matrix[model] = matrix.index.to_series().map(values)
@@ -278,6 +299,7 @@ def main() -> None:
         args.metrics_csv,
         {"model", "test_rmse", "test_mae", "test_r2"},
     )
+    model_order = derive_model_order(metrics_df)
 
     prediction_frames: dict[str, pd.DataFrame] = {}
     for path in sorted(args.predictions_dir.glob("*_test_predictions.csv")):
@@ -296,13 +318,13 @@ def main() -> None:
             continue
         explanation_frames[model] = df
 
-    performance_fig = build_performance_figure(metrics_df)
+    performance_fig = build_performance_figure(metrics_df, model_order)
     save_figure(performance_fig, args.output_dir / "model_performance.png")
 
-    error_fig = build_error_profile_figure(prediction_frames)
+    error_fig = build_error_profile_figure(prediction_frames, model_order)
     save_figure(error_fig, args.output_dir / "prediction_error_profile.png")
 
-    explanation_fig = build_explanation_figure(explanation_frames)
+    explanation_fig = build_explanation_figure(explanation_frames, model_order)
     save_figure(explanation_fig, args.output_dir / "global_explanation_map.png")
 
     print(f"Saved visuals to: {args.output_dir}")

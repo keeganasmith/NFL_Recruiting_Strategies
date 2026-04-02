@@ -9,6 +9,7 @@ from src.visual_scripts.plot_model_training_summary import (
     build_error_profile_figure,
     build_explanation_figure,
     build_performance_figure,
+    derive_model_order,
     save_figure,
 )
 
@@ -58,10 +59,11 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
         }
 
     def test_builders_and_export(self):
-        perf_fig = build_performance_figure(self.metrics)
+        model_order = derive_model_order(self.metrics)
+        perf_fig = build_performance_figure(self.metrics, model_order)
         prepared_predictions = {k: _prepare_prediction_frame(v) for k, v in self.predictions.items()}
-        err_fig = build_error_profile_figure(prepared_predictions)
-        exp_fig = build_explanation_figure(self.explanations, top_n=5)
+        err_fig = build_error_profile_figure(prepared_predictions, model_order)
+        exp_fig = build_explanation_figure(self.explanations, model_order, top_n=5)
 
         self.assertGreaterEqual(len(perf_fig.axes), 2)
         self.assertGreaterEqual(len(err_fig.axes), 2)
@@ -76,6 +78,21 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
             self.assertTrue((output_base / "model_performance.png").exists())
             self.assertTrue((output_base / "prediction_error_profile.png").exists())
             self.assertTrue((output_base / "global_explanation_map.png").exists())
+
+    def test_x_axis_order_is_consistent_across_figures(self):
+        model_order = derive_model_order(self.metrics)
+        prepared_predictions = {k: _prepare_prediction_frame(v) for k, v in self.predictions.items()}
+
+        perf_fig = build_performance_figure(self.metrics, model_order)
+        err_fig = build_error_profile_figure(prepared_predictions, model_order)
+        exp_fig = build_explanation_figure(self.explanations, model_order, top_n=5)
+
+        perf_labels = [tick.get_text() for tick in perf_fig.axes[1].get_xticklabels()]
+        err_labels = [tick.get_text() for tick in err_fig.axes[0].get_xticklabels()]
+        exp_labels = [tick.get_text() for tick in exp_fig.axes[0].get_xticklabels()]
+
+        self.assertListEqual(perf_labels, err_labels)
+        self.assertListEqual(perf_labels, exp_labels)
 
     def test_prepare_prediction_frame_supports_repository_schema(self):
         prepared = _prepare_prediction_frame(self.predictions["decision_tree"])
