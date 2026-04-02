@@ -1,8 +1,0 @@
-{
-  "diagnostics_thresholds": {
-    "max_mae": 0.75,
-    "max_abs_calibration_intercept": 1.10,
-    "max_abs_calibration_slope_deviation": 1.15,
-    "max_abs_mean_residual": 1.12
-  }
-}
