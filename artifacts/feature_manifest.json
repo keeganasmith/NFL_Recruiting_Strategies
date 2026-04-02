@@ -1,0 +1,240 @@
+{
+  "input_csv": "outputs/pipeline/sweeps/db_heuristic_grid_search/best_heuristic_scored_players.csv",
+  "row_count": 3384,
+  "split_mode": "draft_year",
+  "seed": 42,
+  "feature_groups": {
+    "combine": [
+      "forty_yard_sec",
+      "vertical_jump_in",
+      "bench_reps",
+      "broad_jump_in",
+      "three_cone_sec",
+      "shuttle_sec",
+      "height_in",
+      "weight_lb"
+    ],
+    "college": [
+      "college_games",
+      "college_interceptions",
+      "college_interception_yards",
+      "college_interception_tds",
+      "college_passes_defended",
+      "college_combined_tackles",
+      "college_solo_tackles",
+      "college_assisted_tackles",
+      "college_sacks",
+      "college_tfl",
+      "college_forced_fumbles",
+      "college_fumble_recoveries",
+      "college_fumble_recovery_yards",
+      "college_fumble_recovery_tds"
+    ],
+    "missing_indicators": [
+      "forty_yard_sec_missing",
+      "vertical_jump_in_missing",
+      "bench_reps_missing",
+      "broad_jump_in_missing",
+      "three_cone_sec_missing",
+      "shuttle_sec_missing",
+      "height_in_missing",
+      "weight_lb_missing",
+      "college_games_missing",
+      "college_interceptions_missing",
+      "college_interception_yards_missing",
+      "college_interception_tds_missing",
+      "college_passes_defended_missing",
+      "college_combined_tackles_missing",
+      "college_solo_tackles_missing",
+      "college_assisted_tackles_missing",
+      "college_sacks_missing",
+      "college_tfl_missing",
+      "college_forced_fumbles_missing",
+      "college_fumble_recoveries_missing",
+      "college_fumble_recovery_yards_missing",
+      "college_fumble_recovery_tds_missing"
+    ],
+    "standardized_features": [
+      "forty_yard_sec_z",
+      "vertical_jump_in_z",
+      "bench_reps_z",
+      "broad_jump_in_z",
+      "three_cone_sec_z",
+      "shuttle_sec_z",
+      "height_in_z",
+      "weight_lb_z",
+      "college_games_z",
+      "college_interceptions_z",
+      "college_interception_yards_z",
+      "college_interception_tds_z",
+      "college_passes_defended_z",
+      "college_combined_tackles_z",
+      "college_solo_tackles_z",
+      "college_assisted_tackles_z",
+      "college_sacks_z",
+      "college_tfl_z",
+      "college_forced_fumbles_z",
+      "college_fumble_recoveries_z",
+      "college_fumble_recovery_yards_z",
+      "college_fumble_recovery_tds_z"
+    ]
+  },
+  "model_input_features": [
+    "forty_yard_sec_z",
+    "vertical_jump_in_z",
+    "bench_reps_z",
+    "broad_jump_in_z",
+    "three_cone_sec_z",
+    "shuttle_sec_z",
+    "height_in_z",
+    "weight_lb_z",
+    "college_games_z",
+    "college_interceptions_z",
+    "college_interception_yards_z",
+    "college_interception_tds_z",
+    "college_passes_defended_z",
+    "college_combined_tackles_z",
+    "college_solo_tackles_z",
+    "college_assisted_tackles_z",
+    "college_sacks_z",
+    "college_tfl_z",
+    "college_forced_fumbles_z",
+    "college_fumble_recoveries_z",
+    "college_fumble_recovery_yards_z",
+    "college_fumble_recovery_tds_z",
+    "forty_yard_sec_missing",
+    "vertical_jump_in_missing",
+    "bench_reps_missing",
+    "broad_jump_in_missing",
+    "three_cone_sec_missing",
+    "shuttle_sec_missing",
+    "height_in_missing",
+    "weight_lb_missing",
+    "college_games_missing",
+    "college_interceptions_missing",
+    "college_interception_yards_missing",
+    "college_interception_tds_missing",
+    "college_passes_defended_missing",
+    "college_combined_tackles_missing",
+    "college_solo_tackles_missing",
+    "college_assisted_tackles_missing",
+    "college_sacks_missing",
+    "college_tfl_missing",
+    "college_forced_fumbles_missing",
+    "college_fumble_recoveries_missing",
+    "college_fumble_recovery_yards_missing",
+    "college_fumble_recovery_tds_missing"
+  ],
+  "imputation_and_scaling": {
+    "forty_yard_sec": {
+      "median": 4.49,
+      "mean": 4.490325059101655,
+      "std": 0.08704371479073589
+    },
+    "vertical_jump_in": {
+      "median": 36.0,
+      "mean": 36.285756501182036,
+      "std": 2.4915444159480944
+    },
+    "bench_reps": {
+      "median": 16.0,
+      "mean": 15.990248226950355,
+      "std": 3.6841410731210624
+    },
+    "broad_jump_in": {
+      "median": 122.0,
+      "mean": 122.54491725768321,
+      "std": 5.1516933735329316
+    },
+    "three_cone_sec": {
+      "median": 6.93,
+      "mean": 6.928983451536643,
+      "std": 0.1526761888399036
+    },
+    "shuttle_sec": {
+      "median": 4.16,
+      "mean": 4.157098108747045,
+      "std": 0.11005412303236606
+    },
+    "height_in": {
+      "median": 72.0,
+      "mean": 71.71483451536643,
+      "std": 1.5816821651118163
+    },
+    "weight_lb": {
+      "median": 198.0,
+      "mean": 199.0505319148936,
+      "std": 11.279601966419252
+    },
+    "college_games": {
+      "median": 12.0,
+      "mean": 11.967494089834515,
+      "std": 1.8293335115010514
+    },
+    "college_interceptions": {
+      "median": 2.0,
+      "mean": 2.5593971631205674,
+      "std": 1.8782427569624183
+    },
+    "college_interception_yards": {
+      "median": 21.0,
+      "mean": 35.63475177304964,
+      "std": 44.75755728542658
+    },
+    "college_interception_tds": {
+      "median": 0.0,
+      "mean": 0.27452718676122934,
+      "std": 0.5706483609556351
+    },
+    "college_passes_defended": {
+      "median": 3.0,
+      "mean": 3.8690898345153664,
+      "std": 3.9151387844046623
+    },
+    "college_combined_tackles": {
+      "median": 55.0,
+      "mean": 56.68823877068558,
+      "std": 20.182750252945603
+    },
+    "college_solo_tackles": {
+      "median": 37.0,
+      "mean": 38.056442080378254,
+      "std": 12.569760652036386
+    },
+    "college_assisted_tackles": {
+      "median": 17.0,
+      "mean": 18.3806146572104,
+      "std": 9.721533097653303
+    },
+    "college_sacks": {
+      "median": 0.0,
+      "mean": 0.4311465721040189,
+      "std": 0.8812395148514001
+    },
+    "college_tfl": {
+      "median": 2.5,
+      "mean": 2.940898345153664,
+      "std": 2.1885271765349983
+    },
+    "college_forced_fumbles": {
+      "median": 1.0,
+      "mean": 0.8841607565011821,
+      "std": 0.9035311304588097
+    },
+    "college_fumble_recoveries": {
+      "median": 0.0,
+      "mean": 0.21335697399527187,
+      "std": 0.5309444128120012
+    },
+    "college_fumble_recovery_yards": {
+      "median": 0.0,
+      "mean": 3.0700354609929077,
+      "std": 12.595291645291436
+    },
+    "college_fumble_recovery_tds": {
+      "median": 0.0,
+      "mean": 0.07239952718676122,
+      "std": 0.26701114487814576
+    }
+  }
+}
