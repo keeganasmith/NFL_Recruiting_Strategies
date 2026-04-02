@@ -162,10 +162,10 @@ def _select_and_standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
         working[source_col] = pd.to_numeric(working[source_col], errors="coerce")
 
     selected_columns = [
-        column
-        for column in ["Player", "NFL_id", "Pos", "combine_year", "college_name"]
-        if column in working.columns
+        column for column in ["Player", "NFL_id", "Pos", "college_name"] if column in working.columns
     ] + list(source_features.keys())
+    if "combine_year" in working.columns:
+        selected_columns.append("combine_year")
     if TARGET_COLUMN in working.columns:
         selected_columns.append(TARGET_COLUMN)
 
@@ -282,6 +282,13 @@ def preprocess_db_model_dataset(
     missing_flags = [f"{feature}_missing" for feature in base_features]
     model_inputs = z_features + missing_flags
 
+    output_columns = [
+        column
+        for column in ["Player", "NFL_id", "Pos", "college_name", TARGET_COLUMN, "dataset_split"]
+        if column in processed.columns
+    ] + model_inputs
+    processed = processed[output_columns].copy()
+
     manifest = {
         "input_csv": str(input_csv),
         "row_count": int(len(processed)),
@@ -294,6 +301,7 @@ def preprocess_db_model_dataset(
             "standardized_features": z_features,
         },
         "model_input_features": model_inputs,
+        "retained_raw_feature_columns": [],
         "imputation_and_scaling": imputation_meta,
     }
 
