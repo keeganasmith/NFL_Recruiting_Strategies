@@ -68,23 +68,32 @@ function normalizeSportsRefUrl(url) {
   }
 }
 
+function normalizeYearString(value) {
+  const candidate = String(value ?? "").trim();
+  return /^\d{4}$/.test(candidate) ? candidate : "";
+}
+
 function playerKey(row) {
   const nflId = String(row.NFL_id || row.nfl_id || "").trim();
   if (nflId) return `nfl:${nflId}`;
 
   const name = String(row.Player || row.player || "").trim().toLowerCase();
-  const draftYear = String(row.draft_year || row.combine_year || "").trim();
+  const draftYear = normalizeYearString(
+    row.draftYear || row.draft_year || row.combine_year || row.year || row.season_year || ""
+  );
   const pos = String(row.Pos || row.position || "").trim().toLowerCase();
   return `name:${name}|year:${draftYear}|pos:${pos}`;
 }
 
 function extractDraftYear(row) {
-  const direct = Number(String(row.draft_year || row.combine_year || "").trim());
-  if (Number.isFinite(direct)) return String(direct);
+  const direct = normalizeYearString(
+    row.draftYear || row.draft_year || row.combine_year || row.year || row.season_year || ""
+  );
+  if (direct) return direct;
 
   const drafted = String(row["Drafted (tm/rnd/yr)"] || "").trim();
-  const match = drafted.match(/\b(19|20)\d{2}\b/);
-  return match ? match[0] : "";
+  const match = drafted.match(/\b\d{4}\b/);
+  return normalizeYearString(match ? match[0] : "");
 }
 
 function isDraftedRow(row) {
@@ -134,7 +143,7 @@ function mergeQueueState(existingState, importedRecords) {
       ...prev,
       playerName: imported.playerName || prev.playerName,
       pos: imported.pos || prev.pos,
-      draftYear: imported.draftYear || prev.draftYear,
+      draftYear: normalizeYearString(imported.draftYear || prev.draftYear || ""),
       slug: imported.slug || prev.slug
     });
   }
@@ -207,7 +216,14 @@ function buildDraftYearLookup(csvRows) {
 
   const cols = Object.keys(csvRows[0] || {});
   const playerCol = findColumn(cols, ["Player", "player", "name", "Name"]);
-  const yearCol = findColumn(cols, ["year", "draft_year", "Draft Year"]);
+  const yearCol = findColumn(cols, [
+    "year",
+    "draft_year",
+    "Draft Year",
+    "draftYear",
+    "combine_year",
+    "season_year"
+  ]);
   const urlCol = findColumn(cols, [
     "sportsref_predicted_url",
     "sportsref_url",
@@ -218,8 +234,8 @@ function buildDraftYearLookup(csvRows) {
   if (!yearCol || (!playerCol && !urlCol)) return lookup;
 
   for (const row of csvRows) {
-    const year = Number(String(row[yearCol] || "").trim());
-    if (!Number.isFinite(year)) continue;
+    const year = normalizeYearString(row[yearCol] || "");
+    if (!year) continue;
 
     const player = normalizeName(row[playerCol] || "");
     const url = normalizeSportsRefUrl(row[urlCol] || "");
@@ -256,7 +272,7 @@ function buildUnmatchedExportRows(unmatchedRows) {
     playerKey: row.playerKey || "",
     Player: row.Player || row.playerName || "",
     Pos: row.Pos || row.pos || "",
-    draftYear: row.draftYear || "",
+    draftYear: normalizeYearString(row.draftYear || ""),
     slug: row.slug || "",
     attemptsTried: row.attemptsTried || row.attemptedUrlsCount || "",
     lastTriedUrl: row.lastTriedUrl || "",
@@ -285,7 +301,12 @@ async function ensureLocalStateShape() {
   ]);
   const queueState = current.queueState || {};
   const normalizedQueueState = {
-    players: Array.isArray(queueState.players) ? queueState.players : [],
+    players: Array.isArray(queueState.players)
+      ? queueState.players.map(player => ({
+          ...player,
+          draftYear: normalizeYearString(player?.draftYear || "")
+        }))
+      : [],
     nextIndex:
       Number.isInteger(queueState.nextIndex) && queueState.nextIndex >= 0
         ? queueState.nextIndex

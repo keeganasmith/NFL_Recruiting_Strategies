@@ -130,6 +130,11 @@ function normalizeCurrentSportsRefUrl(url) {
   }
 }
 
+function normalizeYearString(value) {
+  const candidate = String(value ?? "").trim();
+  return /^\d{4}$/.test(candidate) ? candidate : "";
+}
+
 function inferYear() {
   const url = window.location.href;
   const m1 = url.match(/\/(\d{4})\/gamelog/);
@@ -194,17 +199,19 @@ function aggregateGameLog(table) {
  */
 async function getExpectedDraftYear() {
   const result = await chrome.storage.local.get(["currentPlayer", "draftYearLookup"]);
-  const direct = result.currentPlayer?.year ? Number(result.currentPlayer.year) : null;
-  if (Number.isFinite(direct)) return direct;
+  const direct = normalizeYearString(result.currentPlayer?.year || "");
+  if (direct) return { year: direct, source: "currentPlayer" };
 
   const lookup = result.draftYearLookup || {};
   const byUrl = lookup[`url:${normalizeCurrentSportsRefUrl(window.location.href)}`];
-  if (Number.isFinite(Number(byUrl))) return Number(byUrl);
+  const normalizedByUrl = normalizeYearString(byUrl || "");
+  if (normalizedByUrl) return { year: normalizedByUrl, source: "lookup:url" };
 
   const byName = lookup[`name:${normalizeLookupName(getMetaPlayerName())}`];
-  if (Number.isFinite(Number(byName))) return Number(byName);
+  const normalizedByName = normalizeYearString(byName || "");
+  if (normalizedByName) return { year: normalizedByName, source: "lookup:name" };
 
-  return null;
+  return { year: null, source: "none" };
 }
 
 function isYearMatch(finalSeasonYear, draftYear) {
@@ -219,7 +226,9 @@ async function scrapePage() {
     const player = getMetaPlayerName();
     const pos = getMetaPosition();
     const page_url = window.location.href;
-    const expected_draft_year = await getExpectedDraftYear();
+    const expectedDraftYear = await getExpectedDraftYear();
+    const expected_draft_year = expectedDraftYear.year;
+    const expected_draft_year_source = expectedDraftYear.source;
     const allTables = getAllTables();
 
     let bestSeasonTable = null, bestSeasonScore = -1;
@@ -245,6 +254,7 @@ async function scrapePage() {
       player,
       page_url,
       expected_draft_year,
+      expected_draft_year_source,
       final_season_year: extra.final_season_year ?? "",
       source_type,
       bestSeasonScore,
@@ -267,6 +277,7 @@ async function scrapePage() {
         player,
         final_season_year: "",
         expected_draft_year,
+        expected_draft_year_source,
         page_url,
         source_type,
         bestSeasonScore,
@@ -299,6 +310,7 @@ async function scrapePage() {
         player,
         final_season_year,
         expected_draft_year,
+        expected_draft_year_source,
         page_url,
         source_type,
         bestSeasonScore,
@@ -313,6 +325,7 @@ async function scrapePage() {
       player,
       final_season_year,
       expected_draft_year,
+      expected_draft_year_source,
       page_url,
       source_type,
       bestSeasonScore,
@@ -322,6 +335,7 @@ async function scrapePage() {
         player,
         pos,
         expected_draft_year,
+        expected_draft_year_source,
         final_season_year,
         source_type,
         page_url,
@@ -347,7 +361,9 @@ async function scrapePage() {
       }
     };
   } catch (error) {
-    const expected_draft_year = await getExpectedDraftYear();
+    const expectedDraftYear = await getExpectedDraftYear();
+    const expected_draft_year = expectedDraftYear.year;
+    const expected_draft_year_source = expectedDraftYear.source;
     const page_url = window.location.href;
     const player = getMetaPlayerName();
     const diagnostic = {
@@ -355,6 +371,7 @@ async function scrapePage() {
       player,
       page_url,
       expected_draft_year,
+      expected_draft_year_source,
       final_season_year: "",
       source_type: "",
       bestSeasonScore: -1,
@@ -366,6 +383,7 @@ async function scrapePage() {
       player,
       final_season_year: "",
       expected_draft_year,
+      expected_draft_year_source,
       page_url,
       source_type: "",
       bestSeasonScore: -1,
@@ -451,12 +469,14 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
 
     await new Promise(resolve => setTimeout(resolve, delayMs));
   }
+  const retryExpectedDraft = await getExpectedDraftYear();
   await sendResult("error", {
     status: "error",
     reason: "retry_limit_exhausted",
     player: getMetaPlayerName(),
     final_season_year: "",
-    expected_draft_year: await getExpectedDraftYear(),
+    expected_draft_year: retryExpectedDraft.year,
+    expected_draft_year_source: retryExpectedDraft.source,
     page_url: window.location.href,
     source_type: "",
     bestSeasonScore: -1,
@@ -465,7 +485,8 @@ async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
     status: "error",
     player: getMetaPlayerName(),
     page_url: window.location.href,
-    expected_draft_year: await getExpectedDraftYear(),
+    expected_draft_year: retryExpectedDraft.year,
+    expected_draft_year_source: retryExpectedDraft.source,
     final_season_year: "",
     source_type: "",
     bestSeasonScore: -1,
