@@ -11,7 +11,7 @@ class PipelineConfigTests(unittest.TestCase):
     def test_load_heuristic_yaml(self):
         cfg = load_heuristic_config("configs/heuristics/nfl_production_value_baseline.yaml")
         self.assertEqual(cfg.heuristic_id, "weighted_nfl_production_value")
-        self.assertIn("touchdowns", cfg.feature_weights)
+        self.assertIn("defensive_interceptions", cfg.feature_weights)
 
     def test_invalid_weight_range_raises(self):
         with tempfile.TemporaryDirectory() as td:
@@ -20,11 +20,11 @@ class PipelineConfigTests(unittest.TestCase):
                 """
 heuristic_id: weighted_nfl_production_value
 feature_weights:
-  offense_yards: 9999
-  touchdowns: 10
-  defense_impact: 1
-  special_teams_impact: 0.5
-  availability_factor: 20
+  defensive_totalTackles: 9999
+  defensive_sacks: 2
+  defensive_interceptions: 3
+  defensive_passesDefended: 1.5
+  defensive_gamesPlayed: 0.5
 """
             )
             with self.assertRaises(ValueError):

@@ -4,13 +4,13 @@ import pandas as pd
 
 
 def add_proxy_outcome(df: pd.DataFrame) -> pd.DataFrame:
-    """Create a transparent proxy NFL outcome for heuristic calibration checks."""
+    """Create a transparent proxy NFL defensive-back outcome for calibration checks."""
     working = df.copy()
     working["proxy_nfl_outcome"] = (
-        0.01 * working["offense_yards"]
-        + 2.0 * working["touchdowns"]
-        + 0.3 * working["defense_impact"]
-        + 0.005 * working["special_teams_impact"]
+        0.5 * working["defensive_totalTackles"]
+        + 2.0 * working["defensive_sacks"]
+        + 3.0 * working["defensive_interceptions"]
+        + 1.5 * working["defensive_passesDefended"]
     )
     return working
 
