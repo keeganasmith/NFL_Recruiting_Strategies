@@ -143,3 +143,44 @@ All `pipeline/` heuristic experiments now compute `NFL_production_value` only on
 ### Swapping heuristics without changing pipeline code
 
 Heuristics are created by key through `pipeline/heuristics/registry.py`. To swap heuristics, provide a different config file with a different `heuristic_key` and parameter block.
+
+## Explainable model-training pipeline for `db_model_preprocessed.csv`
+
+A dedicated training script is now available at `src/modeling/train_explainable_models.py` for supervised prediction of `NFL_production_value`.
+
+### Why these modeling choices
+
+To keep outputs explainable while still tuning performance, the pipeline trains and fine-tunes three interpretable model families:
+
+- **Ridge regression**: stable linear baseline with coefficient-based interpretation.
+- **Elastic Net regression**: sparse linear model for feature selection + coefficient interpretation.
+- **Decision tree regressor (depth-constrained)**: non-linear model with transparent split logic and global feature-importance output.
+
+### Data split policy
+
+The script respects the existing `dataset_split` column:
+
+- `train` + `val` rows are used for tuning.
+- `test` rows are held out for final evaluation only.
+
+If `val` rows are present, tuning uses a `PredefinedSplit` so hyperparameter selection is anchored to the provided validation partition. If `val` rows are absent, it falls back to 5-fold CV on train rows.
+
+### Leakage controls
+
+- The target (`NFL_production_value`) and split label (`dataset_split`) are excluded from model features.
+- Numeric/categorical preprocessing (imputation, scaling/encoding) is encapsulated inside sklearn `Pipeline`/`ColumnTransformer` objects so transforms are fit only on train/validation data during CV.
+
+### How to run
+
+```bash
+python src/modeling/train_explainable_models.py \
+  --input-csv db_model_preprocessed.csv \
+  --output-dir outputs/model_training
+```
+
+### Artifacts produced
+
+- `model_metrics.csv`: best CV score + held-out test RMSE/MAE/R² + best hyperparameters.
+- `<model>_global_explanations.csv`: global explainability export (coefficients or importances).
+- `<model>_test_predictions.csv`: test-set predictions for each model.
+
