@@ -1,0 +1,18 @@
+{
+  "heuristic": "combine_weighted",
+  "params": {
+    "weights": {
+      "40yd": 0.4,
+      "Vertical": 0.2,
+      "Bench": 0.15,
+      "Broad Jump": 0.15,
+      "3Cone": 0.05,
+      "Shuttle": 0.05
+    },
+    "invert_columns": [
+      "40yd",
+      "3Cone",
+      "Shuttle"
+    ]
+  }
+}

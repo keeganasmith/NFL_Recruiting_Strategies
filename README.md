@@ -76,3 +76,46 @@ Outputs:
 
 - `outputs/visualizations/effect_size_dotplot.svg`
 - `outputs/visualizations/effect_size_dotplot.pdf`
+
+## Heuristic experiment pipeline
+
+A modular experiment package now lives under `pipeline/` with clear stages:
+
+- `pipeline/io/`: input loading and schema validation
+- `pipeline/features/`: shared preprocessing / feature preparation
+- `pipeline/heuristics/`: heuristic interface and pluggable implementations
+- `pipeline/evaluation/`: metrics, calibration, and ranking analysis
+- `pipeline/reporting/`: persisted tables/artifacts for each run
+- `configs/`: heuristic configuration files
+
+### Run an experiment
+
+```bash
+python -m pipeline.run_experiment \
+  --input-data all_data.csv \
+  --heuristic-config configs/default_heuristic.json \
+  --output-dir outputs/experiments/default_run
+```
+
+Optional split/time context arguments (for reproducibility metadata):
+
+```bash
+python -m pipeline.run_experiment \
+  --input-data all_data.csv \
+  --heuristic-config configs/default_heuristic.json \
+  --output-dir outputs/experiments/time_split_run \
+  --seed 7 \
+  --time-column combine_year \
+  --train-end-year 2018 \
+  --target-column scoring_totalPoints \
+  --calibration-bins 10 \
+  --top-k 25
+```
+
+Each run writes:
+
+- `scored_players.csv`
+- `metrics.json`
+- `calibration.csv`
+- `ranking_topk.csv`
+- `manifest.json` with timestamp, git hash (if available), heuristic+params, data slice details, and evaluation settings.
