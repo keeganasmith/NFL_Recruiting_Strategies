@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import ElasticNet, Ridge
@@ -14,6 +15,11 @@ from sklearn.model_selection import GridSearchCV, KFold, PredefinedSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
+
+try:
+    from autogluon.tabular import TabularPredictor
+except ImportError:  # pragma: no cover - exercised in environments without AutoGluon
+    TabularPredictor = None  # type: ignore[assignment]
 
 TARGET_COLUMN = "NFL_production_value"
 SPLIT_COLUMN = "dataset_split"
@@ -185,6 +191,24 @@ def _prepare_splits(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Da
     return train_df, val_df, test_df
 
 
+def _extract_autogluon_global_explanations(
+    importance_df: pd.DataFrame,
+) -> pd.DataFrame:
+    if importance_df.empty:
+        return pd.DataFrame(columns=["feature", "importance", "abs_value"])
+
+    explanation = importance_df.copy()
+    explanation.index = explanation.index.map(str)
+    explanation = explanation.reset_index().rename(columns={"index": "feature"})
+    if "importance" not in explanation.columns:
+        numeric_columns = [column for column in explanation.columns if is_numeric_dtype(explanation[column])]
+        if not numeric_columns:
+            return pd.DataFrame(columns=["feature", "importance", "abs_value"])
+        explanation = explanation.rename(columns={numeric_columns[0]: "importance"})
+    explanation["abs_value"] = explanation["importance"].abs()
+    return explanation.sort_values("abs_value", ascending=False)
+
+
 def train_models(input_csv: Path, output_dir: Path) -> None:
     df = pd.read_csv(input_csv)
 
@@ -263,6 +287,81 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
         predictions_df[[SPLIT_COLUMN, TARGET_COLUMN, f"{model_name}_prediction"]].to_csv(
             output_dir / f"{model_name}_test_predictions.csv", index=False
         )
+
+    if TabularPredictor is None:
+        metrics_records.append(
+            {
+                "model": "autogluon_extreme",
+                "best_cv_rmse": np.nan,
+                "test_rmse": np.nan,
+                "test_mae": np.nan,
+                "test_r2": np.nan,
+                "best_params": json.dumps(
+                    {"status": "skipped", "reason": "autogluon.tabular is not installed"},
+                    sort_keys=True,
+                ),
+            }
+        )
+        pd.DataFrame(columns=["feature", "importance", "abs_value"]).to_csv(
+            output_dir / "autogluon_extreme_global_explanations.csv",
+            index=False,
+        )
+    else:
+        autogluon_path = output_dir / "autogluon_extreme_predictor"
+        train_val_ag = pd.concat([X_train_val, y_train_val.rename(TARGET_COLUMN)], axis=1)
+        fit_kwargs = {
+            "train_data": train_val_ag,
+            "presets": "extreme",
+        }
+        if not val_df.empty:
+            val_ag = val_df[feature_columns].copy()
+            val_ag[TARGET_COLUMN] = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
+            val_ag = val_ag.loc[val_ag[TARGET_COLUMN].notna()]
+            if not val_ag.empty:
+                fit_kwargs["tuning_data"] = val_ag
+
+        predictor = TabularPredictor(
+            label=TARGET_COLUMN,
+            path=str(autogluon_path),
+            problem_type="regression",
+            eval_metric="root_mean_squared_error",
+        ).fit(**fit_kwargs)
+
+        ag_predictions = predictor.predict(X_test)
+        ag_rmse = float(np.sqrt(mean_squared_error(y_test, ag_predictions)))
+        ag_mae = float(mean_absolute_error(y_test, ag_predictions))
+        ag_r2 = float(r2_score(y_test, ag_predictions))
+
+        ag_importance = predictor.feature_importance(train_val_ag, silent=True)
+        explanation_df = _extract_autogluon_global_explanations(ag_importance)
+        _assert_no_forbidden_features(
+            explanation_df["feature"].astype(str).tolist(),
+            forbidden_columns=identity_columns,
+        )
+        explanation_df.to_csv(output_dir / "autogluon_extreme_global_explanations.csv", index=False)
+
+        metrics_records.append(
+            {
+                "model": "autogluon_extreme",
+                "best_cv_rmse": np.nan,
+                "test_rmse": ag_rmse,
+                "test_mae": ag_mae,
+                "test_r2": ag_r2,
+                "best_params": json.dumps(
+                    {
+                        "model_best": predictor.model_best,
+                        "presets": "extreme",
+                    },
+                    sort_keys=True,
+                ),
+            }
+        )
+
+        ag_predictions_df = test_df.loc[valid_test_mask].copy()
+        ag_predictions_df["autogluon_extreme_prediction"] = ag_predictions.to_numpy()
+        ag_predictions_df[
+            [SPLIT_COLUMN, TARGET_COLUMN, "autogluon_extreme_prediction"]
+        ].to_csv(output_dir / "autogluon_extreme_test_predictions.csv", index=False)
 
     metrics_df = pd.DataFrame(metrics_records).sort_values("test_rmse")
     metrics_df.to_csv(output_dir / "model_metrics.csv", index=False)

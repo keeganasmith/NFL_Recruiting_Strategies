@@ -47,12 +47,13 @@ class TrainExplainableModelsIdentityTests(unittest.TestCase):
             self.assertNotIn("NFL_id", manifest["model_feature_columns"])
             self.assertNotIn("record_id", manifest["model_feature_columns"])
 
-            for model_name in ["ridge", "elastic_net", "decision_tree"]:
+            for model_name in ["ridge", "elastic_net", "decision_tree", "autogluon_extreme"]:
                 explanation = pd.read_csv(output_dir / f"{model_name}_global_explanations.csv")
-                features_lower = explanation["feature"].astype(str).str.lower()
-                self.assertFalse(features_lower.str.contains("player").any())
-                self.assertFalse(features_lower.str.contains("nfl_id").any())
-                self.assertFalse(features_lower.str.contains("record_id").any())
+                if not explanation.empty:
+                    features_lower = explanation["feature"].astype(str).str.lower()
+                    self.assertFalse(features_lower.str.contains("player").any())
+                    self.assertFalse(features_lower.str.contains("nfl_id").any())
+                    self.assertFalse(features_lower.str.contains("record_id").any())
 
 
 if __name__ == "__main__":
