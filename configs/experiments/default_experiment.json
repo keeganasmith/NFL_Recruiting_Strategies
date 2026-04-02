@@ -1,0 +1,9 @@
+{
+  "description": "Baseline heuristic experiment for generating NFL_production_value and evaluating score behavior.",
+  "input_data": "all_data.csv",
+  "heuristic_config": "configs/heuristics/nfl_production_value_baseline.json",
+  "output_dir": "outputs/pipeline/default_run",
+  "split_seed": 42,
+  "time_split_year": null,
+  "calibration_bins": 10
+}
