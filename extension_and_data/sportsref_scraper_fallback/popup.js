@@ -51,7 +51,7 @@ function buildPlayerRecord(row) {
   const key = playerKey({ ...row, draft_year: draftYear });
   const playerName = String(row.Player || row.player || "").trim();
   const pos = String(row.Pos || row.position || "").trim();
-  const slug = String(row["Player-additional"] || row.slug || "").trim();
+  const slug = normalizeSlugBase(row["Player-additional"] || row.slug || playerName);
 
   return {
     playerKey: key,

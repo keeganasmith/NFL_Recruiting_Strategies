@@ -260,7 +260,7 @@ async function scrapePage() {
       "final season =", final_season_year,
       "expected draft year =", expected_draft_year
     );
-    return null;
+    return { __yearMismatch: true, player, final_season_year, expected_draft_year };
   }
 
   return {
@@ -338,6 +338,11 @@ async function sendResult(resultType, row = null) {
 async function autoScrapeWithRetry(maxAttempts = 10, delayMs = 800) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const row = await scrapePage();
+    if (row && row.__yearMismatch) {
+      console.log("[SportsRef scraper] year mismatch on", window.location.href);
+      await sendResult("year_mismatch");
+      return;
+    }
     if (row && row.player) {
       await saveRow(row);
       console.log(
