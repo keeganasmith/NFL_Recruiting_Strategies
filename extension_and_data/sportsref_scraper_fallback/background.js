@@ -4,6 +4,11 @@ const RUN_TAB_KEY = "runTabId";
 const MAX_SUFFIX_ATTEMPTS = 25;
 const NAV_THROTTLE_MS = 5000;
 
+function normalizeYearString(value) {
+  const candidate = String(value ?? "").trim();
+  return /^\d{4}$/.test(candidate) ? candidate : "";
+}
+
 function dedupeKey(row) {
   return `${row.player}|${row.expected_draft_year}|${row.page_url}`;
 }
@@ -55,14 +60,14 @@ function buildDiagnosticRow(player, resultType, pageUrl, diagnostic) {
   return {
     playerKey: player?.playerKey || "",
     playerName: player?.playerName || "",
-    draftYear: player?.draftYear || "",
+    draftYear: normalizeYearString(player?.draftYear || ""),
     slug: player?.slug || "",
     resultType: resultType || "",
     pageUrl: pageUrl || player?.lastTriedUrl || "",
     status: diagnostic?.status || resultType || "",
     player: diagnostic?.player || player?.playerName || "",
     page_url: diagnostic?.page_url || pageUrl || player?.lastTriedUrl || "",
-    expected_draft_year: diagnostic?.expected_draft_year ?? player?.draftYear ?? "",
+    expected_draft_year: normalizeYearString(diagnostic?.expected_draft_year ?? player?.draftYear ?? ""),
     final_season_year: diagnostic?.final_season_year ?? "",
     source_type: diagnostic?.source_type || "",
     bestSeasonScore: diagnostic?.bestSeasonScore ?? "",
@@ -134,6 +139,7 @@ async function processNext() {
 
   const player = players[index];
   const attemptIndex = Number.isInteger(player.attemptIndex) && player.attemptIndex > 0 ? player.attemptIndex : 1;
+  const playerDraftYear = normalizeYearString(player?.draftYear || "");
 
   if (attemptIndex > MAX_SUFFIX_ATTEMPTS) {
     players[index] = {
@@ -144,7 +150,7 @@ async function processNext() {
     state.unmatchedRows.push({
       playerKey: player.playerKey,
       playerName: player.playerName,
-      draftYear: player.draftYear,
+      draftYear: playerDraftYear,
       slug: player.slug,
       lastTriedUrl: player.lastTriedUrl || "",
       attemptedUrlsCount: attemptIndex - 1,
@@ -173,7 +179,7 @@ async function processNext() {
         {
           playerKey: player.playerKey,
           playerName: player.playerName,
-          draftYear: player.draftYear,
+          draftYear: playerDraftYear,
           reason: "missing_slug",
           attemptedAt: new Date().toISOString()
         }
@@ -195,7 +201,7 @@ async function processNext() {
     [RUN_TAB_KEY]: tab.id,
     currentPlayer: {
       key: player.playerKey,
-      year: player.draftYear,
+      year: playerDraftYear,
       name: player.playerName,
       slug: player.slug,
       attemptIndex,
@@ -250,7 +256,7 @@ async function handleMarkResult(message) {
     state.unmatchedRows.push({
       playerKey: player.playerKey,
       playerName: player.playerName,
-      draftYear: player.draftYear,
+      draftYear: normalizeYearString(player.draftYear),
       slug: player.slug,
       lastTriedUrl: pageUrl || player.lastTriedUrl || "",
       attemptedUrlsCount,
@@ -279,7 +285,7 @@ async function handleMarkResult(message) {
       state.unmatchedRows.push({
         playerKey: player.playerKey,
         playerName: player.playerName,
-        draftYear: player.draftYear,
+        draftYear: normalizeYearString(player.draftYear),
         slug: player.slug,
         lastTriedUrl: pageUrl || player.lastTriedUrl || "",
         attemptedUrlsCount: Number(player.attemptIndex) || 1,
