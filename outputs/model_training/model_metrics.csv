@@ -1,5 +1,5 @@
 model,best_cv_rmse,test_rmse,test_mae,test_r2,best_params
 decision_tree,322.85778585206685,392.43980342435134,308.01558863471945,0.07665765433785898,"{""model__max_depth"": 2, ""model__min_samples_leaf"": 10}"
 ridge,324.8766529996912,392.5606434133341,309.86921835473413,0.0760889359956407,"{""model__alpha"": 100.0}"
-elastic_net,316.5933158417857,393.09229520528817,311.37450017343895,0.07358470333380607,"{""model__alpha"": 1.0, ""model__l1_ratio"": 0.2}"
-autogluon_extreme,,,,,"{""reason"": ""autogluon.tabular is not installed"", ""status"": ""skipped""}"
+elastic_net,316.5933158417857,393.09229520528817,311.37450017343895,0.07358470333380629,"{""model__alpha"": 1.0, ""model__l1_ratio"": 0.2}"
+autogluon_medium,,405.62802201956663,318.45723866429813,0.013555731443422148,"{""model_best"": ""WeightedEnsemble_L2"", ""presets"": ""medium""}"

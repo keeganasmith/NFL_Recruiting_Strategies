@@ -76,5 +76,6 @@
     "college_fumble_recovery_yards_z",
     "college_fumble_recovery_tds_missing",
     "college_fumble_recovery_tds_z"
-  ]
+  ],
+  "autogluon_preset": "medium"
 }
