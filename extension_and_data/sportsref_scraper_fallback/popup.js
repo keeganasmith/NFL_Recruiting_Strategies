@@ -32,6 +32,43 @@ function formatControllerStatus(response, successMessage, failurePrefix) {
   return reasonMessage(response?.reason, failurePrefix);
 }
 
+function summarizeMismatchReason(row) {
+  const expected = normalizeYearString(row?.expected_draft_year ?? "");
+  const finalSeason = normalizeYearString(row?.final_season_year ?? "");
+  if (expected && finalSeason && expected !== finalSeason) {
+    return `Final season year ${finalSeason} does not match expected draft year ${expected}`;
+  }
+  return String(row?.status || row?.resultType || "mismatch");
+}
+
+function buildLastMismatchSummary(diagnosticRows) {
+  const rows = Array.isArray(diagnosticRows) ? diagnosticRows : [];
+  const mismatchRows = rows.filter(row =>
+    String(row?.status || row?.resultType || "").toLowerCase() === "mismatch"
+  );
+  const latest = mismatchRows.length ? mismatchRows[mismatchRows.length - 1] : null;
+  if (!latest) {
+    return { label: "Last mismatch: none", payload: "" };
+  }
+
+  const reason = summarizeMismatchReason(latest);
+  const player = latest.playerName || latest.player || "unknown";
+  return {
+    label: `Last mismatch: ${player} — ${reason}`,
+    payload: JSON.stringify({
+      player: latest.player || latest.playerName || "",
+      expected_draft_year: latest.expected_draft_year || "",
+      final_season_year: latest.final_season_year || "",
+      reason,
+      page_url: latest.page_url || latest.pageUrl || "",
+      source_type: latest.source_type || "",
+      bestSeasonScore: latest.bestSeasonScore ?? "",
+      bestGameLogScoreVal: latest.bestGameLogScoreVal ?? "",
+      timestamp: latest.timestamp || ""
+    }, null, 2)
+  };
+}
+
 const NAV_THROTTLE_MS = 5000;
 let throttleTicker = null;
 
@@ -296,6 +333,7 @@ async function ensureLocalStateShape() {
     "queueState",
     "processedKeys",
     "unmatchedRows",
+    "diagnosticRows",
     "runConfig",
     "lastNavigationAt"
   ]);
@@ -317,6 +355,7 @@ async function ensureLocalStateShape() {
     queueState: normalizedQueueState,
     processedKeys: Array.isArray(current.processedKeys) ? current.processedKeys : [],
     unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
+    diagnosticRows: Array.isArray(current.diagnosticRows) ? current.diagnosticRows : [],
     runConfig: current.runConfig || {},
     lastNavigationAt: Number(current.lastNavigationAt) || 0
   });
@@ -329,6 +368,7 @@ async function refresh() {
     "queueState",
     "processedKeys",
     "unmatchedRows",
+    "diagnosticRows",
     "runConfig",
     "lastNavigationAt",
     "draftYearLookupMeta"
@@ -341,6 +381,7 @@ async function refresh() {
     ? result.processedKeys.length
     : Object.keys(result.processedKeys || {}).length;
   const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
+  const mismatchSummary = buildLastMismatchSummary(result.diagnosticRows);
   const statusCounts = countQueueStatuses(queuePlayers);
   const importMeta = result.draftYearLookupMeta || {};
   const importSummary = importMeta.filename
@@ -353,6 +394,8 @@ async function refresh() {
   document.getElementById("preview").value = queuePlayers.length
     ? JSON.stringify(queuePlayers[Math.max(0, queueState.nextIndex || 0)] || queuePlayers[0], null, 2)
     : "";
+  document.getElementById("diagLastMismatch").textContent = mismatchSummary.label;
+  document.getElementById("mismatchPreview").value = mismatchSummary.payload;
   document.getElementById("queueCounts").textContent =
     `Pending: ${statusCounts.pending} | Processing: ${statusCounts.processing} | Matched: ${statusCounts.matched} | Unmatched: ${statusCounts.unmatched} | Errors: ${statusCounts.errors}`;
   document.getElementById("diagQueueSize").textContent = `Queue size: ${queuePlayers.length}`;
@@ -426,6 +469,7 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
       "queueState",
       "processedKeys",
       "unmatchedRows",
+      "diagnosticRows",
       "runConfig"
     ]);
 
@@ -462,6 +506,7 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
       queueState: mergedQueueState,
       processedKeys: Array.from(processedSet),
       unmatchedRows: Array.isArray(current.unmatchedRows) ? current.unmatchedRows : [],
+      diagnosticRows: Array.isArray(current.diagnosticRows) ? current.diagnosticRows : [],
       runConfig: current.runConfig || {}
     });
     console.log("[combineCsvInput] after chrome.storage.local.set", {
@@ -583,7 +628,8 @@ document.getElementById("clearBtn").addEventListener("click", async () => {
     runConfig: {},
     runTabId: null,
     currentPlayer: null,
-    lastNavigationAt: 0
+    lastNavigationAt: 0,
+    diagnosticRows: []
   });
   setStatus("Cleared saved data");
   await refresh();
