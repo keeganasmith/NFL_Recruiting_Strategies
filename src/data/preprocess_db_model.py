@@ -66,13 +66,6 @@ class SplitConfig:
     test_start_year: int | None = None
 
 
-def _first_non_null(series_list: list[pd.Series]) -> pd.Series:
-    out = series_list[0].copy()
-    for series in series_list[1:]:
-        out = out.where(out.notna() & (out.astype(str).str.strip() != ""), series)
-    return out
-
-
 def _coerce_height_to_inches(series: pd.Series) -> pd.Series:
     parsed = series.astype(str).str.extract(r"(?P<feet>\d+)-(?P<inches>\d+)")
     parsed_inches = pd.to_numeric(parsed["feet"], errors="coerce") * 12 + pd.to_numeric(
@@ -143,13 +136,6 @@ def _collapse_to_player_level(df: pd.DataFrame) -> pd.DataFrame:
 def _select_and_standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
     working = df.copy()
 
-    school_candidates: list[pd.Series] = []
-    for name in ["College", "college_school", "School"]:
-        if name in working.columns:
-            school_candidates.append(working[name])
-    if school_candidates:
-        working["college_name"] = _first_non_null(school_candidates)
-
     if "Ht" in working.columns:
         working["Ht"] = _coerce_height_to_inches(working["Ht"])
     if "Broad Jump" in working.columns:
@@ -161,9 +147,9 @@ def _select_and_standardize_columns(df: pd.DataFrame) -> pd.DataFrame:
             working[source_col] = np.nan
         working[source_col] = pd.to_numeric(working[source_col], errors="coerce")
 
-    selected_columns = [
-        column for column in ["Player", "NFL_id", "Pos", "college_name"] if column in working.columns
-    ] + list(source_features.keys())
+    selected_columns = [column for column in ["Player", "NFL_id", "Pos"] if column in working.columns] + list(
+        source_features.keys()
+    )
     if "combine_year" in working.columns:
         selected_columns.append("combine_year")
     if TARGET_COLUMN in working.columns:
@@ -284,7 +270,7 @@ def preprocess_db_model_dataset(
 
     output_columns = [
         column
-        for column in ["Player", "NFL_id", "Pos", "college_name", TARGET_COLUMN, "dataset_split"]
+        for column in ["Player", "NFL_id", "Pos", TARGET_COLUMN, "dataset_split"]
         if column in processed.columns
     ] + model_inputs
     processed = processed[output_columns].copy()
