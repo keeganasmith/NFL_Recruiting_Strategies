@@ -220,6 +220,30 @@ function toCsv(rows) {
   return lines.join("\n");
 }
 
+function buildUnmatchedExportRows(unmatchedRows) {
+  return (Array.isArray(unmatchedRows) ? unmatchedRows : []).map(row => ({
+    playerKey: row.playerKey || "",
+    Player: row.Player || row.playerName || "",
+    Pos: row.Pos || row.pos || "",
+    draftYear: row.draftYear || "",
+    slug: row.slug || "",
+    attemptsTried: row.attemptsTried || row.attemptedUrlsCount || "",
+    lastTriedUrl: row.lastTriedUrl || "",
+    reason: row.reason || "",
+    timestamp: row.timestamp || row.attemptedAt || ""
+  }));
+}
+
+function downloadBlob(content, type, filename) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  chrome.downloads.download({
+    url,
+    filename,
+    saveAs: true
+  });
+}
+
 async function ensureLocalStateShape() {
   const current = await chrome.storage.local.get([
     "queueState",
@@ -264,12 +288,26 @@ async function refresh() {
     ? result.processedKeys.length
     : Object.keys(result.processedKeys || {}).length;
   const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
+  const statusCounts = queuePlayers.reduce(
+    (acc, player) => {
+      const status = String(player.status || "").toLowerCase();
+      if (status === "pending") acc.pending += 1;
+      else if (status === "processing") acc.processing += 1;
+      else if (status === "matched") acc.matched += 1;
+      else if (status === "unmatched") acc.unmatched += 1;
+      else if (status === "error") acc.errors += 1;
+      return acc;
+    },
+    { pending: 0, processing: 0, matched: 0, unmatched: 0, errors: 0 }
+  );
   document.getElementById("count").textContent = `Saved records: ${rows.length}`;
   document.getElementById("lookupCount").textContent =
     `Lookup: ${Object.keys(lookup).length} | Queue: ${queuePlayers.length} | Processed: ${processedCount} | Unmatched: ${unmatchedCount} | Run: ${result.runConfig?.status || "idle"}`;
   document.getElementById("preview").value = queuePlayers.length
     ? JSON.stringify(queuePlayers[Math.max(0, queueState.nextIndex || 0)] || queuePlayers[0], null, 2)
     : "";
+  document.getElementById("queueCounts").textContent =
+    `Pending: ${statusCounts.pending} | Processing: ${statusCounts.processing} | Matched: ${statusCounts.matched} | Unmatched: ${statusCounts.unmatched} | Errors: ${statusCounts.errors}`;
   startThrottleTicker(result.lastNavigationAt);
 }
 
@@ -347,13 +385,7 @@ document.getElementById("combineCsvInput").addEventListener("change", async even
 document.getElementById("exportCsvBtn").addEventListener("click", async () => {
   const result = await chrome.storage.local.get(["rows"]);
   const rows = result.rows || [];
-  const blob = new Blob([toCsv(rows)], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  chrome.downloads.download({
-    url,
-    filename: "sportsref_final_season_data.csv",
-    saveAs: true
-  });
+  downloadBlob(toCsv(rows), "text/csv", "sportsref_final_season_data.csv");
   setStatus(`Exported ${rows.length} rows to CSV`);
 });
 
@@ -384,16 +416,54 @@ document.getElementById("processNextBtn").addEventListener("click", async () => 
 document.getElementById("exportJsonBtn").addEventListener("click", async () => {
   const result = await chrome.storage.local.get(["rows"]);
   const rows = result.rows || [];
-  const blob = new Blob([JSON.stringify(rows, null, 2)], {
-    type: "application/json"
-  });
-  const url = URL.createObjectURL(blob);
-  chrome.downloads.download({
-    url,
-    filename: "sportsref_final_season_data.json",
-    saveAs: true
-  });
+  downloadBlob(JSON.stringify(rows, null, 2), "application/json", "sportsref_final_season_data.json");
   setStatus(`Exported ${rows.length} rows to JSON`);
+});
+
+document.getElementById("exportUnmatchedCsvBtn").addEventListener("click", async () => {
+  const result = await chrome.storage.local.get(["unmatchedRows"]);
+  const unmatchedRows = buildUnmatchedExportRows(result.unmatchedRows || []);
+  downloadBlob(toCsv(unmatchedRows), "text/csv", "unmatched_players.csv");
+  setStatus(`Exported ${unmatchedRows.length} unmatched rows to CSV`);
+});
+
+document.getElementById("exportRunStateJsonBtn").addEventListener("click", async () => {
+  const result = await chrome.storage.local.get([
+    "queueState",
+    "runConfig",
+    "processedKeys",
+    "lastNavigationAt",
+    "currentPlayer"
+  ]);
+  const queueState = result.queueState || {};
+  const players = Array.isArray(queueState.players) ? queueState.players : [];
+  const processedCount = Array.isArray(result.processedKeys)
+    ? result.processedKeys.length
+    : Object.keys(result.processedKeys || {}).length;
+  const runState = {
+    exportedAt: new Date().toISOString(),
+    runConfig: result.runConfig || {},
+    nextIndex: Number.isInteger(queueState.nextIndex) ? queueState.nextIndex : 0,
+    processedCount,
+    lastNavigationAt: Number(result.lastNavigationAt) || 0,
+    currentPlayer: result.currentPlayer || null,
+    queue: players.map(player => ({
+      playerKey: player.playerKey || "",
+      playerName: player.playerName || "",
+      pos: player.pos || "",
+      draftYear: player.draftYear || "",
+      slug: player.slug || "",
+      status: player.status || "pending",
+      attempts: Number(player.attemptIndex) || 0,
+      lastTriedUrl: player.lastTriedUrl || "",
+      matchedUrl: player.matchedUrl || "",
+      processingStartedAt: player.processingStartedAt || "",
+      updatedAt: player.updatedAt || "",
+      completedAt: player.completedAt || ""
+    }))
+  };
+  downloadBlob(JSON.stringify(runState, null, 2), "application/json", "run_state.json");
+  setStatus(`Exported run state for ${players.length} queued players`);
 });
 
 document.getElementById("clearBtn").addEventListener("click", async () => {
