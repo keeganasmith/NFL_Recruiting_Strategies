@@ -1,0 +1,27 @@
+experiment_id: db_heuristic_grid_search
+input_data: all_data.csv
+output_root: outputs/pipeline/sweeps
+split:
+  type: time
+  time_split_year: 2018
+  seed: 42
+filters:
+  positions: [CB, S]
+  era_min: 2000
+  era_max: 2025
+  minimum_snaps: 0
+calibration_bins: 10
+output_naming: "{variant_id}"
+heuristic_variants:
+  - id: baseline
+    heuristic_config: ../heuristics/nfl_production_value_baseline.yaml
+auto_grid:
+  base_heuristic_config: ../heuristics/nfl_production_value_baseline.yaml
+  output_config_dir: configs/heuristics
+  variant_prefix: db_grid
+  feature_weights:
+    defensive_totalTackles: [0.7, 1.0]
+    defensive_sacks: [1.5, 2.2]
+    defensive_interceptions: [2.5, 3.5]
+    defensive_passesDefended: [1.2, 1.8]
+    defensive_gamesPlayed: [0.3, 0.7]
