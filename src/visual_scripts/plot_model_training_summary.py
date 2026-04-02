@@ -203,7 +203,17 @@ def build_explanation_figure(
         values = df.groupby("feature")["value"].mean()
         matrix[model] = matrix.index.to_series().map(values)
 
-    filled = matrix.fillna(0.0)
+    # Normalize each model independently so that color intensity is comparable
+    # within a model while preserving signed direction.
+    normalized_matrix = matrix.copy()
+    for model in normalized_matrix.columns:
+        col = normalized_matrix[model].astype(float)
+        scale = float(np.nanmax(np.abs(col.to_numpy())))
+        if not np.isfinite(scale) or scale <= 0:
+            scale = 1.0
+        normalized_matrix[model] = col / scale
+
+    filled = normalized_matrix.fillna(0.0)
     vmax = float(np.nanmax(np.abs(filled.to_numpy())))
     vmax = max(vmax, 1e-9)
 
@@ -215,12 +225,22 @@ def build_explanation_figure(
     ax.set_xticklabels([_slug_to_label(m) for m in filled.columns], rotation=0)
     ax.set_yticks(np.arange(len(filled.index)))
     ax.set_yticklabels(filled.index)
-    ax.set_title("Global Explanation Signal Map\n(top features by |importance/coefficient|)")
+    ax.set_title("Global Explanation Signal Map\n(top features by within-model |importance/coefficient|)")
 
     cbar = fig.colorbar(image, ax=ax)
-    cbar.set_label("Signed importance / coefficient")
+    cbar.set_label("Normalized signed importance / coefficient")
 
-    fig.tight_layout()
+    fig.text(
+        0.01,
+        0.005,
+        "Note: Values are normalized within each model; raw magnitudes are not cross-model comparable.",
+        ha="left",
+        va="bottom",
+        fontsize=9,
+        color="#444444",
+    )
+
+    fig.tight_layout(rect=[0, 0.03, 1, 1])
     return fig
 
 
