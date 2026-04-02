@@ -15,17 +15,25 @@ const HEADER_ALIASES = {
   games: "g",
   team_name_abbr: "team",
   conf_abbr: "conf",
+  tackles_solo: "solo",
+  tackles_assists: "ast",
+  tackles_combined: "comb",
+  tackles_loss: "tfl",
+  sacks: "sk",
   def_int: "int",
-  def_int_yds: "yds",
+  def_int_yds: "int_yds",
   def_int_td: "inttd",
-  def_int_yds_per_int: "avg",
+  def_int_yds_per_int: "int_yds_per_int",
+  fumbles_forced: "ff",
+  fumbles_rec: "fr",
+  fumbles_rec_yds: "fr_yds",
+  fumbles_rec_td: "frtd",
   int_td: "inttd",
   inttd: "inttd",
-  int_yds: "yds",
-  int_yds_: "yds",
-  interception_yds: "yds",
-  interception_yards: "yds",
-  yds: "yds",
+  int_yds: "int_yds",
+  int_yds_: "int_yds",
+  interception_yds: "int_yds",
+  interception_yards: "int_yds",
   yards: "yds",
   pass_defended: "pd",
   passes_defended: "pd",
@@ -137,13 +145,26 @@ function seasonScoreDetails(table, options = {}) {
     };
   }
 
-  const sparseSubset = ["int", "inttd", "yds", "pd"];
+  const sparseSubset = ["int", "inttd", "int_yds", "pd"];
   let sparseSubsetHits = 0;
   for (const k of sparseSubset) if (hs.has(k)) sparseSubsetHits += 1;
   if (sparseSubsetHits >= minSparseSubsetKeys) {
     return {
       score: sparseSubsetHits,
       reason: "accepted_sparse_defensive_summary",
+      headers,
+      statKeyScore: score,
+      sparseSubsetHits
+    };
+  }
+
+  const optionalStatKeys = ["inttd", "int_yds", "fr_yds", "frtd", "yds", "awards"];
+  let optionalStatHits = 0;
+  for (const k of optionalStatKeys) if (hs.has(k)) optionalStatHits += 1;
+  if (score + optionalStatHits > 0) {
+    return {
+      score: Math.max(score, optionalStatHits),
+      reason: "accepted_minimal_defensive_stats",
       headers,
       statKeyScore: score,
       sparseSubsetHits
@@ -273,7 +294,21 @@ function aggregateGameLog(table) {
     class: ""
   };
 
-  const sumFields = ["solo", "ast", "comb", "tfl", "sk", "int", "pd", "ff", "fr", "yds", "inttd", "frtd"];
+  const sumFields = [
+    "solo",
+    "ast",
+    "comb",
+    "tfl",
+    "sk",
+    "int",
+    "pd",
+    "ff",
+    "fr",
+    "int_yds",
+    "inttd",
+    "fr_yds",
+    "frtd"
+  ];
   for (const field of sumFields) {
     total[field] = String(rawRows.reduce((acc, r) => acc + parseNum(r[field]), 0));
   }
@@ -460,12 +495,12 @@ async function scrapePage() {
         tfl: row.tfl || "",
         sacks: row.sk || "",
         interceptions: row.int || "",
-        interception_yards: row.yds || "",
+        interception_yards: row.int_yds || row.yds || "",
         interception_tds: row.inttd || "",
         passes_defended: row.pd || "",
         forced_fumbles: row.ff || "",
         fumble_recoveries: row.fr || "",
-        fumble_recovery_yards: row.yds_2 || row.yds_3 || "",
+        fumble_recovery_yards: row.fr_yds || row.yds_2 || row.yds_3 || "",
         fumble_recovery_tds: row.frtd || "",
         awards: row.awards || "",
         scraped_at: new Date().toISOString()
