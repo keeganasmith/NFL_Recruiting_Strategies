@@ -228,7 +228,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--input-csv",
         type=Path,
-        default=Path("db_model_preprocessed.csv"),
+        default=Path("./artifacts/db_model_preprocessed.csv"),
         help="Path to preprocessed CSV with dataset_split and NFL_production_value columns.",
     )
     parser.add_argument(
