@@ -285,10 +285,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             output_dir / f"{model_name}_test_predictions.csv", index=False
         )
 
+    autogluon_model_name = "autogluon_extreme"
     if TabularPredictor is None:
         metrics_records.append(
             {
-                "model": "autogluon_medium",
+                "model": autogluon_model_name,
                 "best_cv_rmse": np.nan,
                 "test_rmse": np.nan,
                 "test_mae": np.nan,
@@ -300,15 +301,16 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             }
         )
         pd.DataFrame(columns=["feature", "importance", "abs_value"]).to_csv(
-            output_dir / "autogluon_medium_global_explanations.csv",
+            output_dir / f"{autogluon_model_name}_global_explanations.csv",
             index=False,
         )
     else:
-        autogluon_path = output_dir / "autogluon_medium_predictor"
+        autogluon_path = output_dir / f"{autogluon_model_name}_predictor"
+        train_val_ag = train_val_df.loc[valid_train_val_mask, feature_columns + [TARGET_COLUMN]]
 
         fit_kwargs = {
-            "train_data": df,
-            "presets": "medium",
+            "train_data": train_val_ag,
+            "presets": "extreme",
         }
 
         predictor = TabularPredictor(
@@ -330,11 +332,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             explanation_df["feature"].astype(str).tolist(),
             forbidden_columns=identity_columns,
         )
-        explanation_df.to_csv(output_dir / "autogluon_medium_global_explanations.csv", index=False)
+        explanation_df.to_csv(output_dir / f"{autogluon_model_name}_global_explanations.csv", index=False)
 
         metrics_records.append(
             {
-                "model": "autogluon_medium",
+                "model": autogluon_model_name,
                 "best_cv_rmse": np.nan,
                 "test_rmse": ag_rmse,
                 "test_mae": ag_mae,
@@ -342,7 +344,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
                 "best_params": json.dumps(
                     {
                         "model_best": predictor.model_best,
-                        "presets": "medium",
+                        "presets": "extreme",
                     },
                     sort_keys=True,
                 ),
@@ -350,10 +352,10 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
         )
 
         ag_predictions_df = test_df.loc[valid_test_mask].copy()
-        ag_predictions_df["autogluon_meidum_prediction"] = ag_predictions.to_numpy()
+        ag_predictions_df[f"{autogluon_model_name}_prediction"] = ag_predictions.to_numpy()
         ag_predictions_df[
-            [SPLIT_COLUMN, TARGET_COLUMN, "autogluon_medium_prediction"]
-        ].to_csv(output_dir / "autogluon_medium_test_predictions.csv", index=False)
+            [SPLIT_COLUMN, TARGET_COLUMN, f"{autogluon_model_name}_prediction"]
+        ].to_csv(output_dir / f"{autogluon_model_name}_test_predictions.csv", index=False)
 
     metrics_df = pd.DataFrame(metrics_records).sort_values("test_rmse")
     metrics_df.to_csv(output_dir / "model_metrics.csv", index=False)
