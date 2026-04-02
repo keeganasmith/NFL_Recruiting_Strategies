@@ -1,0 +1,16 @@
+experiment_id: default_heuristic_sweep
+input_data: all_data.csv
+output_root: outputs/pipeline/sweeps
+split:
+  type: random
+  seed: 42
+filters:
+  positions: [CB, S]
+  era_min: 2000
+  era_max: 2025
+  minimum_snaps: 0
+calibration_bins: 10
+output_naming: "{variant_id}"
+heuristic_variants:
+  - id: baseline
+    heuristic_config: ../heuristics/nfl_production_value_baseline.yaml
