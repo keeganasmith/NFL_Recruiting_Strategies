@@ -8,11 +8,11 @@ import pandas as pd
 
 
 REQUIRED_FEATURES = {
-    "offense_yards",
-    "touchdowns",
-    "defense_impact",
-    "special_teams_impact",
-    "availability_factor",
+    "defensive_totalTackles",
+    "defensive_sacks",
+    "defensive_interceptions",
+    "defensive_passesDefended",
+    "defensive_gamesPlayed",
 }
 SUPPORTED_ROLES = {"CB", "S", "slot", "outside"}
 
@@ -59,7 +59,6 @@ class ExperimentConfig:
     variants: list[dict[str, Any]]
 
 
-
 def _load_yaml(path: Path) -> dict[str, Any]:
     try:
         import yaml  # type: ignore
@@ -74,13 +73,11 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return data
 
 
-
 def _coerce_float(value: Any, field_name: str) -> float:
     try:
         return float(value)
     except (TypeError, ValueError) as exc:
         raise ValueError(f"Field '{field_name}' must be numeric. Got: {value!r}") from exc
-
 
 
 def _validate_bin_rules(feature: str, bins: Any) -> list[BinRule]:
@@ -118,7 +115,6 @@ def _validate_bin_rules(feature: str, bins: Any) -> list[BinRule]:
         out.append(BinRule(min=min_v, max=max_v, value=value))
 
     return out
-
 
 
 def load_heuristic_config(path: str | Path) -> HeuristicConfig:
@@ -221,7 +217,6 @@ def load_heuristic_config(path: str | Path) -> HeuristicConfig:
     )
 
 
-
 def validate_heuristic_inputs(df: pd.DataFrame, config: HeuristicConfig) -> None:
     missing_cols = sorted(REQUIRED_FEATURES - set(df.columns))
     if missing_cols:
@@ -237,7 +232,6 @@ def validate_heuristic_inputs(df: pd.DataFrame, config: HeuristicConfig) -> None
                 raise ValueError(
                     f"Column '{feature}' is non-numeric and cannot be scored with weight {weight}."
                 )
-
 
 
 def load_experiment_config(path: str | Path) -> ExperimentConfig:
@@ -258,7 +252,7 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
     if split_type not in {"random", "time"}:
         raise ValueError("split.type must be one of ['random', 'time'].")
     seed = int(split_cfg.get("seed", 42))
-    time_split_year = split_cfg.get("time_split_year")
+    time_split_year = split_cfg.get("time_split_year", None)
     if time_split_year is not None:
         time_split_year = int(time_split_year)
 
@@ -267,7 +261,7 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
         raise ValueError("'filters' must be a mapping.")
     positions = filters_cfg.get("positions")
     if positions is not None and not isinstance(positions, list):
-        raise ValueError("filters.positions must be a list of position codes if provided.")
+        raise ValueError("filters.positions must be a list when provided.")
 
     variants = cfg.get("heuristic_variants")
     if not isinstance(variants, list) or not variants:
@@ -275,27 +269,25 @@ def load_experiment_config(path: str | Path) -> ExperimentConfig:
     for idx, variant in enumerate(variants):
         if not isinstance(variant, dict):
             raise ValueError(f"heuristic_variants[{idx}] must be an object.")
-        if not isinstance(variant.get("id"), str) or not variant["id"].strip():
-            raise ValueError(f"heuristic_variants[{idx}] must contain non-empty string 'id'.")
-        if "heuristic_config" not in variant:
+        if "id" not in variant or "heuristic_config" not in variant:
             raise ValueError(
-                f"heuristic_variants[{idx}] missing required field 'heuristic_config'."
+                f"heuristic_variants[{idx}] must define 'id' and 'heuristic_config'."
             )
 
     return ExperimentConfig(
         experiment_id=experiment_id,
         input_data=str(cfg.get("input_data", "all_data.csv")),
         output_root=str(cfg.get("output_root", "outputs/pipeline/sweeps")),
-        split=SplitStrategy(
-            type=split_type,
-            seed=seed,
-            time_split_year=time_split_year,
-        ),
+        split=SplitStrategy(type=split_type, seed=seed, time_split_year=time_split_year),
         filters=SharedFilters(
             positions=positions,
-            era_min=filters_cfg.get("era_min"),
-            era_max=filters_cfg.get("era_max"),
-            minimum_snaps=filters_cfg.get("minimum_snaps"),
+            era_min=int(filters_cfg["era_min"]) if filters_cfg.get("era_min") is not None else None,
+            era_max=int(filters_cfg["era_max"]) if filters_cfg.get("era_max") is not None else None,
+            minimum_snaps=(
+                int(filters_cfg["minimum_snaps"])
+                if filters_cfg.get("minimum_snaps") is not None
+                else None
+            ),
         ),
         calibration_bins=int(cfg.get("calibration_bins", 10)),
         output_naming=str(cfg.get("output_naming", "{variant_id}")),

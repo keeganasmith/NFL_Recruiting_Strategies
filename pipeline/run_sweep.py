@@ -44,8 +44,8 @@ def _apply_filters(df: pd.DataFrame, filters: dict[str, Any]) -> pd.DataFrame:
         out = out[pd.to_numeric(out["combine_year"], errors="coerce") <= int(era_max)]
 
     minimum_snaps = filters.get("minimum_snaps")
-    if minimum_snaps is not None and "games_played_any" in out.columns:
-        out = out[out["games_played_any"] >= int(minimum_snaps)]
+    if minimum_snaps is not None and "defensive_gamesPlayed" in out.columns:
+        out = out[out["defensive_gamesPlayed"] >= int(minimum_snaps)]
 
     return out
 

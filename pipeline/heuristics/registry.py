@@ -26,11 +26,11 @@ def _from_legacy_json(path: Path) -> HeuristicConfig:
     return HeuristicConfig(
         heuristic_id=key,
         feature_weights={
-            "offense_yards": float(params.get("offense_weight", 1.0)),
-            "touchdowns": float(params.get("touchdowns_weight", 10.0)),
-            "defense_impact": float(params.get("defense_weight", 1.0)),
-            "special_teams_impact": float(params.get("special_teams_weight", 0.5)),
-            "availability_factor": float(params.get("availability_weight", 20.0)),
+            "defensive_totalTackles": float(params.get("total_tackles_weight", 1.0)),
+            "defensive_sacks": float(params.get("sacks_weight", 2.0)),
+            "defensive_interceptions": float(params.get("interceptions_weight", 3.0)),
+            "defensive_passesDefended": float(params.get("passes_defended_weight", 1.5)),
+            "defensive_gamesPlayed": float(params.get("games_played_weight", 0.5)),
         },
         thresholds={},
         role_overrides={},
