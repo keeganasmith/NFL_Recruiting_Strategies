@@ -1,7 +1,7 @@
 {
   "input_csv": "outputs/pipeline/sweeps/db_heuristic_grid_search/best_heuristic_scored_players.csv",
   "row_count": 3384,
-  "split_mode": "draft_year",
+  "split_mode": "random",
   "seed": 42,
   "feature_groups": {
     "combine": [
