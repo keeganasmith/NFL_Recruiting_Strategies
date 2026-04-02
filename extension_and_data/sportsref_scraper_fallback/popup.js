@@ -69,6 +69,60 @@ function buildLastMismatchSummary(diagnosticRows) {
   };
 }
 
+function normalizeDiagnosticStatus(row) {
+  const raw = String(row?.status || row?.resultType || "").toLowerCase().trim();
+  return ["mismatch", "no_table", "error", "not_found_404"].includes(raw) ? raw : "";
+}
+
+function diagnosticReason(row, status) {
+  if (status === "mismatch") return summarizeMismatchReason(row);
+  return (
+    String(row?.reason || row?.error || row?.message || row?.statusDetail || "").trim() ||
+    status ||
+    "unknown"
+  );
+}
+
+function buildDiagnosticAggregateSummary(diagnosticRows) {
+  const rows = Array.isArray(diagnosticRows) ? diagnosticRows : [];
+  const statusTotals = { mismatch: 0, no_table: 0, error: 0, not_found_404: 0 };
+  const reasonCounts = new Map();
+
+  for (const row of rows) {
+    const status = normalizeDiagnosticStatus(row);
+    if (!status) continue;
+    statusTotals[status] += 1;
+    const reason = diagnosticReason(row, status);
+    reasonCounts.set(reason, (reasonCounts.get(reason) || 0) + 1);
+  }
+
+  const totalTracked = Object.values(statusTotals).reduce((sum, count) => sum + count, 0);
+  const statusLabel = totalTracked
+    ? `Status summary: mismatch=${statusTotals.mismatch}, no_table=${statusTotals.no_table}, error=${statusTotals.error}, not_found_404=${statusTotals.not_found_404}`
+    : "Status summary: none";
+
+  const topReasons = Array.from(reasonCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3);
+  const reasonsLabel = topReasons.length
+    ? `Top reasons: ${topReasons.map(([reason, count]) => `${count}× ${reason}`).join(" | ")}`
+    : "Top reasons: none";
+
+  return { statusLabel, reasonsLabel };
+}
+
+function buildDiagnosticDebugRows(diagnosticRows, limit = 10) {
+  const rows = Array.isArray(diagnosticRows) ? diagnosticRows : [];
+  return rows.slice(0, limit).map(row => ({
+    player: row.player || row.playerName || "",
+    draftYear: normalizeYearString(
+      row.draftYear || row.draft_year || row.expected_draft_year || row.final_season_year || ""
+    ),
+    url: row.page_url || row.pageUrl || row.url || "",
+    resultType: row.resultType || row.status || ""
+  }));
+}
+
 const NAV_THROTTLE_MS = 5000;
 let throttleTicker = null;
 
@@ -382,6 +436,7 @@ async function refresh() {
     : Object.keys(result.processedKeys || {}).length;
   const unmatchedCount = Array.isArray(result.unmatchedRows) ? result.unmatchedRows.length : 0;
   const mismatchSummary = buildLastMismatchSummary(result.diagnosticRows);
+  const diagnosticAggregate = buildDiagnosticAggregateSummary(result.diagnosticRows);
   const statusCounts = countQueueStatuses(queuePlayers);
   const importMeta = result.draftYearLookupMeta || {};
   const importSummary = importMeta.filename
@@ -402,6 +457,8 @@ async function refresh() {
   document.getElementById("diagPending").textContent = `Pending: ${statusCounts.pending}`;
   document.getElementById("diagImportMeta").textContent = `Last import: ${importSummary}`;
   document.getElementById("diagRunStatus").textContent = `Run status: ${runStatus}`;
+  document.getElementById("diagStatusSummary").textContent = diagnosticAggregate.statusLabel;
+  document.getElementById("diagTopReasons").textContent = diagnosticAggregate.reasonsLabel;
   startThrottleTicker(result.lastNavigationAt);
 }
 
@@ -617,6 +674,13 @@ document.getElementById("exportRunStateJsonBtn").addEventListener("click", async
   };
   downloadBlob(JSON.stringify(runState, null, 2), "application/json", "run_state.json");
   setStatus(`Exported run state for ${players.length} queued players`);
+});
+
+document.getElementById("exportDiagDebugCsvBtn").addEventListener("click", async () => {
+  const result = await chrome.storage.local.get(["diagnosticRows"]);
+  const debugRows = buildDiagnosticDebugRows(result.diagnosticRows, 10);
+  downloadBlob(toCsv(debugRows), "text/csv", "diagnostic_debug_top10.csv");
+  setStatus(`Exported ${debugRows.length} diagnostic sample rows to CSV`);
 });
 
 document.getElementById("clearBtn").addEventListener("click", async () => {
