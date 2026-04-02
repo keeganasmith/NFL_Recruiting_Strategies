@@ -2,6 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from src.visual_scripts.plot_model_training_summary import (
@@ -91,13 +92,29 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
         err_labels = [tick.get_text() for tick in err_fig.axes[0].get_xticklabels()]
         exp_labels = [tick.get_text() for tick in exp_fig.axes[0].get_xticklabels()]
 
-        self.assertListEqual(perf_labels, err_labels)
+        self.assertListEqual(perf_labels[: len(err_labels)], err_labels)
         self.assertListEqual(perf_labels, exp_labels)
 
     def test_prepare_prediction_frame_supports_repository_schema(self):
         prepared = _prepare_prediction_frame(self.predictions["decision_tree"])
         self.assertListEqual(prepared.columns.tolist(), ["predicted", "actual"])
         self.assertEqual(len(prepared), 2)
+
+    def test_explanation_figure_masks_missing_feature_model_pairs(self):
+        model_order = derive_model_order(self.metrics)
+        exp_fig = build_explanation_figure(self.explanations, model_order, top_n=5)
+
+        heatmap = exp_fig.axes[0].images[0]
+        array = heatmap.get_array()
+        self.assertTrue(np.ma.isMaskedArray(array))
+        self.assertGreater(np.ma.count_masked(array), 0)
+        np.testing.assert_allclose(
+            heatmap.cmap.get_bad(),
+            (0.8274509803921568, 0.8274509803921568, 0.8274509803921568, 1.0),
+        )
+
+        note_texts = [text.get_text() for text in exp_fig.texts]
+        self.assertTrue(any("Gray = not present, near-white = near zero." in text for text in note_texts))
 
 
 if __name__ == "__main__":

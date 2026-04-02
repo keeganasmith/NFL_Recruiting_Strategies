@@ -198,7 +198,11 @@ def build_explanation_figure(
     if not top_features:
         raise ValueError("No features available after ranking explanation values.")
 
-    matrix = pd.DataFrame(index=sorted(top_features), columns=list(usable.keys()), dtype=float)
+    display_models = [model for model in model_order]
+    if not display_models:
+        display_models = list(usable.keys())
+
+    matrix = pd.DataFrame(index=sorted(top_features), columns=display_models, dtype=float)
     for model, df in usable.items():
         values = df.groupby("feature")["value"].mean()
         matrix[model] = matrix.index.to_series().map(values)
@@ -208,23 +212,29 @@ def build_explanation_figure(
     normalized_matrix = matrix.copy()
     for model in normalized_matrix.columns:
         col = normalized_matrix[model].astype(float)
-        scale = float(np.nanmax(np.abs(col.to_numpy())))
+        observed_abs = np.abs(col.to_numpy()[~np.isnan(col.to_numpy())])
+        scale = float(np.nanmax(observed_abs)) if observed_abs.size else 1.0
         if not np.isfinite(scale) or scale <= 0:
             scale = 1.0
         normalized_matrix[model] = col / scale
 
-    filled = normalized_matrix.fillna(0.0)
-    vmax = float(np.nanmax(np.abs(filled.to_numpy())))
+    observed = normalized_matrix.to_numpy(dtype=float)
+    observed_abs = np.abs(observed[~np.isnan(observed)])
+    vmax = float(np.nanmax(observed_abs)) if observed_abs.size else 1.0
     vmax = max(vmax, 1e-9)
 
-    fig_height = max(4.8, 0.35 * len(filled))
-    fig, ax = plt.subplots(figsize=(10.5, fig_height))
-    image = ax.imshow(filled.to_numpy(), aspect="auto", cmap="coolwarm", vmin=-vmax, vmax=vmax)
+    masked = np.ma.masked_invalid(observed)
 
-    ax.set_xticks(np.arange(len(filled.columns)))
-    ax.set_xticklabels([_slug_to_label(m) for m in filled.columns], rotation=0)
-    ax.set_yticks(np.arange(len(filled.index)))
-    ax.set_yticklabels(filled.index)
+    fig_height = max(4.8, 0.35 * len(normalized_matrix))
+    fig, ax = plt.subplots(figsize=(10.5, fig_height))
+    cmap = plt.get_cmap("coolwarm").copy()
+    cmap.set_bad("#d3d3d3")
+    image = ax.imshow(masked, aspect="auto", cmap=cmap, vmin=-vmax, vmax=vmax)
+
+    ax.set_xticks(np.arange(len(normalized_matrix.columns)))
+    ax.set_xticklabels([_slug_to_label(m) for m in normalized_matrix.columns], rotation=0)
+    ax.set_yticks(np.arange(len(normalized_matrix.index)))
+    ax.set_yticklabels(normalized_matrix.index)
     ax.set_title("Global Explanation Signal Map\n(top features by within-model |importance/coefficient|)")
 
     cbar = fig.colorbar(image, ax=ax)
@@ -233,7 +243,8 @@ def build_explanation_figure(
     fig.text(
         0.01,
         0.005,
-        "Note: Values are normalized within each model; raw magnitudes are not cross-model comparable.",
+        "Note: Values are normalized within each model; raw magnitudes are not cross-model comparable. "
+        "Gray = not present, near-white = near zero.",
         ha="left",
         va="bottom",
         fontsize=9,
