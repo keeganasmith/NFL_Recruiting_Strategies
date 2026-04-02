@@ -17,6 +17,12 @@ from sklearn.tree import DecisionTreeRegressor
 
 TARGET_COLUMN = "NFL_production_value"
 SPLIT_COLUMN = "dataset_split"
+EXPLICIT_IDENTITY_COLUMNS = {
+    "Player",
+    "NFL_id",
+    "player_id",
+    "record_id",
+}
 
 
 def _build_preprocessor(
@@ -45,6 +51,44 @@ def _build_preprocessor(
         ],
         remainder="drop",
     )
+
+
+def _looks_like_identity_column(column_name: str) -> bool:
+    normalized = column_name.strip().lower()
+    if normalized in {value.lower() for value in EXPLICIT_IDENTITY_COLUMNS}:
+        return True
+    return normalized.endswith("_id")
+
+
+def _resolve_identity_columns(columns: list[str]) -> list[str]:
+    return sorted({column for column in columns if _looks_like_identity_column(column)})
+
+
+def _assert_no_forbidden_features(
+    transformed_feature_names: list[str] | np.ndarray,
+    forbidden_columns: list[str],
+) -> None:
+    if not forbidden_columns:
+        return
+
+    normalized_forbidden = {column.lower() for column in forbidden_columns}
+    violations: list[str] = []
+    for feature_name in transformed_feature_names:
+        lowered = str(feature_name).lower()
+        if any(
+            lowered == forbidden
+            or lowered.endswith(f"__{forbidden}")
+            or lowered.startswith(f"{forbidden}_")
+            or f"__{forbidden}_" in lowered
+            for forbidden in normalized_forbidden
+        ):
+            violations.append(str(feature_name))
+
+    if violations:
+        raise ValueError(
+            "Forbidden identity features detected in model matrix after preprocessing: "
+            f"{sorted(set(violations))}"
+        )
 
 
 def _build_searches(X_train_val: pd.DataFrame, cv_strategy: PredefinedSplit | KFold) -> dict[str, GridSearchCV]:
@@ -152,10 +196,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
     train_df, val_df, test_df = _prepare_splits(df)
 
     train_val_df = pd.concat([train_df, val_df], axis=0, ignore_index=True)
+    identity_columns = _resolve_identity_columns(train_val_df.columns.tolist())
     feature_columns = [
         column
         for column in train_val_df.columns
-        if column not in {TARGET_COLUMN, SPLIT_COLUMN}
+        if column not in {TARGET_COLUMN, SPLIT_COLUMN} and column not in identity_columns
     ]
 
     X_train_val = train_val_df[feature_columns]
@@ -191,6 +236,8 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
     for model_name, search in searches.items():
         search.fit(X_train_val, y_train_val)
         best_pipeline = search.best_estimator_
+        transformed_feature_names = best_pipeline.named_steps["preprocessor"].get_feature_names_out()
+        _assert_no_forbidden_features(transformed_feature_names, forbidden_columns=identity_columns)
 
         predictions = best_pipeline.predict(X_test)
         rmse = float(np.sqrt(mean_squared_error(y_test, predictions)))
@@ -219,6 +266,19 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
 
     metrics_df = pd.DataFrame(metrics_records).sort_values("test_rmse")
     metrics_df.to_csv(output_dir / "model_metrics.csv", index=False)
+    (output_dir / "training_manifest.json").write_text(
+        json.dumps(
+            {
+                "input_csv": str(input_csv),
+                "target_column": TARGET_COLUMN,
+                "split_column": SPLIT_COLUMN,
+                "excluded_identity_columns": identity_columns,
+                "model_feature_columns": feature_columns,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
 
 
 def parse_args() -> argparse.Namespace:
