@@ -256,7 +256,11 @@ def _save_predicted_vs_expected_scatterplot(
     (output_dir / f"predicted_vs_expected_{model_name}.svg").write_text(svg_markup, encoding="utf-8")
 
 
-def train_models(input_csv: Path, output_dir: Path) -> None:
+def train_models(
+    input_csv: Path,
+    output_dir: Path,
+    autogluon_preset: str = "extreme",
+) -> None:
     df = pd.read_csv(input_csv)
 
     required_columns = {TARGET_COLUMN, SPLIT_COLUMN}
@@ -340,7 +344,11 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
             model_name=model_name,
         )
 
-    autogluon_model_name = "autogluon_extreme"
+    autogluon_preset = autogluon_preset.strip().lower()
+    if autogluon_preset not in {"extreme", "medium"}:
+        raise ValueError("autogluon_preset must be one of: 'extreme', 'medium'.")
+
+    autogluon_model_name = f"autogluon_{autogluon_preset}"
     if TabularPredictor is None:
         metrics_records.append(
             {
@@ -365,7 +373,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
 
         fit_kwargs = {
             "train_data": train_val_ag,
-            "presets": "extreme",
+            "presets": autogluon_preset,
         }
 
         predictor = TabularPredictor(
@@ -399,7 +407,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
                 "best_params": json.dumps(
                     {
                         "model_best": predictor.model_best,
-                        "presets": "extreme",
+                        "presets": autogluon_preset,
                     },
                     sort_keys=True,
                 ),
@@ -427,6 +435,7 @@ def train_models(input_csv: Path, output_dir: Path) -> None:
                 "split_column": SPLIT_COLUMN,
                 "excluded_identity_columns": identity_columns,
                 "model_feature_columns": feature_columns,
+                "autogluon_preset": autogluon_preset,
             },
             indent=2,
         ),
@@ -450,12 +459,26 @@ def parse_args() -> argparse.Namespace:
         default=Path("outputs/model_training"),
         help="Directory where tuned model artifacts are written.",
     )
+    parser.add_argument(
+        "--autogluon-preset",
+        type=str,
+        choices=["medium", "extreme"],
+        default="extreme",
+        help=(
+            "AutoGluon training quality preset. Use 'medium' for faster/lighter training "
+            "or 'extreme' for highest-quality training."
+        ),
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    train_models(input_csv=args.input_csv, output_dir=args.output_dir)
+    train_models(
+        input_csv=args.input_csv,
+        output_dir=args.output_dir,
+        autogluon_preset=args.autogluon_preset,
+    )
 
 
 if __name__ == "__main__":
