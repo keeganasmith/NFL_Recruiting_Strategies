@@ -125,6 +125,7 @@
     "college_fumble_recovery_yards_missing",
     "college_fumble_recovery_tds_missing"
   ],
+  "retained_raw_feature_columns": [],
   "imputation_and_scaling": {
     "forty_yard_sec": {
       "median": 4.49,

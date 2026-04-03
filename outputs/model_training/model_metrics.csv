@@ -1,5 +1,8 @@
-model,best_cv_rmse,test_rmse,test_mae,test_r2,best_params
-decision_tree,322.85778585206685,392.43980342435134,308.01558863471945,0.07665765433785898,"{""model__max_depth"": 2, ""model__min_samples_leaf"": 10}"
-ridge,324.8766529996912,392.5606434133341,309.86921835473413,0.0760889359956407,"{""model__alpha"": 100.0}"
-elastic_net,316.5933158417857,393.09229520528817,311.37450017343895,0.07358470333380629,"{""model__alpha"": 1.0, ""model__l1_ratio"": 0.2}"
-autogluon_medium,,405.62802201956663,318.45723866429813,0.013555731443422148,"{""model_best"": ""WeightedEnsemble_L2"", ""presets"": ""medium""}"
+model,best_cv_rmse,test_rmse,test_mae,test_r2,target_transform,calibration_method,sample_weighting,best_params
+gbm_huber,1.19303171007391,398.04032658315765,308.70389626721504,0.050115497599875436,log1p,isotonic_residual,high_production>=p75:2x,"{""model__alpha"": 0.95, ""model__learning_rate"": 0.1, ""model__max_depth"": 2, ""model__n_estimators"": 100}"
+huber_linear,1.2431910351743118,406.2408866537961,311.852438786847,0.010572636162187732,log1p,isotonic_residual,high_production>=p75:2x,"{""model__alpha"": 0.001, ""model__epsilon"": 2.0}"
+ridge,1.209255069317887,406.8110610610429,310.1090611723324,0.007793289821410698,log1p,isotonic_residual,high_production>=p75:2x,"{""model__alpha"": 100.0}"
+gbm_quantile,1.320452945985101,411.20204329253596,309.97708928848084,-0.013741398726396792,log1p,isotonic_residual,high_production>=p75:2x,"{""model__alpha"": 0.5, ""model__learning_rate"": 0.03, ""model__max_depth"": 3, ""model__n_estimators"": 200}"
+autogluon_medium,,413.4899470381087,313.2680082290816,-0.025053575422788743,log1p,isotonic_residual,not_applied,"{""model_best"": ""WeightedEnsemble_L2"", ""presets"": ""medium""}"
+elastic_net,1.1749385490413777,416.9516057456057,318.191824248774,-0.04228852327716881,log1p,isotonic_residual,high_production>=p75:2x,"{""model__alpha"": 0.1, ""model__l1_ratio"": 1.0}"
+decision_tree,1.2142105245311974,430.1002991940633,326.45862645026574,-0.10906281314134758,log1p,isotonic_residual,high_production>=p75:2x,"{""model__max_depth"": 3, ""model__min_samples_leaf"": 20}"
