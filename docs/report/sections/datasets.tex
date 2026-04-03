@@ -8,13 +8,13 @@ This project uses a layered data pipeline that starts from merged raw records an
 \setlength{\tabcolsep}{5pt}
 \caption{Source-to-model lineage for the DB modeling dataset.}
 \label{tab:source-lineage}
-\begin{tabular}{p{0.20\linewidth} p{0.33\linewidth} p{0.40\linewidth}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.20\linewidth} >{\raggedright\arraybackslash}p{0.33\linewidth} >{\raggedright\arraybackslash}p{0.40\linewidth}}
 \hline
 \textbf{Layer} & \textbf{Primary files} & \textbf{Role in pipeline} \\
 \hline
-Raw / merged base data & \texttt{all\_data.csv}; \texttt{NFL\_data/combine\_with\_college\_stats.csv}; \texttt{extension\_and\_data/*.csv} & Core player-level records combining NFL season logs, combine measurements, and college statistics used for feature derivation and heuristic scoring. \\
-Heuristic sweep outputs & \texttt{outputs/pipeline/sweeps/db\_heuristic\_grid\_search/*} (especially \texttt{best\_heuristic\_scored\_players.csv}) & Contains per-player/per-season heuristic outputs, including \texttt{NFL\_production\_value}, after evaluating candidate scoring configurations. \\
-Modeling table & \texttt{artifacts/db\_model\_preprocessed.csv} & Final supervised-learning table with target, split labels, standardized predictors (\texttt{\_z}), and missingness indicators (\texttt{\_missing}). \\
+Raw / merged base data & \path|all_data.csv|; \path|NFL_data/combine_with_college_stats.csv|; \path|extension_and_data/*.csv| & Core player-level records combining NFL season logs, combine measurements, and college statistics used for feature derivation and heuristic scoring. \\
+Heuristic sweep outputs & \path|outputs/pipeline/sweeps/db_heuristic_grid_search/*| (especially \path|best_heuristic_scored_players.csv|) & Contains per-player/per-season heuristic outputs, including \path|NFL_production_value|, after evaluating candidate scoring configurations. \\
+Modeling table & \path|artifacts/db_model_preprocessed.csv| & Final supervised-learning table with target, split labels, standardized predictors (\path|_z|), and missingness indicators (\path|_missing|). \\
 \hline
 \end{tabular}
 \end{table}
