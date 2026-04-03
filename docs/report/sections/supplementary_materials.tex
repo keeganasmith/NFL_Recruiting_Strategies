@@ -1,0 +1,22 @@
+\textbf{External-source acknowledgments (data and code).}
+\begin{itemize}
+  \item \textbf{Sports Reference / Pro-Football-Reference-derived data:} the repository includes multiple \texttt{sportsref\_*} files in \texttt{extension\_and\_data/} and related scraping/matching utilities, which should be cited in the final submission as external data dependencies.
+  \item \textbf{Combine and NFL player records:} raw and merged tables under \texttt{combine\_data/}, \texttt{NFL\_data/}, and \texttt{all\_data.csv} aggregate externally sourced football statistics and identifiers; these should be acknowledged in the data provenance statement.
+  \item \textbf{External code libraries:} model training depends on open-source packages listed in \texttt{requirements.txt}, notably \texttt{scikit-learn} and \texttt{autogluon}. Include package-level attribution in the submission appendix/environment manifest as required by the competition rules.
+\end{itemize}
+
+\textbf{Optional supplementary bundle (recommended from \texttt{outputs/}).}
+\begin{itemize}
+  \item \texttt{outputs/pipeline/sweeps/db\_heuristic\_grid\_search/comparison\_table.csv}
+  \item \texttt{outputs/pipeline/sweeps/db\_heuristic\_grid\_search/comparison\_summary.md}
+  \item \texttt{outputs/pipeline/sweeps/db\_heuristic\_grid\_search/sweep\_manifest.json}
+  \item \texttt{outputs/model\_training/model\_metrics.csv}
+  \item \texttt{outputs/model\_training/*\_global\_explanations.csv}
+  \item \texttt{outputs/model\_training/*\_test\_predictions.csv}
+  \item \texttt{outputs/model\_training/training\_manifest.json}
+  \item \texttt{outputs/visualizations/model\_diagnostics.pdf} and \texttt{outputs/visualizations/model\_performance.png}
+  \item \texttt{outputs/visualizations/overperformer\_quadrant.html} (interactive dashboard-style artifact)
+  \item \texttt{outputs/model\_effects/standardized\_effects.csv}
+\end{itemize}
+
+\textbf{Competition submission note.} Before final upload, confirm the required executable artifact format (for example, script bundle, notebook, Docker image, or archive naming convention) in the Competition Discord, as requested by organizers.
