@@ -1,0 +1,70 @@
+\section{Modeling Analysis}
+
+This section synthesizes the latest model-training artifacts from \texttt{outputs/model\_training/model\_metrics.csv}, model-specific quantile residual summaries, and the narrative notes in \texttt{docs/model\_training\_results\_summary.md}.
+
+\subsection{Side-by-Side Model Performance}
+
+Table~\ref{tab:model-comparison} compares holdout performance across the trained model set. Lower RMSE/MAE is better; higher $R^2$ is better.
+
+\begin{table}[h]
+\centering
+\caption{Test-set performance comparison across candidate models}
+\label{tab:model-comparison}
+\begin{tabular}{lccc}
+\hline
+Model & Test RMSE & Test MAE & Test $R^2$ \\
+\hline
+\texttt{gbm\_huber} & \textbf{398.04} & \textbf{308.70} & \textbf{0.0501} \\
+\texttt{huber\_linear} & 406.24 & 311.85 & 0.0106 \\
+\texttt{ridge} & 406.81 & 310.11 & 0.0078 \\
+\texttt{gbm\_quantile} & 411.20 & 309.98 & $-$0.0137 \\
+\texttt{autogluon\_medium} & 413.49 & 313.27 & $-$0.0251 \\
+\texttt{elastic\_net} & 416.95 & 318.19 & $-$0.0423 \\
+\texttt{decision\_tree} & 430.10 & 326.46 & $-$0.1091 \\
+\hline
+\end{tabular}
+\end{table}
+
+Key points:
+\begin{itemize}
+    \item \texttt{gbm\_huber} is the strongest current candidate by all three primary test metrics.
+    \item Even the best model explains only about $5\%$ of variance in \texttt{NFL\_production\_value} ($R^2=0.0501$), indicating weak signal capture relative to outcome volatility.
+    \item Earlier summary notes also showed weak fit (roughly $R^2\approx0.07$ in a prior run), so the general conclusion---low explanatory power---is stable across experiment iterations.
+\end{itemize}
+
+\subsection{Underprediction and Tail-Error Behavior}
+
+Quantile-residual diagnostics show persistent underprediction and heavy-tail misspecification:
+\begin{itemize}
+    \item Median residuals are negative for six of seven models (e.g., \texttt{decision\_tree}: $q_{0.50}=-54.18$; \texttt{ridge}: $q_{0.50}=-49.76$; \texttt{gbm\_huber}: $q_{0.50}=-15.46$), indicating systematic underprediction for the typical player.
+    \item The 95th percentile residual is very large for every model (approximately $853$ to $956$), showing large positive misses where realized outcomes far exceed predictions.
+    \item Absolute-error tails are also substantial: 95th-percentile absolute residuals are roughly $859$--$956$, implying that high-upside cases are still poorly calibrated.
+    \item \texttt{gbm\_quantile} and \texttt{gbm\_huber} modestly reduce some central/tail absolute residual quantiles relative to purely linear baselines, but not enough to change deployment-readiness.
+\end{itemize}
+
+Together, these patterns imply a conservative prediction regime that compresses the upper tail and fails to reliably identify rare high-production outcomes.
+
+\subsection{Why Current Accuracy Is Insufficient for Autonomous Recruiting Decisions}
+
+Current models are useful as \emph{decision support}, but not as autonomous decision-makers:
+\begin{itemize}
+    \item Error magnitudes are large in football terms: MAE is still around $309$--$326$ production-value units across most models, so rank-ordering nearby prospects remains noisy.
+    \item Low $R^2$ means most player-level variance is unexplained, which raises the risk of systematic misallocation if the model is used without human override.
+    \item Underprediction plus large positive tail residuals creates asymmetric risk: the system is more likely to miss elite upside than to overhype low-upside profiles.
+    \item For recruiting operations, false negatives on high-ceiling players are strategically costly and often irreversible.
+\end{itemize}
+
+Accordingly, the model should remain one input in a human-in-the-loop process (scouting + medical + scheme fit + character/context), rather than an automated gatekeeper.
+
+\subsection{Current Limitations and Practical Constraints}
+
+\begin{itemize}
+    \item \textbf{Feature coverage gaps:} existing features emphasize combine metrics and selected college box-score proxies, but likely omit high-value context (injury history granularity, role/scheme interaction, strength-of-schedule effects, coaching/system transitions, and richer film-derived traits).
+    \item \textbf{Potential target noise:} \texttt{NFL\_production\_value} is an aggregate downstream outcome affected by opportunity, team context, and stochastic career events, so label noise can cap achievable predictive performance.
+    \item \textbf{Cohort-size constraints:} draft-class sample sizes are limited relative to feature dimensionality; this reduces statistical power, makes tail learning difficult, and increases sensitivity to split variance.
+    \item \textbf{Environment/dependency inconsistency:} prior documentation reports \texttt{autogluon\_extreme} was skipped due to missing \texttt{autogluon.tabular}, while other AutoGluon artifacts are present in the output folder. This mismatch signals reproducibility risk and weakens confidence in strict run-to-run comparability.
+\end{itemize}
+
+\subsection{Implication for Next Iteration}
+
+The next development cycle should prioritize (1) environment lock-in/reproducibility, (2) target/feature quality improvements, and (3) explicit optimization for upper-tail recall (high-upside prospect detection), before considering any autonomous recruiting deployment.
