@@ -2,11 +2,13 @@
 
 This project uses a layered data pipeline that starts from merged raw records and ends in a model-ready defensive-back (DB) table. Table~\ref{tab:source-lineage} documents the source-to-model lineage.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
+\small
+\setlength{\tabcolsep}{5pt}
 \caption{Source-to-model lineage for the DB modeling dataset.}
 \label{tab:source-lineage}
-\begin{tabular}{p{0.29\linewidth} p{0.24\linewidth} p{0.40\linewidth}}
+\begin{tabular}{p{0.20\linewidth} p{0.33\linewidth} p{0.40\linewidth}}
 \hline
 \textbf{Layer} & \textbf{Primary files} & \textbf{Role in pipeline} \\
 \hline
@@ -16,6 +18,16 @@ Modeling table & \texttt{artifacts/db\_model\_preprocessed.csv} & Final supervis
 \hline
 \end{tabular}
 \end{table}
+
+\subsection{How the Data Was Collected}
+
+The raw inputs were assembled from three collection paths before preprocessing:
+\begin{itemize}
+    \item \textbf{Combine data:} provided directly to the project team as source files.
+    \item \textbf{NFL data:} scraped from ESPN using a non-public API.
+    \item \textbf{College football data:} scraped from Pro Sports Reference using a Chrome extension workflow.
+\end{itemize}
+These sources were then merged into the unified base tables referenced in Table~\ref{tab:source-lineage}.
 
 \subsection{Competition Dataset Fields vs. External Additions}
 
