@@ -28,6 +28,10 @@ EXPLICIT_IDENTITY_COLUMNS = {
     "player_id",
     "record_id",
 }
+FORBIDDEN_NON_PREDICTIVE_COLUMNS = {
+    "college_name",
+    "cat_college_name",
+}
 VISUAL_OUTPUT_DIR = Path("visuals/outputs")
 
 
@@ -68,6 +72,15 @@ def _looks_like_identity_column(column_name: str) -> bool:
 
 def _resolve_identity_columns(columns: list[str]) -> list[str]:
     return sorted({column for column in columns if _looks_like_identity_column(column)})
+
+
+def _looks_like_forbidden_non_predictive_column(column_name: str) -> bool:
+    normalized = column_name.strip().lower()
+    return normalized in FORBIDDEN_NON_PREDICTIVE_COLUMNS or normalized.startswith("cat_college_name_")
+
+
+def _resolve_forbidden_non_predictive_columns(columns: list[str]) -> list[str]:
+    return sorted({column for column in columns if _looks_like_forbidden_non_predictive_column(column)})
 
 
 def _assert_no_forbidden_features(
@@ -421,10 +434,12 @@ def train_models(
 
     train_val_df = pd.concat([train_df, val_df], axis=0, ignore_index=True)
     identity_columns = _resolve_identity_columns(train_val_df.columns.tolist())
+    forbidden_non_predictive_columns = _resolve_forbidden_non_predictive_columns(train_val_df.columns.tolist())
+    forbidden_columns = sorted(set(identity_columns + forbidden_non_predictive_columns))
     feature_columns = [
         column
         for column in train_val_df.columns
-        if column not in {TARGET_COLUMN, SPLIT_COLUMN} and column not in identity_columns
+        if column not in {TARGET_COLUMN, SPLIT_COLUMN} and column not in forbidden_columns
     ]
 
     X_train_val = train_val_df[feature_columns]
@@ -473,7 +488,7 @@ def train_models(
         search.fit(X_train_val, y_train_val, model__sample_weight=train_sample_weight)
         best_pipeline = search.best_estimator_
         transformed_feature_names = best_pipeline.named_steps["preprocessor"].get_feature_names_out()
-        _assert_no_forbidden_features(transformed_feature_names, forbidden_columns=identity_columns)
+        _assert_no_forbidden_features(transformed_feature_names, forbidden_columns=forbidden_columns)
 
         raw_predictions = best_pipeline.predict(X_test)
         if use_target_log1p:
@@ -624,7 +639,7 @@ def train_models(
         explanation_df = _extract_autogluon_global_explanations(ag_importance)
         _assert_no_forbidden_features(
             explanation_df["feature"].astype(str).tolist(),
-            forbidden_columns=identity_columns,
+            forbidden_columns=forbidden_columns,
         )
         explanation_df.to_csv(output_dir / f"{autogluon_model_name}_global_explanations.csv", index=False)
 
@@ -675,6 +690,7 @@ def train_models(
                 "target_column": TARGET_COLUMN,
                 "split_column": SPLIT_COLUMN,
                 "excluded_identity_columns": identity_columns,
+                "excluded_non_predictive_columns": forbidden_non_predictive_columns,
                 "model_feature_columns": feature_columns,
                 "autogluon_preset": autogluon_preset,
             },
