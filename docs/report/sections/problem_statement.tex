@@ -1,1 +1,15 @@
-% Draft this section collaboratively.
+\section{Problem Statement}
+
+This project addresses a practical NFL personnel question: how to improve \textbf{defensive back recruitment strategy} using only \textbf{pre-draft information}. The modeling target is early-career NFL production value ($\texttt{NFL\_production\_value}$), framed explicitly as a regression task that must rely on data available before a player is drafted (combine/anthropometric metrics and college performance/context variables).
+
+The core objective is \emph{decision support}, not automation. We evaluate whether pre-draft signals can be translated into a model-based ranking system that helps identify high-upside defensive backs more consistently than unaided scouting alone.
+
+However, current results show that available features contain limited learnable signal for this outcome. Across trained models, test $R^2$ is low (roughly $0.07$--$0.08$ in the training summary and near-zero in the visual model comparison), while absolute error distributions are wide with large upper tails. This means model predictions are noisy and especially uncertain for high-end outcomes---the segment most valuable in recruiting.
+
+Accordingly, the central problem is two-fold:
+\begin{enumerate}
+    \item Build and validate a pre-draft predictive framework for defensive backs that avoids leakage from post-draft/NFL outcomes.
+    \item Determine how to use weak-to-moderate predictive signal in a way that still improves real recruiting decisions.
+\end{enumerate}
+
+The project therefore reframes success criteria from ``fully automated ranking'' to ``actionable support within a human-led workflow,'' while identifying what additional data is needed to materially improve predictive reliability.
