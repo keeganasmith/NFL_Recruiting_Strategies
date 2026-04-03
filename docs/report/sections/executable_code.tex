@@ -1,1 +1,59 @@
-% Draft this section collaboratively.
+\textbf{Execution environment.} Use Python 3.11+ in a clean virtual environment and install dependencies before running any stage:
+\begin{verbatim}
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+\end{verbatim}
+
+\textbf{Recommended end-to-end reproducibility path (from repo root).}
+
+\begin{enumerate}
+  \item \textbf{Run heuristic sweeps} (creates filtered input, per-variant runs, objective comparison, and the best scored-player file used by downstream DB modeling):
+\begin{verbatim}
+python pipeline/run_sweep.py \\
+  --experiment-config configs/experiments/db_heuristic_grid_search.yaml
+\end{verbatim}
+
+  \item \textbf{Run one focused experiment} (optional sanity check or ablation on a single heuristic config):
+\begin{verbatim}
+python pipeline/run_experiment.py \\
+  --input-data all_data.csv \\
+  --heuristic-config configs/heuristics/nfl_production_value_baseline.yaml \\
+  --output-dir outputs/pipeline/default_run \\
+  --time-split-year 2018 \\
+  --calibration-bins 10
+\end{verbatim}
+
+  \item \textbf{Preprocess DB model inputs} from the sweep winner:
+\begin{verbatim}
+python src/data/preprocess_db_model.py \\
+  --input-csv outputs/pipeline/sweeps/db_heuristic_grid_search/best_heuristic_scored_players.csv \\
+  --output-csv artifacts/db_model_preprocessed.csv \\
+  --manifest artifacts/feature_manifest.json \\
+  --split-mode draft_year \\
+  --val-start-year 2018 \\
+  --test-start-year 2021
+\end{verbatim}
+
+  \item \textbf{Train explainable supervised models} on the preprocessed dataset:
+\begin{verbatim}
+python src/modeling/train_explainable_models.py \\
+  --input-csv artifacts/db_model_preprocessed.csv \\
+  --output-dir outputs/model_training \\
+  --autogluon-preset medium
+\end{verbatim}
+\end{enumerate}
+
+\textbf{Concise repository map for judges.}
+\begin{itemize}
+  \item \texttt{all_data.csv}, \texttt{NFL\_data/}, \texttt{combine\_data/}, \texttt{extension\_and\_data/}: source and joined datasets.
+  \item \texttt{configs/heuristics/}, \texttt{configs/experiments/}: heuristic weights and sweep/experiment settings.
+  \item \texttt{pipeline/}: reusable experiment runner, evaluation, and reporting modules.
+  \item \texttt{src/data/}: DB-specific preprocessing scripts.
+  \item \texttt{src/modeling/}: explainable training and diagnostics export.
+  \item \texttt{outputs/}: generated artifacts (pipeline runs, sweeps, model outputs, visualizations).
+  \item \texttt{visuals/outputs/}: exported visual diagnostics/figures.
+  \item \texttt{docs/} and \texttt{docs/report/}: narrative documentation and final report \LaTeX sections.
+\end{itemize}
+
+\textbf{Determinism notes.} Key scripts set fixed random seeds (for example, split seed \texttt{42}) and emit manifests (for example, \texttt{experiment\_manifest.json}, \texttt{sweep\_manifest.json}, and \texttt{training\_manifest.json}) to document inputs, settings, and outputs used in each run.
