@@ -1,1 +1,19 @@
-% Draft this section collaboratively.
+\subsection{Heuristic pipeline methodology}
+
+The heuristic workflow is orchestrated through \texttt{pipeline/run\_experiment.py} and \texttt{pipeline/run\_sweep.py}. A single experiment run loads and validates the unified input table, applies feature preparation, instantiates a configured heuristic, and writes run artifacts (score summary, calibration table, ranking stability, top-player outputs, scored players, plots, and a manifest) to an output directory. The split logic supports either (a) a random 80/20 train-test split with a fixed seed or (b) a time-based split where rows with \texttt{combine\_year \textbackslash{}leq time\_split\_year} form train and later years form test. Sweep runs then iterate across heuristic variants, execute the same evaluation pipeline per variant, and aggregate comparable metrics into a ranked table.
+
+For model selection within the heuristic sweep, variants are scored by the objective:
+\[
+\text{objective\_score} = 0.55\,\text{proxy\_spearman} + 0.25\,\text{rank\_corr} + 0.20\,\text{top\_overlap} - 0.15\,\text{calibration\_rmse}.
+\]
+This weighting emphasizes agreement with downstream performance ordering (proxy Spearman, rank correlation) while still rewarding practical top-of-board overlap and penalizing calibration error. In the defensive-back grid search summary (\texttt{docs/db\_heuristic\_grid\_search\_summary.md}), the time-based split setting led to \texttt{rank\_corr} and \texttt{top\_overlap} of 0.0 across variants, so objective differences were primarily driven by proxy alignment and calibration terms.
+
+\subsection{Supervised model methodology}
+
+The supervised workflow in \texttt{src/modeling/train\_explainable\_models.py} trains multiple interpretable and robust regression families on \texttt{NFL\_production\_value}. The candidate families are: regularized linear models (ridge, elastic net), a constrained-depth decision tree, robust linear regression (Huber), and gradient-boosted tree variants using Huber and quantile losses. Together these cover linear signal recovery, sparse/regularized effects, non-linear interactions, and robustness to outliers/heavy-tailed outcomes.
+
+Data partitioning is controlled by the explicit \texttt{dataset\_split} column. Rows tagged \texttt{train}, \texttt{val}, and \texttt{test} are separated first; model selection is performed on train+val (with \texttt{PredefinedSplit} when validation rows exist, otherwise K-fold on train), and final reporting is on the held-out test set only. Leakage controls are implemented by removing identity-like columns (e.g., explicit IDs and any column ending in \texttt{\_id}) plus forbidden non-predictive college-name fields before fitting. A post-fit assertion also validates that forbidden features did not survive preprocessing into the transformed design matrix.
+
+Preprocessing uses \texttt{ColumnTransformer} to apply branch-specific transforms: numeric features receive median imputation (plus standardization for linear/Huber paths), while categorical features receive most-frequent imputation and one-hot encoding with unknown-category tolerance. This yields a consistent, auditable feature engineering layer across model families. Additional robustness steps include optional \texttt{log1p} target transformation for heavy-tailed outcomes, high-production sample weighting during fitting, and post-hoc residual calibration (isotonic residual correction or mean-bias adjustment) when a validation split is available.
+
+These model choices were intentionally oriented toward explainability and robustness rather than black-box-only optimization. Coefficients and feature importances are exported for global interpretation, diagnostics are emitted for residual behavior and subgroup performance, and calibration is explicit and inspectable---allowing domain stakeholders to trace why a model scores prospects the way it does while retaining competitive predictive performance.
