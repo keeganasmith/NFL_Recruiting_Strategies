@@ -1,1 +1,13 @@
-% Draft this section collaboratively.
+\section{Data Exploration}
+
+\subsection{Focused EDA Findings}
+
+\begin{enumerate}
+    \item \textbf{Draft round has real but noisy directional signal.} The draft-round distribution plot (\texttt{outputs/visualizations/nfl\_production\_vs\_draft\_round.png}) shows a clear median decline from Round 1 ($\sim$79.8) to Round 6 ($\sim$27.2), with Round 7 rebounding modestly ($\sim$36.4). At the same time, each round retains wide spread and overlap (e.g., Round 1 standard deviation $\sim$226), which implies that round captures broad expected value but not individual outcomes with high precision. \textit{Decision impact: we treated draft round as a weak-prior context feature rather than a ranking anchor, and we set expectations for low-to-moderate model signal with substantial variance.}
+
+    \item \textbf{Model-level error visuals confirm upside-risk under uncertainty.} In \texttt{outputs/visualizations/prediction\_error\_profile.png}, all models show broad absolute-error distributions, with medians roughly in the 218--252 range and 90th-percentile errors around 663--705. This supports the interpretation that extreme positive outcomes are difficult to resolve from the current feature set, even when average performance differences across algorithms are small. \textit{Decision impact: we constrained downstream use to tiering/triage and added explicit caution around confidence in fine-grained rank ordering.}
+
+    \item \textbf{Residual-vs-predicted files show error growth in high-prediction regions.} Across \texttt{outputs/model\_training/*\_residual\_vs\_pred.csv}, the correlation between prediction level and absolute residual is consistently positive (about 0.16--0.26), and top prediction quartiles generally have materially larger median absolute residuals than bottom quartiles. This is consistent with heteroskedastic behavior: uncertainty expands where the model projects higher production. \textit{Decision impact: this motivated robust/quantile-oriented loss functions and conservative communication of ``high-ceiling'' projections.}
+
+    \item \textbf{Missingness is structured and materially encoded in preprocessing.} The feature manifest (\texttt{artifacts/feature\_manifest.json}) and preprocessing pipeline (\texttt{src/data/preprocess\_db\_model.py}) indicate deterministic median imputation plus explicit missingness indicators for every combine/college feature. Missingness is non-uniform (e.g., roughly 45.7\% for three-cone and 44.3\% for shuttle, versus near-zero for college games/interception TDs), indicating that absent tests/stat fields likely carry process information, not just random noise. \textit{Decision impact: we retained missingness flags in the model input, avoided dropping high-missing columns solely by threshold, and interpreted feature effects with data-quality caveats.}
+\end{enumerate}
