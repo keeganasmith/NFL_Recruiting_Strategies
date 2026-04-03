@@ -1,1 +1,23 @@
-% Draft this section collaboratively.
+\section{Executive Summary}
+
+The project set out to support \textbf{defensive back recruitment strategy} with pre-draft modeling. Using combine and college-era features only, we trained multiple regressors to predict $\texttt{NFL\_production\_value}$ as a proxy for early-career NFL impact.
+
+\textbf{Key finding:} the models learn only limited signal and are \textbf{not reliable as standalone ranking tools}. Performance is tightly clustered across model families, test $R^2$ remains low, and error profiles show broad dispersion with large tail errors and mild average underprediction. In practical terms, the system cannot yet be trusted to independently order prospects for final draft-board decisions.
+
+\textbf{Practical takeaway:} adopt a \textbf{hybrid scouting workflow}.
+\begin{itemize}
+    \item Use model outputs for triage (flagging risk tiers, surfacing outliers, and prioritizing film study).
+    \item Keep final evaluations anchored in scout expertise, role fit, and context-specific judgment.
+    \item Treat model--scout disagreement as a review trigger rather than an automatic override.
+\end{itemize}
+
+\textbf{Forward recommendation:} improve the feature base before adding major model complexity. The highest-value next step is richer college context, especially:
+\begin{itemize}
+    \item game-by-game production and usage,
+    \item team strength and opponent quality adjustments,
+    \item role/deployment context (e.g., coverage-heavy vs.
+    box-heavy responsibilities), and
+    \item developmental trajectory indicators across seasons.
+\end{itemize}
+
+Bottom line: this work demonstrates a viable model-assisted process for pre-draft defensive back evaluation, but current signal quality supports \emph{decision support and triage}, not autonomous prospect ranking.
