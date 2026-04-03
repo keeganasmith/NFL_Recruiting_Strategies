@@ -1,0 +1,46 @@
+\section{Conclusions and Recommendations}
+
+\subsection{Final Conclusion}
+The current modeling pipeline provides \textbf{directional signal} for prospect evaluation, but it is \textbf{not yet decision-grade prediction}. Diagnostics indicate that while the models separate broad talent tiers better than chance, error rates and instability are still too high for fully automated draft or scholarship decisions.
+
+\subsection{Priority 1: Data Additions (Highest Impact)}
+The most important next step is improving input quality and context coverage. Each proposed data addition maps directly to an observed weakness in model diagnostics:
+
+\begin{itemize}
+    \item \textbf{Game-level college performance} (rather than season aggregates):
+    \emph{Observed weakness:} residual error is large for players with volatile week-to-week trajectories; aggregate stats hide development curves and late-season breakout patterns.
+
+    \item \textbf{Team quality context}:
+    \emph{Observed weakness:} systematic bias appears when prospects come from either dominant or very weak programs, suggesting confounding from surrounding roster strength and scheme support.
+
+    \item \textbf{Opponent quality context}:
+    \emph{Observed weakness:} the model over-credits production against weaker schedules and under-credits efficient performance versus elite competition.
+
+    \item \textbf{Role/usage context} (snap share, deployment type, situational usage):
+    \emph{Observed weakness:} calibration degrades across role archetypes because identical box-score outputs can come from very different responsibilities and opportunity profiles.
+\end{itemize}
+
+\subsection{Priority 2: Modeling Upgrades (After Data Improvements)}
+Once the contextual data above is incorporated and validated, modeling upgrades should follow:
+
+\begin{itemize}
+    \item \textbf{Richer non-linear models} (e.g., boosted trees or neural architectures):
+    \emph{Observed weakness:} current linear/limited interaction structure misses threshold effects and cross-feature interactions visible in error analysis.
+
+    \item \textbf{Subgroup calibration} (by position/archetype/conference tiers):
+    \emph{Observed weakness:} global calibration masks subgroup miscalibration, creating uneven risk across player types.
+
+    \item \textbf{Uncertainty-aware ranking} (prediction intervals and confidence-adjusted ordering):
+    \emph{Observed weakness:} point-estimate rankings are unstable in the mid-tier, where overlapping error bounds can invert player ordering.
+\end{itemize}
+
+\subsection{Operational Recommendation}
+Deploy the current system as a \textbf{decision-support layer} within a \textbf{hybrid scouting process}, not as a replacement for scouting judgment.
+
+\begin{itemize}
+    \item Use model outputs to prioritize film review, flag value opportunities, and surface disagreement cases.
+    \item Require human sign-off for high-stakes decisions, especially where uncertainty is wide or subgroup calibration is weak.
+    \item Track post-decision outcomes to continuously audit model bias, drift, and practical utility.
+\end{itemize}
+
+In short, diagnostics support using the model to improve consistency and coverage in scouting workflows, while preserving expert oversight until data completeness and calibration reliability reach decision-grade standards.
