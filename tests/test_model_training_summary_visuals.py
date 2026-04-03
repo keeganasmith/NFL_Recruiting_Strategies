@@ -100,6 +100,19 @@ class ModelTrainingSummaryVisualTests(unittest.TestCase):
         self.assertListEqual(prepared.columns.tolist(), ["predicted", "actual"])
         self.assertEqual(len(prepared), 2)
 
+    def test_model_order_removes_three_weakest_trained_models(self):
+        metrics = pd.DataFrame(
+            {
+                "model": ["m1", "m2", "m3", "m4", "m5", "m6"],
+                "status": ["trained"] * 6,
+                "test_rmse": [10.0, 11.0, 12.0, 13.0, 14.0, 15.0],
+                "test_mae": [1.0] * 6,
+                "test_r2": [0.1] * 6,
+            }
+        )
+
+        self.assertListEqual(derive_model_order(metrics), ["m1", "m2", "m3"])
+
     def test_explanation_figure_masks_missing_feature_model_pairs(self):
         model_order = derive_model_order(self.metrics)
         exp_fig = build_explanation_figure(self.explanations, model_order, top_n=5)

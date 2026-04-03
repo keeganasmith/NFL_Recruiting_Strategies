@@ -65,7 +65,13 @@ def derive_model_order(metrics_df: pd.DataFrame) -> list[str]:
 
     trained = trained.dropna(subset=["test_rmse"])
     trained = trained.sort_values("test_rmse", ascending=True)
-    return trained["model"].astype(str).tolist()
+    ordered_models = trained["model"].astype(str).tolist()
+
+    weakest_models_to_remove = 3
+    if len(ordered_models) > weakest_models_to_remove:
+        ordered_models = ordered_models[:-weakest_models_to_remove]
+
+    return ordered_models
 
 
 def build_performance_figure(metrics_df: pd.DataFrame, model_order: list[str]) -> plt.Figure:
