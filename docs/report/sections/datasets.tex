@@ -1,1 +1,53 @@
-% Draft this section collaboratively.
+\section{Datasets and Lineage}
+
+This project uses a layered data pipeline that starts from merged raw records and ends in a model-ready defensive-back (DB) table. Table~\ref{tab:source-lineage} documents the source-to-model lineage.
+
+\begin{table}[h]
+\centering
+\caption{Source-to-model lineage for the DB modeling dataset.}
+\label{tab:source-lineage}
+\begin{tabular}{p{0.29\linewidth} p{0.24\linewidth} p{0.40\linewidth}}
+\hline
+\textbf{Layer} & \textbf{Primary files} & \textbf{Role in pipeline} \\
+\hline
+Raw / merged base data & \texttt{all\_data.csv}; \texttt{NFL\_data/combine\_with\_college\_stats.csv}; \texttt{extension\_and\_data/*.csv} & Core player-level records combining NFL season logs, combine measurements, and college statistics used for feature derivation and heuristic scoring. \\
+Heuristic sweep outputs & \texttt{outputs/pipeline/sweeps/db\_heuristic\_grid\_search/*} (especially \texttt{best\_heuristic\_scored\_players.csv}) & Contains per-player/per-season heuristic outputs, including \texttt{NFL\_production\_value}, after evaluating candidate scoring configurations. \\
+Modeling table & \texttt{artifacts/db\_model\_preprocessed.csv} & Final supervised-learning table with target, split labels, standardized predictors (\texttt{\_z}), and missingness indicators (\texttt{\_missing}). \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Competition Dataset Fields vs. External Additions}
+
+\textbf{Competition/base fields.} The competition-ready modeling inputs are restricted to pre-draft information families:
+(1) combine/anthropometric fields (e.g., \texttt{40yd}, \texttt{Vertical}, \texttt{Bench}, \texttt{Broad Jump}, \texttt{3Cone}, \texttt{Shuttle}, \texttt{Ht}, \texttt{Wt}) and
+(2) college production fields (e.g., \texttt{college\_games}, \texttt{college\_interceptions}, \texttt{college\_passes\_defended}, \texttt{college\_combined\_tackles}, \texttt{college\_tfl}, \texttt{college\_sacks}).
+
+\textbf{External additions.} Additional artifacts are introduced by the project pipeline rather than the original merged files:
+\begin{itemize}
+    \item \texttt{NFL\_production\_value}: heuristic target value generated during sweep experiments.
+    \item \texttt{dataset\_split}: train/validation/test assignment.
+    \item Derived model features from preprocessing: standardized columns (suffix \texttt{\_z}) and explicit missingness indicators (suffix \texttt{\_missing}).
+\end{itemize}
+
+\subsection{Missing-Value Strategy and Outlier Treatment}
+
+Preprocessing is implemented in \texttt{src/data/preprocess\_db\_model.py}. The pipeline:
+\begin{enumerate}
+    \item filters to DB-family positions using \texttt{Pos} and \texttt{college\_pos};
+    \item collapses season-level rows to one row per player (summing \texttt{NFL\_production\_value} across retained seasons and taking first values for covariates);
+    \item coerces mixed-format measurement fields (e.g., height and broad jump) into numeric inches;
+    \item applies deterministic median imputation for each base feature;
+    \item appends binary missingness flags for each imputed feature;
+    \item creates z-score standardized versions of each feature for modeling.
+\end{enumerate}
+
+Outlier handling is intentionally conservative: there is no explicit winsorization, clipping, or row deletion for high/low numeric values in this preprocessing stage. Instead, values are retained and mapped into standardized scale through z-scores, preserving extreme observations while reducing scale imbalance.
+
+\subsection{Target Construction and First-Contract Window Rationale}
+
+The supervised target is \texttt{NFL\_production\_value}, sourced from the heuristic sweep output table and carried into the final modeling artifact. In feature preprocessing, \texttt{pipeline/features/preprocessing.py} enforces an early-career restriction to the first four NFL seasons using
+\[
+\texttt{career\_year} = \texttt{season\_year} - \texttt{combine\_year} + 1 \le 4.
+\]
+This first-contract window aligns target construction with the rookie-contract evaluation horizon and focuses model learning on the period most relevant to recruiting and early career projection.
