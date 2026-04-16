@@ -13,7 +13,8 @@ from sklearn.impute import SimpleImputer
 from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import ElasticNet, HuberRegressor, Ridge
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import GridSearchCV, KFold, PredefinedSplit
+from sklearn.base import clone
+from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
@@ -110,7 +111,7 @@ def _assert_no_forbidden_features(
         )
 
 
-def _build_searches(X_train_val: pd.DataFrame, cv_strategy: PredefinedSplit | KFold) -> dict[str, GridSearchCV]:
+def _build_searches(X_train_val: pd.DataFrame, cv_strategy: KFold) -> dict[str, GridSearchCV]:
     linear_preprocessor = _build_preprocessor(X_train_val, scale_numeric=True)
     tree_preprocessor = _build_preprocessor(X_train_val, scale_numeric=False)
 
@@ -349,6 +350,34 @@ def _fit_calibrator(
     return "mean_bias", mean_bias
 
 
+def _build_tuning_cv(*, n_samples: int, random_state: int = 42) -> KFold:
+    if n_samples < 2:
+        raise ValueError("At least 2 train/val rows are required for K-fold tuning.")
+    n_splits = min(5, n_samples)
+    return KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
+
+
+def _build_calibration_partition(
+    *,
+    n_samples: int,
+    random_state: int = 42,
+    calibration_fraction: float = 0.15,
+    min_calibration_samples: int = 5,
+) -> tuple[np.ndarray, np.ndarray]:
+    minimum_total_samples = min_calibration_samples + 2
+    if n_samples < minimum_total_samples:
+        return np.arange(n_samples, dtype=int), np.array([], dtype=int)
+
+    calibration_count = max(min_calibration_samples, int(round(n_samples * calibration_fraction)))
+    calibration_count = min(calibration_count, n_samples - 2)
+
+    rng = np.random.default_rng(random_state)
+    shuffled_indices = rng.permutation(n_samples)
+    calibration_indices = np.sort(shuffled_indices[:calibration_count])
+    fit_indices = np.sort(shuffled_indices[calibration_count:])
+    return fit_indices, calibration_indices
+
+
 def _apply_calibration(
     predictions: np.ndarray,
     calibration_payload: float | IsotonicRegression,
@@ -495,12 +524,11 @@ def train_models(
     else:
         y_train_val = y_train_val_raw.copy()
 
-    if val_df.empty:
-        cv_strategy: PredefinedSplit | KFold = KFold(n_splits=5, shuffle=True, random_state=42)
-    else:
-        split_marker = np.where(train_val_df[SPLIT_COLUMN].astype(str).str.lower() == "val", 0, -1)
-        split_marker = split_marker[valid_train_val_mask.to_numpy()]
-        cv_strategy = PredefinedSplit(test_fold=split_marker)
+    cv_strategy = _build_tuning_cv(n_samples=len(X_train_val), random_state=42)
+    calibration_fit_indices, calibration_indices = _build_calibration_partition(
+        n_samples=len(X_train_val),
+        random_state=42,
+    )
 
     searches = _build_searches(X_train_val, cv_strategy=cv_strategy)
     high_production_threshold = float(y_train_val_raw.quantile(0.75))
@@ -537,34 +565,42 @@ def train_models(
                 )
         _print_model_accuracy(model_name=model_name, train_accuracy=train_accuracy, val_accuracy=val_accuracy)
 
-        raw_predictions = best_pipeline.predict(X_test)
+        calibration_method = "none"
+        inference_pipeline = best_pipeline
+        if calibration_indices.size > 0:
+            fit_features = X_train_val.iloc[calibration_fit_indices]
+            fit_target = y_train_val.iloc[calibration_fit_indices]
+            fit_sample_weight = train_sample_weight[calibration_fit_indices]
+            inference_pipeline = clone(best_pipeline)
+            inference_pipeline.fit(
+                fit_features,
+                fit_target,
+                model__sample_weight=fit_sample_weight,
+            )
+
+            calibration_features = X_train_val.iloc[calibration_indices]
+            calibration_target_raw = y_train_val_raw.iloc[calibration_indices].to_numpy(dtype=float)
+            calibration_predictions_raw = inference_pipeline.predict(calibration_features)
+            if use_target_log1p:
+                calibration_predictions = np.expm1(calibration_predictions_raw)
+            else:
+                calibration_predictions = calibration_predictions_raw
+            calibration_method, calibration_payload = _fit_calibrator(
+                val_predictions=np.asarray(calibration_predictions, dtype=float),
+                val_actuals=calibration_target_raw,
+            )
+
+        raw_predictions = inference_pipeline.predict(X_test)
         if use_target_log1p:
             predictions = np.expm1(raw_predictions)
         else:
             predictions = raw_predictions
-
-        calibration_method = "none"
-        if not val_df.empty:
-            val_features = val_df[feature_columns]
-            val_targets_raw = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
-            val_valid_mask = val_targets_raw.notna()
-            val_features = val_features.loc[val_valid_mask]
-            val_targets_raw = val_targets_raw.loc[val_valid_mask]
-            if not val_features.empty:
-                val_predictions_raw = best_pipeline.predict(val_features)
-                if use_target_log1p:
-                    val_predictions = np.expm1(val_predictions_raw)
-                else:
-                    val_predictions = val_predictions_raw
-                calibration_method, calibration_payload = _fit_calibrator(
-                    val_predictions=np.asarray(val_predictions, dtype=float),
-                    val_actuals=val_targets_raw.to_numpy(dtype=float),
-                )
-                predictions = _apply_calibration(
-                    predictions=np.asarray(predictions, dtype=float),
-                    calibration_payload=calibration_payload,
-                    calibration_method=calibration_method,
-                )
+        if calibration_method != "none":
+            predictions = _apply_calibration(
+                predictions=np.asarray(predictions, dtype=float),
+                calibration_payload=calibration_payload,
+                calibration_method=calibration_method,
+            )
 
         rmse = float(np.sqrt(mean_squared_error(y_test_array, predictions)))
         mae = float(mean_absolute_error(y_test_array, predictions))
@@ -638,8 +674,17 @@ def train_models(
             train_val_ag = train_val_ag.copy()
             train_val_ag[TARGET_COLUMN] = np.log1p(train_val_ag[TARGET_COLUMN])
 
+        train_data_for_fit = train_val_ag
+        calibration_features_ag: pd.DataFrame | None = None
+        calibration_targets_ag: np.ndarray | None = None
+        if calibration_indices.size > 0:
+            train_data_for_fit = train_val_ag.iloc[calibration_fit_indices].copy()
+            calibration_frame_ag = train_val_ag.iloc[calibration_indices].copy()
+            calibration_targets_ag = y_train_val_raw.iloc[calibration_indices].to_numpy(dtype=float)
+            calibration_features_ag = calibration_frame_ag[feature_columns]
+
         fit_kwargs = {
-            "train_data": train_val_ag,
+            "train_data": train_data_for_fit,
             "presets": autogluon_preset,
         }
 
@@ -693,27 +738,21 @@ def train_models(
         else:
             ag_predictions = ag_predictions_raw.to_numpy()
         ag_calibration_method = "none"
-        if not val_df.empty:
-            val_features = val_df[feature_columns]
-            val_targets_raw = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
-            val_valid_mask = val_targets_raw.notna()
-            val_features = val_features.loc[val_valid_mask]
-            val_targets_raw = val_targets_raw.loc[val_valid_mask]
-            if not val_features.empty:
-                ag_val_predictions_raw = predictor.predict(val_features).to_numpy()
-                if use_target_log1p:
-                    ag_val_predictions = np.expm1(ag_val_predictions_raw)
-                else:
-                    ag_val_predictions = ag_val_predictions_raw
-                ag_calibration_method, ag_calibration_payload = _fit_calibrator(
-                    val_predictions=np.asarray(ag_val_predictions, dtype=float),
-                    val_actuals=val_targets_raw.to_numpy(dtype=float),
-                )
-                ag_predictions = _apply_calibration(
-                    predictions=np.asarray(ag_predictions, dtype=float),
-                    calibration_payload=ag_calibration_payload,
-                    calibration_method=ag_calibration_method,
-                )
+        if calibration_features_ag is not None and calibration_targets_ag is not None:
+            ag_calibration_predictions_raw = predictor.predict(calibration_features_ag).to_numpy()
+            if use_target_log1p:
+                ag_calibration_predictions = np.expm1(ag_calibration_predictions_raw)
+            else:
+                ag_calibration_predictions = ag_calibration_predictions_raw
+            ag_calibration_method, ag_calibration_payload = _fit_calibrator(
+                val_predictions=np.asarray(ag_calibration_predictions, dtype=float),
+                val_actuals=calibration_targets_ag,
+            )
+            ag_predictions = _apply_calibration(
+                predictions=np.asarray(ag_predictions, dtype=float),
+                calibration_payload=ag_calibration_payload,
+                calibration_method=ag_calibration_method,
+            )
         ag_rmse = float(np.sqrt(mean_squared_error(y_test_array, ag_predictions)))
         ag_mae = float(mean_absolute_error(y_test_array, ag_predictions))
         ag_r2 = float(r2_score(y_test_array, ag_predictions))
