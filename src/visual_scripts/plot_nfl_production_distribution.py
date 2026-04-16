@@ -1,7 +1,8 @@
-"""Plot the distribution of NFL production values.
+"""Plot the distribution of NFL production values using unique players only.
 
-The script reads a CSV containing an ``NFL_production_value`` column and
-creates a histogram (with optional KDE overlay) to visualize the distribution.
+The script reads a CSV containing an ``NFL_production_value`` column, deduplicates
+rows so each player is counted exactly once, and creates a histogram (with
+optional KDE overlay) to visualize the distribution.
 """
 
 from __future__ import annotations
@@ -13,6 +14,18 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
+def _resolve_player_id_column(df: pd.DataFrame) -> str:
+    """Return the best available player identifier column from known candidates."""
+    candidates = ("Player-additional", "NFL_id", "player", "Player")
+    for column in candidates:
+        if column in df.columns:
+            return column
+    raise ValueError(
+        "Unable to identify a player ID column. Expected one of: "
+        "Player-additional, NFL_id, player, Player."
+    )
+
+
 def build_plot(input_csv: Path, output_png: Path, bins: int = 40, with_kde: bool = True) -> None:
     """Read the input CSV and save a distribution plot for NFL production values."""
     if not input_csv.exists():
@@ -22,7 +35,18 @@ def build_plot(input_csv: Path, output_png: Path, bins: int = 40, with_kde: bool
     if "NFL_production_value" not in df.columns:
         raise ValueError("Missing required column: NFL_production_value")
 
-    values = pd.to_numeric(df["NFL_production_value"], errors="coerce").dropna()
+    player_id_column = _resolve_player_id_column(df)
+    deduped = (
+        df.assign(NFL_production_value=pd.to_numeric(df["NFL_production_value"], errors="coerce"))
+        .dropna(subset=["NFL_production_value"])
+        .groupby(player_id_column, as_index=False)["NFL_production_value"]
+        .max()
+    )
+
+    unique_player_count = deduped[player_id_column].nunique()
+    print(f"Unique players counted: {unique_player_count}")
+
+    values = deduped["NFL_production_value"]
     if values.empty:
         raise ValueError("No valid NFL_production_value rows available to plot.")
 
