@@ -359,6 +359,32 @@ def _apply_calibration(
     return predictions + float(calibration_payload)
 
 
+def _compute_regression_accuracy(
+    model: Pipeline,
+    features: pd.DataFrame,
+    target_raw: pd.Series,
+    *,
+    use_target_log1p: bool,
+) -> float:
+    raw_predictions = model.predict(features)
+    if use_target_log1p:
+        predictions = np.expm1(raw_predictions)
+    else:
+        predictions = raw_predictions
+    return float(r2_score(target_raw.to_numpy(dtype=float), np.asarray(predictions, dtype=float)))
+
+
+def _print_model_accuracy(model_name: str, train_accuracy: float, val_accuracy: float | None) -> None:
+    if val_accuracy is None:
+        val_accuracy_str = "N/A (no validation split provided)"
+    else:
+        val_accuracy_str = f"{val_accuracy:.4f}"
+    print(
+        f"[{model_name}] Regression accuracy (R^2) -> "
+        f"train: {train_accuracy:.4f}, validation: {val_accuracy_str}"
+    )
+
+
 def _export_diagnostics(
     model_name: str,
     output_dir: Path,
@@ -489,6 +515,27 @@ def train_models(
         best_pipeline = search.best_estimator_
         transformed_feature_names = best_pipeline.named_steps["preprocessor"].get_feature_names_out()
         _assert_no_forbidden_features(transformed_feature_names, forbidden_columns=forbidden_columns)
+        train_accuracy = _compute_regression_accuracy(
+            model=best_pipeline,
+            features=X_train_val,
+            target_raw=y_train_val_raw,
+            use_target_log1p=use_target_log1p,
+        )
+        val_accuracy: float | None = None
+        if not val_df.empty:
+            val_features_for_accuracy = val_df[feature_columns]
+            val_targets_for_accuracy = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
+            val_valid_accuracy_mask = val_targets_for_accuracy.notna()
+            val_features_for_accuracy = val_features_for_accuracy.loc[val_valid_accuracy_mask]
+            val_targets_for_accuracy = val_targets_for_accuracy.loc[val_valid_accuracy_mask]
+            if not val_features_for_accuracy.empty:
+                val_accuracy = _compute_regression_accuracy(
+                    model=best_pipeline,
+                    features=val_features_for_accuracy,
+                    target_raw=val_targets_for_accuracy,
+                    use_target_log1p=use_target_log1p,
+                )
+        _print_model_accuracy(model_name=model_name, train_accuracy=train_accuracy, val_accuracy=val_accuracy)
 
         raw_predictions = best_pipeline.predict(X_test)
         if use_target_log1p:
@@ -604,6 +651,42 @@ def train_models(
         ).fit(**fit_kwargs)
 
         print("predictor finished")
+        ag_train_predictions_raw = predictor.predict(X_train_val)
+        if use_target_log1p:
+            ag_train_predictions = np.expm1(ag_train_predictions_raw.to_numpy())
+        else:
+            ag_train_predictions = ag_train_predictions_raw.to_numpy()
+        ag_train_accuracy = float(
+            r2_score(
+                y_train_val_raw.to_numpy(dtype=float),
+                np.asarray(ag_train_predictions, dtype=float),
+            )
+        )
+        ag_val_accuracy: float | None = None
+        if not val_df.empty:
+            val_features_for_accuracy = val_df[feature_columns]
+            val_targets_for_accuracy = pd.to_numeric(val_df[TARGET_COLUMN], errors="coerce")
+            val_valid_accuracy_mask = val_targets_for_accuracy.notna()
+            val_features_for_accuracy = val_features_for_accuracy.loc[val_valid_accuracy_mask]
+            val_targets_for_accuracy = val_targets_for_accuracy.loc[val_valid_accuracy_mask]
+            if not val_features_for_accuracy.empty:
+                ag_val_predictions_raw = predictor.predict(val_features_for_accuracy)
+                if use_target_log1p:
+                    ag_val_predictions = np.expm1(ag_val_predictions_raw.to_numpy())
+                else:
+                    ag_val_predictions = ag_val_predictions_raw.to_numpy()
+                ag_val_accuracy = float(
+                    r2_score(
+                        val_targets_for_accuracy.to_numpy(dtype=float),
+                        np.asarray(ag_val_predictions, dtype=float),
+                    )
+                )
+        _print_model_accuracy(
+            model_name=autogluon_model_name,
+            train_accuracy=ag_train_accuracy,
+            val_accuracy=ag_val_accuracy,
+        )
+
         ag_predictions_raw = predictor.predict(X_test)
         if use_target_log1p:
             ag_predictions = np.expm1(ag_predictions_raw.to_numpy())
