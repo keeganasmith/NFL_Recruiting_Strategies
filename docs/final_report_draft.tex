@@ -1,0 +1,189 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\setlist{nosep}
+\setstretch{1.08}
+
+\title{Draft Report: NFL Recruiting Strategy Analysis}
+\author{Team Draft}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Executive Summary}
+This project develops a pre-draft decision-support framework that estimates early-career NFL production value from combine and college signals. The workflow combines: (i) a transparent heuristic score, (ii) explainable predictive models, and (iii) diagnostic visualizations for uncertainty and calibration.
+
+Across 32 defensive-back heuristic variants in a time-split evaluation setting, the best configuration (\texttt{db\_grid\_008}) reached an objective score of 0.5294 and a proxy Spearman correlation of 0.9625. The practical interpretation is that the pipeline can consistently rank prospects in ways that align with independent production proxies while preserving interpretability for scouting and recruiting communication.
+
+Primary recommendations are to (1) use the heuristic score as a screening layer rather than a sole decision rule, (2) pair rank outputs with uncertainty/calibration diagnostics in all stakeholder reviews, and (3) continue extending sensitivity analyses across positions and seasons before operational deployment.
+
+\section{Problem Statement}
+The core research problem is:
+\begin{quote}
+\emph{How can we use pre-draft data to identify defensive-back prospects most likely to generate early NFL production, while keeping the process interpretable enough for recruiting strategy and public-facing explanation?}
+\end{quote}
+
+This scope emphasizes three constraints:
+\begin{enumerate}
+  \item \textbf{Prediction-time realism}: features must be available pre-draft.
+  \item \textbf{Interpretability}: outputs must support coach/scout/front-office discussion.
+  \item \textbf{Robustness}: rankings should remain stable under held-out or time-split checks.
+\end{enumerate}
+
+\section{Datasets}
+\subsection{Competition and project datasets used}
+The analysis integrates player-level records assembled in this repository, including:
+\begin{itemize}
+  \item merged player table (e.g., \texttt{all\_data.csv}),
+  \item combine-only and combine+college intermediate tables,
+  \item heuristic/model outputs for training and evaluation,
+  \item sweep outputs for grid-search comparison.
+\end{itemize}
+
+\subsection{External data usage and provenance}
+The following external sources were used and should be cited in the final submission metadata:
+\begin{itemize}
+  \item College football statistics and combine data were scraped from \texttt{sports-reference-api}.
+  \item NFL football data were scraped from ESPN.
+\end{itemize}
+
+\textbf{Required final-pass action:} include explicit citation links, scrape dates, and retrieval scripts in the appendix or reproducibility section.
+
+\subsection{Preprocessing summary}
+Preprocessing steps used in the current workflow include:
+\begin{itemize}
+  \item feature filtering to enforce pre-draft eligibility,
+  \item harmonization of identifiers across combine/college/NFL tables,
+  \item handling of missing values via model-pipeline imputers and heuristic defaults,
+  \item standardized feature transforms for effect-size comparability,
+  \item temporal slicing to first four NFL seasons for target construction.
+\end{itemize}
+
+\textbf{To complete before final report:} add exact missingness rates, outlier-treatment rules, and row-count deltas for each preprocessing stage.
+
+\section{Data Exploration}
+Initial exploration focused on:
+\begin{itemize}
+  \item position-specific distributions of combine metrics,
+  \item pairwise relationships between combine/college features and production proxy,
+  \item shifts in metric influence by position group,
+  \item class imbalance and tail behavior in production outcomes.
+\end{itemize}
+
+The exploratory outputs informed two design decisions:
+\begin{enumerate}
+  \item prioritize \textbf{position-aware interpretation} over one pooled ranking model;
+  \item evaluate with \textbf{rank-focused metrics} (Spearman, top-overlap) rather than RMSE alone.
+\end{enumerate}
+
+\section{Methodology}
+\subsection{Heuristic pipeline}
+A configurable heuristic framework computes \texttt{NFL\_production\_value} and evaluates each configuration on:
+\begin{itemize}
+  \item proxy alignment (Spearman),
+  \item ranking stability,
+  \item top-board overlap,
+  \item calibration quality.
+\end{itemize}
+
+The sweep objective is:
+\[
+\text{objective} = 0.55\cdot\text{proxy\_spearman} + 0.25\cdot\text{rank\_corr} + 0.20\cdot\text{top\_overlap} - 0.15\cdot\text{calibration\_rmse}
+\]
+which was selected to balance signal quality, ranking reliability, and interpretability.
+
+\subsection{Explainable modeling}
+Three explainable model families were trained to predict continuous production value:
+\begin{itemize}
+  \item Ridge regression,
+  \item Elastic Net,
+  \item depth-constrained Decision Tree.
+\end{itemize}
+
+These were chosen to maintain clear global explanations (coefficients/importances) while allowing linear and moderate non-linear effects.
+
+\section{Modeling and Analysis}
+\subsection{Key findings to date}
+\begin{itemize}
+  \item Grid-search best variant: \texttt{db\_grid\_008}.
+  \item Objective score: 0.5294.
+  \item Proxy Spearman: 0.9625.
+\end{itemize}
+
+In the evaluated time-split run, rank-correlation and top-overlap terms were near zero across variants, meaning observed differences were driven mainly by proxy alignment and calibration components.
+
+\subsection{Limitations and uncertainty}
+\begin{itemize}
+  \item Potential source-coverage bias from public scraping sources.
+  \item Measurement noise from joins/matching across datasets.
+  \item Generalization uncertainty for seasons/contexts underrepresented in training data.
+  \item Correlational analysis only; no causal claims.
+\end{itemize}
+
+\subsection{Further analysis planned}
+\begin{itemize}
+  \item expanded robustness checks by draft cohort and conference,
+  \item fairness/distributional shift review across subgroups,
+  \item ablation studies separating combine-only vs combine+college feature sets,
+  \item scenario analysis for alternate weighting in the heuristic objective.
+\end{itemize}
+
+\section{Visualization and Interpretation}
+Two central visual products support interpretation:
+\begin{enumerate}
+  \item \textbf{Effect-size dotplot} (small multiples by position group): communicates direction, magnitude, and uncertainty of standardized metric effects.
+  \item \textbf{Model diagnostics panel}: summarizes calibration and performance-health checks used to qualify confidence in ranking outputs.
+\end{enumerate}
+
+These visuals are included because they translate model internals into scouting-readable narratives and make uncertainty explicit for decision meetings.
+
+\section{Conclusions and Recommendations}
+\subsection{Conclusions}
+The current pipeline demonstrates that interpretable, pre-draft signals can produce strong ranking alignment with early NFL production proxies for defensive backs. The strongest practical value is not a single ``best'' score, but a reproducible framework for combining ranking signal, calibration, and domain interpretation.
+
+\subsection{Recommendations}
+\begin{itemize}
+  \item Use the model as a \textbf{decision-support layer} alongside film and contextual scouting.
+  \item Require a \textbf{calibration + uncertainty review} before final board decisions.
+  \item Maintain \textbf{versioned, auditable data contracts} for pre-draft-only features.
+  \item Publish a concise narrative summary translating technical outcomes for broader public discourse around evidence-based team-building under uncertainty.
+\end{itemize}
+
+\section{Executable Code}
+Recommended executable artifact for submission:
+\begin{itemize}
+  \item A reproducible Jupyter notebook (or script-based runbook) that executes data loading, preprocessing, heuristic sweep summary, and final visualization generation from repository paths.
+  \item Repository link with \texttt{README} run instructions, environment requirements, and exact command sequence.
+\end{itemize}
+
+\textbf{Compliance note:} reused code/components are allowed if external sources are acknowledged in a dedicated ``Acknowledgments and External Reuse'' subsection.
+
+\section{Supplementary Materials (Optional but Encouraged)}
+Potential supplementary submission items:
+\begin{itemize}
+  \item interactive ranking dashboard,
+  \item appendix figures for position-by-position sensitivity,
+  \item data dictionary and feature lineage table,
+  \item one-page practitioner brief for non-technical stakeholders.
+\end{itemize}
+
+\section*{Draft Completion Checklist}
+\begin{itemize}
+  \item Replace placeholders with exact sample sizes, years, and missingness rates.
+  \item Insert figure callouts and captions tied to generated output files.
+  \item Add formal citations for ESPN and sports-reference-api data collection.
+  \item Verify final PDF is $\leq$10 pages and formatted at 10pt+ sans serif with 1-inch margins.
+\end{itemize}
+
+\end{document}
